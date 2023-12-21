@@ -8,4 +8,6 @@ public class Exam : Entity<Guid>
     public bool IsActive { get; set; }
     public string ExamUrl { get; set; }
     public virtual ICollection<ClassExam>? ClassExams { get; set; }
+    public virtual ICollection<StudentExam>? StudentExams { get; set; }
+
 }

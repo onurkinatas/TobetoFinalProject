@@ -9,6 +9,6 @@ public class LectureCompletionCondition : Entity<Guid>
     public int CompletionPercentage { get; set; }
     public virtual Student? Student { get; set; }
     public virtual Lecture? Lecture { get; set; }
-    public virtual ICollection<LectureView> LectureViews { get; set;}
+    //public virtual ICollection<LectureView> LectureViews { get; set;}
     
 }

@@ -27,5 +27,8 @@ public class Student : Entity<Guid>
     public virtual ICollection<StudentCertificate>? StudentCertificates { get; set; }
     public virtual ICollection<StudentAppeal>? StudentAppeal { get; set; }
     public virtual ICollection<StudentStage>? StudentStages { get; set; }
+    public virtual ICollection<StudentExam>? StudentExams { get; set; }
+    public virtual ICollection<StudentAnnouncement>? StudentAnnouncements { get; set; }
 }
+ 
 

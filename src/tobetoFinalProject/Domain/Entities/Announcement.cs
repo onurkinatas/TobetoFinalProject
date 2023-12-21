@@ -12,4 +12,6 @@ public class Announcement : Entity<Guid>
     public string Name { get; set; }
     public string Description { get; set; }
     public virtual ICollection<ClassAnnouncement>? ClassAnnouncements { get; set; }
+    public virtual ICollection<StudentAnnouncement>? StudentAnnouncement { get; set; }
+
 }
