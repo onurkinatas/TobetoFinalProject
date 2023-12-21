@@ -9,6 +9,8 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentSocialMedias.Constants.StudentSocialMediasOperationClaims;
+using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentSocialMedias.Queries.GetList;
 
@@ -16,7 +18,7 @@ public class GetListStudentSocialMediaQuery : IRequest<GetListResponse<GetListSt
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentSocialMedias({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -27,16 +29,24 @@ public class GetListStudentSocialMediaQuery : IRequest<GetListResponse<GetListSt
     {
         private readonly IStudentSocialMediaRepository _studentSocialMediaRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListStudentSocialMediaQueryHandler(IStudentSocialMediaRepository studentSocialMediaRepository, IMapper mapper)
+        public GetListStudentSocialMediaQueryHandler(IStudentSocialMediaRepository studentSocialMediaRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _studentSocialMediaRepository = studentSocialMediaRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListStudentSocialMediaListItemDto>> Handle(GetListStudentSocialMediaQuery request, CancellationToken cancellationToken)
         {
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
             IPaginate<StudentSocialMedia> studentSocialMedias = await _studentSocialMediaRepository.GetListAsync(
+                predicate: ssm => ssm.StudentId == cacheMemoryStudentId,
+                include: se => se.Include(se => se.SocialMedia)
+                    .Include(se => se.Student)
+                    .ThenInclude(s => s.User),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

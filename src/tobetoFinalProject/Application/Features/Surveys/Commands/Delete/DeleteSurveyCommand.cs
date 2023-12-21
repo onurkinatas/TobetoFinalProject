@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Surveys.Constants.SurveysOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Surveys.Commands.Delete;
 
@@ -39,7 +40,10 @@ public class DeleteSurveyCommand : IRequest<DeletedSurveyResponse>, ISecuredRequ
 
         public async Task<DeletedSurveyResponse> Handle(DeleteSurveyCommand request, CancellationToken cancellationToken)
         {
-            Survey? survey = await _surveyRepository.GetAsync(predicate: s => s.Id == request.Id, cancellationToken: cancellationToken);
+            Survey? survey = await _surveyRepository.GetAsync(
+                predicate: s => s.Id == request.Id,
+                include: s => s.Include(s => s.ClassSurveys),
+                cancellationToken: cancellationToken);
             await _surveyBusinessRules.SurveyShouldExistWhenSelected(survey);
 
             await _surveyRepository.DeleteAsync(survey!);

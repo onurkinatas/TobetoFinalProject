@@ -17,7 +17,7 @@ public class CreateStudentLanguageLevelCommand : IRequest<CreatedStudentLanguage
     public Guid StudentId { get; set; }
     public Guid LanguageLevelId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentLanguageLevelsOperationClaims.Create };
+    public string[] Roles => new[] { Admin, Write, StudentLanguageLevelsOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Appeals.Constants.AppealsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Appeals.Commands.Update;
 
@@ -41,7 +42,10 @@ public class UpdateAppealCommand : IRequest<UpdatedAppealResponse>, ISecuredRequ
 
         public async Task<UpdatedAppealResponse> Handle(UpdateAppealCommand request, CancellationToken cancellationToken)
         {
-            Appeal? appeal = await _appealRepository.GetAsync(predicate: a => a.Id == request.Id, cancellationToken: cancellationToken);
+            Appeal? appeal = await _appealRepository.GetAsync(
+                predicate: a => a.Id == request.Id,
+                include: c => c.Include(c => c.AppealStages),
+                cancellationToken: cancellationToken);
             await _appealBusinessRules.AppealShouldExistWhenSelected(appeal);
             appeal = _mapper.Map(request, appeal);
 

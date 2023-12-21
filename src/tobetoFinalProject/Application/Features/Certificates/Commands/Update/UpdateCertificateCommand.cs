@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Certificates.Constants.CertificatesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Certificates.Commands.Update;
 
@@ -39,7 +40,10 @@ public class UpdateCertificateCommand : IRequest<UpdatedCertificateResponse>, IS
 
         public async Task<UpdatedCertificateResponse> Handle(UpdateCertificateCommand request, CancellationToken cancellationToken)
         {
-            Certificate? certificate = await _certificateRepository.GetAsync(predicate: c => c.Id == request.Id, cancellationToken: cancellationToken);
+            Certificate? certificate = await _certificateRepository.GetAsync(
+                predicate: c => c.Id == request.Id,
+                include: c => c.Include(c => c.StudentCertificates),
+                cancellationToken: cancellationToken);
             await _certificateBusinessRules.CertificateShouldExistWhenSelected(certificate);
             certificate = _mapper.Map(request, certificate);
 

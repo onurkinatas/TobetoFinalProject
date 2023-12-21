@@ -10,6 +10,7 @@ using MediatR;
 using static Application.Features.Students.Constants.StudentsOperationClaims;
 using Application.Features.Users.Commands.Create;
 using Core.Application.Pipelines.Authorization;
+using Application.Features.UserOperationClaims.Commands.Create;
 
 namespace Application.Features.Students.Commands.Create;
 
@@ -52,7 +53,15 @@ public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ISecuredRe
                 LastName = request.LastName,
                 Password = request.Password,
             };
+
             CreatedUserResponse result = await _mediator.Send(createUserCommand);
+
+            CreateUserOperationClaimCommand createUserOperationClaimCommand = new()
+            {
+                UserId = result.Id,
+                OperationClaimId = 298,
+            };
+            await _mediator.Send(createUserOperationClaimCommand);
 
             Student student = _mapper.Map<Student>(request);
             student.UserId = result.Id;

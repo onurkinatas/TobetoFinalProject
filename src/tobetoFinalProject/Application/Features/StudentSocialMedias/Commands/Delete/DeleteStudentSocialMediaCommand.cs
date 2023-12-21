@@ -17,7 +17,7 @@ public class DeleteStudentSocialMediaCommand : IRequest<DeletedStudentSocialMedi
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Delete };
+    public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Delete, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

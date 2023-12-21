@@ -9,6 +9,8 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentSkills.Constants.StudentSkillsOperationClaims;
+using Microsoft.EntityFrameworkCore;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.StudentSkills.Queries.GetList;
 
@@ -16,7 +18,7 @@ public class GetListStudentSkillQuery : IRequest<GetListResponse<GetListStudentS
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentSkills({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -27,16 +29,23 @@ public class GetListStudentSkillQuery : IRequest<GetListResponse<GetListStudentS
     {
         private readonly IStudentSkillRepository _studentSkillRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListStudentSkillQueryHandler(IStudentSkillRepository studentSkillRepository, IMapper mapper)
+        public GetListStudentSkillQueryHandler(IStudentSkillRepository studentSkillRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _studentSkillRepository = studentSkillRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListStudentSkillListItemDto>> Handle(GetListStudentSkillQuery request, CancellationToken cancellationToken)
         {
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
             IPaginate<StudentSkill> studentSkills = await _studentSkillRepository.GetListAsync(
+                predicate: ss => ss.StudentId == cacheMemoryStudentId,
+                include: ss => ss.Include(ss => ss.Skill)
+                    .Include(ss => ss.Student),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

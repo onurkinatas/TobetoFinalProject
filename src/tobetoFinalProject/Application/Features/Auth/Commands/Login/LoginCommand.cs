@@ -1,12 +1,16 @@
 ﻿using Application.Features.Auth.Rules;
 using Application.Services.AuthenticatorService;
 using Application.Services.AuthService;
+using Application.Services.CacheForMemory;
+using Application.Services.Students;
 using Application.Services.UsersService;
 using Core.Application.Dtos;
 using Core.Security.Entities;
 using Core.Security.Enums;
 using Core.Security.JWT;
+using Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Features.Auth.Commands.Login;
 
@@ -33,18 +37,26 @@ public class LoginCommand : IRequest<LoggedResponse>
         private readonly IAuthenticatorService _authenticatorService;
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly IStudentsService _studentsService;
+        private readonly ICacheMemoryService _cacheForMemoryService;
 
         public LoginCommandHandler(
-            IUserService userService,
-            IAuthService authService,
-            AuthBusinessRules authBusinessRules,
-            IAuthenticatorService authenticatorService
-        )
+                IUserService userService,
+                IAuthService authService,
+                AuthBusinessRules authBusinessRules,
+                IAuthenticatorService authenticatorService,
+                IMemoryCache memoryCache,
+                IStudentsService studentsService,
+                ICacheMemoryService cacheForMemoryService)
         {
             _userService = userService;
             _authService = authService;
             _authBusinessRules = authBusinessRules;
             _authenticatorService = authenticatorService;
+            _memoryCache = memoryCache;
+            _studentsService = studentsService;
+            _cacheForMemoryService = cacheForMemoryService;
         }
 
         public async Task<LoggedResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -55,6 +67,8 @@ public class LoginCommand : IRequest<LoggedResponse>
             );
             await _authBusinessRules.UserShouldBeExistsWhenSelected(user);
             await _authBusinessRules.UserPasswordShouldBeMatch(user!.Id, request.UserForLoginDto.Password);
+
+
 
             LoggedResponse loggedResponse = new();
 
@@ -78,6 +92,13 @@ public class LoginCommand : IRequest<LoggedResponse>
 
             loggedResponse.AccessToken = createdAccessToken;
             loggedResponse.RefreshToken = addedRefreshToken;
+
+            Student? student = await _studentsService.GetAsync(
+                predicate: s => s.UserId == user.Id,
+                cancellationToken: cancellationToken);
+            if (student != null)
+                _cacheForMemoryService.AddStudentIdToCache(student.Id);
+
             return loggedResponse;
         }
     }

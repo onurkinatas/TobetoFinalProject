@@ -18,7 +18,7 @@ public class CreateStudentSocialMediaCommand : IRequest<CreatedStudentSocialMedi
     public Guid SocialMediaId { get; set; }
     public string MediaAccountUrl { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Create };
+    public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

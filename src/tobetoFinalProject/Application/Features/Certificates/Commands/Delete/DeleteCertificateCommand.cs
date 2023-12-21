@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Certificates.Constants.CertificatesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Certificates.Commands.Delete;
 
@@ -39,7 +40,10 @@ public class DeleteCertificateCommand : IRequest<DeletedCertificateResponse>, IS
 
         public async Task<DeletedCertificateResponse> Handle(DeleteCertificateCommand request, CancellationToken cancellationToken)
         {
-            Certificate? certificate = await _certificateRepository.GetAsync(predicate: c => c.Id == request.Id, cancellationToken: cancellationToken);
+            Certificate? certificate = await _certificateRepository.GetAsync(
+                predicate: c => c.Id == request.Id, 
+                include: c => c.Include(c => c.StudentCertificates),
+                cancellationToken: cancellationToken);
             await _certificateBusinessRules.CertificateShouldExistWhenSelected(certificate);
 
             await _certificateRepository.DeleteAsync(certificate!);

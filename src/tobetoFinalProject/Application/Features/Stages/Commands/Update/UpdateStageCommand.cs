@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Stages.Constants.StagesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Stages.Commands.Update;
 
@@ -39,7 +40,11 @@ public class UpdateStageCommand : IRequest<UpdatedStageResponse>, ISecuredReques
 
         public async Task<UpdatedStageResponse> Handle(UpdateStageCommand request, CancellationToken cancellationToken)
         {
-            Stage? stage = await _stageRepository.GetAsync(predicate: s => s.Id == request.Id, cancellationToken: cancellationToken);
+            Stage? stage = await _stageRepository.GetAsync(
+                predicate: s => s.Id == request.Id,
+                include: s => s.Include(s => s.AppealStages)
+                    .Include(s => s.StudentStages),
+                cancellationToken: cancellationToken);
             await _stageBusinessRules.StageShouldExistWhenSelected(stage);
             stage = _mapper.Map(request, stage);
 

@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Skills.Constants.SkillsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Skills.Commands.Update;
 
@@ -39,7 +40,10 @@ public class UpdateSkillCommand : IRequest<UpdatedSkillResponse>, ISecuredReques
 
         public async Task<UpdatedSkillResponse> Handle(UpdateSkillCommand request, CancellationToken cancellationToken)
         {
-            Skill? skill = await _skillRepository.GetAsync(predicate: s => s.Id == request.Id, cancellationToken: cancellationToken);
+            Skill? skill = await _skillRepository.GetAsync(
+                predicate: s => s.Id == request.Id,
+                include: s => s.Include(s => s.StudentSkills),
+                cancellationToken: cancellationToken);
             await _skillBusinessRules.SkillShouldExistWhenSelected(skill);
             skill = _mapper.Map(request, skill);
 

@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Tags.Constants.TagsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Tags.Commands.Delete;
 
@@ -39,7 +40,10 @@ public class DeleteTagCommand : IRequest<DeletedTagResponse>, ISecuredRequest, I
 
         public async Task<DeletedTagResponse> Handle(DeleteTagCommand request, CancellationToken cancellationToken)
         {
-            Tag? tag = await _tagRepository.GetAsync(predicate: t => t.Id == request.Id, cancellationToken: cancellationToken);
+            Tag? tag = await _tagRepository.GetAsync(
+                predicate: t => t.Id == request.Id,
+                include: t => t.Include(t => t.ContentTags),
+                cancellationToken: cancellationToken);
             await _tagBusinessRules.TagShouldExistWhenSelected(tag);
 
             await _tagRepository.DeleteAsync(tag!);

@@ -17,7 +17,7 @@ public class DeleteStudentLanguageLevelCommand : IRequest<DeletedStudentLanguage
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentLanguageLevelsOperationClaims.Delete };
+    public string[] Roles => new[] { Admin, Write, StudentLanguageLevelsOperationClaims.Delete, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

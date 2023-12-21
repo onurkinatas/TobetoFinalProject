@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Categories.Constants.CategoriesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Commands.Delete;
 
@@ -39,7 +40,10 @@ public class DeleteCategoryCommand : IRequest<DeletedCategoryResponse>, ISecured
 
         public async Task<DeletedCategoryResponse> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
-            Category? category = await _categoryRepository.GetAsync(predicate: c => c.Id == request.Id, cancellationToken: cancellationToken);
+            Category? category = await _categoryRepository.GetAsync(
+                predicate: c => c.Id == request.Id,
+                include: c => c.Include(c => c.Lectures),
+                cancellationToken: cancellationToken);
             await _categoryBusinessRules.CategoryShouldExistWhenSelected(category);
 
             await _categoryRepository.DeleteAsync(category!);

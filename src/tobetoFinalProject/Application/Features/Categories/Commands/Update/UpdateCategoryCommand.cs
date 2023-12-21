@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Categories.Constants.CategoriesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Categories.Commands.Update;
 
@@ -39,7 +40,10 @@ public class UpdateCategoryCommand : IRequest<UpdatedCategoryResponse>, ISecured
 
         public async Task<UpdatedCategoryResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            Category? category = await _categoryRepository.GetAsync(predicate: c => c.Id == request.Id, cancellationToken: cancellationToken);
+            Category? category = await _categoryRepository.GetAsync(
+                predicate: c => c.Id == request.Id,
+                include: c => c.Include(c => c.Lectures),
+                cancellationToken: cancellationToken);
             await _categoryBusinessRules.CategoryShouldExistWhenSelected(category);
             category = _mapper.Map(request, category);
 

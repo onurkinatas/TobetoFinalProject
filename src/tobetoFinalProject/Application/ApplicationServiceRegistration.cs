@@ -63,6 +63,7 @@ using Application.Services.SubTypes;
 using Application.Services.Surveys;
 using Application.Services.Tags;
 using Application.Services.StudentSurveys;
+using Application.Services.CacheForMemory;
 
 namespace Application;
 
@@ -141,6 +142,8 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ISurveysService, SurveysManager>();
         services.AddScoped<ITagsService, TagsManager>();
         services.AddScoped<IStudentSurveysService, StudentSurveysManager>();
+        services.AddScoped<ICacheMemoryService, CacheService>();
+        services.AddMemoryCache();
         return services;
     }
 

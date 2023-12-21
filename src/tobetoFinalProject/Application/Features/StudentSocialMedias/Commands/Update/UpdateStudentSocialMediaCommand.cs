@@ -19,7 +19,7 @@ public class UpdateStudentSocialMediaCommand : IRequest<UpdatedStudentSocialMedi
     public Guid SocialMediaId { get; set; }
     public string MediaAccountUrl { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Update };
+    public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Update, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

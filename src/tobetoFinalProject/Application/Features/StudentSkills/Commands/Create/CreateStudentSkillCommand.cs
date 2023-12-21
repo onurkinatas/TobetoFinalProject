@@ -17,7 +17,7 @@ public class CreateStudentSkillCommand : IRequest<CreatedStudentSkillResponse>, 
     public Guid StudentId { get; set; }
     public Guid SkillId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentSkillsOperationClaims.Create };
+    public string[] Roles => new[] { Admin, Write, StudentSkillsOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

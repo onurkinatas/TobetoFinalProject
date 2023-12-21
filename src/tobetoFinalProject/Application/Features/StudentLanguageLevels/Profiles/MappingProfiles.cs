@@ -23,5 +23,15 @@ public class MappingProfiles : Profile
         CreateMap<StudentLanguageLevel, GetByIdStudentLanguageLevelResponse>().ReverseMap();
         CreateMap<StudentLanguageLevel, GetListStudentLanguageLevelListItemDto>().ReverseMap();
         CreateMap<IPaginate<StudentLanguageLevel>, GetListResponse<GetListStudentLanguageLevelListItemDto>>().ReverseMap();
+
+
+        CreateMap<StudentLanguageLevel, GetListStudentLanguageLevelListItemDto>()
+            .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageLevel.LanguageId))
+            .ForMember(dest => dest.LanguageName, opt => opt.MapFrom(src => src.LanguageLevel.Language.Name));
+
+
+        CreateMap<StudentLanguageLevel, GetByIdStudentLanguageLevelResponse>()
+            .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageLevel.LanguageId))
+            .ForMember(dest => dest.LanguageName, opt => opt.MapFrom(src => src.LanguageLevel.Language.Name));
     }
 }

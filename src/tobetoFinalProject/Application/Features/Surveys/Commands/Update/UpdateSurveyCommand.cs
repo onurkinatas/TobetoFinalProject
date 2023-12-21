@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Surveys.Constants.SurveysOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Surveys.Commands.Update;
 
@@ -43,7 +44,10 @@ public class UpdateSurveyCommand : IRequest<UpdatedSurveyResponse>, ISecuredRequ
 
         public async Task<UpdatedSurveyResponse> Handle(UpdateSurveyCommand request, CancellationToken cancellationToken)
         {
-            Survey? survey = await _surveyRepository.GetAsync(predicate: s => s.Id == request.Id, cancellationToken: cancellationToken);
+            Survey? survey = await _surveyRepository.GetAsync(
+                predicate: s => s.Id == request.Id,
+                include: s => s.Include(s => s.ClassSurveys),
+                cancellationToken: cancellationToken);
             await _surveyBusinessRules.SurveyShouldExistWhenSelected(survey);
             survey = _mapper.Map(request, survey);
 

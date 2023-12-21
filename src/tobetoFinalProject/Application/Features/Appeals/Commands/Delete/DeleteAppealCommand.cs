@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Appeals.Constants.AppealsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Appeals.Commands.Delete;
 
@@ -39,7 +40,10 @@ public class DeleteAppealCommand : IRequest<DeletedAppealResponse>, ISecuredRequ
 
         public async Task<DeletedAppealResponse> Handle(DeleteAppealCommand request, CancellationToken cancellationToken)
         {
-            Appeal? appeal = await _appealRepository.GetAsync(predicate: a => a.Id == request.Id, cancellationToken: cancellationToken);
+            Appeal? appeal = await _appealRepository.GetAsync(
+                predicate: a => a.Id == request.Id,
+                include: c => c.Include(c => c.AppealStages),
+                cancellationToken: cancellationToken);
             await _appealBusinessRules.AppealShouldExistWhenSelected(appeal);
 
             await _appealRepository.DeleteAsync(appeal!);

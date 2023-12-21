@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.LanguageLevels.Constants.LanguageLevelsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.LanguageLevels.Commands.Update;
 
@@ -40,7 +41,10 @@ public class UpdateLanguageLevelCommand : IRequest<UpdatedLanguageLevelResponse>
 
         public async Task<UpdatedLanguageLevelResponse> Handle(UpdateLanguageLevelCommand request, CancellationToken cancellationToken)
         {
-            LanguageLevel? languageLevel = await _languageLevelRepository.GetAsync(predicate: ll => ll.Id == request.Id, cancellationToken: cancellationToken);
+            LanguageLevel? languageLevel = await _languageLevelRepository.GetAsync(
+                predicate: ll => ll.Id == request.Id,
+                include: ll => ll.Include(ll => ll.StudentLanguageLevels),
+                cancellationToken: cancellationToken);
             await _languageLevelBusinessRules.LanguageLevelShouldExistWhenSelected(languageLevel);
             languageLevel = _mapper.Map(request, languageLevel);
 
