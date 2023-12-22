@@ -24,7 +24,7 @@ public class UpdateStudentExperienceCommand : IRequest<UpdatedStudentExperienceR
     public string Description { get; set; }
     public Guid CityId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Update };
+    public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Update, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

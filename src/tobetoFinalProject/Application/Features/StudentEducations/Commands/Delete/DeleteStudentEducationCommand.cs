@@ -17,7 +17,7 @@ public class DeleteStudentEducationCommand : IRequest<DeletedStudentEducationRes
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Delete };
+    public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Delete, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

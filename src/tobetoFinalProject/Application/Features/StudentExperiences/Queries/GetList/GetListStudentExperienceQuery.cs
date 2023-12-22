@@ -9,6 +9,7 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentExperiences.Constants.StudentExperiencesOperationClaims;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.StudentExperiences.Queries.GetList;
 
@@ -16,7 +17,7 @@ public class GetListStudentExperienceQuery : IRequest<GetListResponse<GetListStu
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentExperiences({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -27,16 +28,21 @@ public class GetListStudentExperienceQuery : IRequest<GetListResponse<GetListStu
     {
         private readonly IStudentExperienceRepository _studentExperienceRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListStudentExperienceQueryHandler(IStudentExperienceRepository studentExperienceRepository, IMapper mapper)
+        public GetListStudentExperienceQueryHandler(IStudentExperienceRepository studentExperienceRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _studentExperienceRepository = studentExperienceRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListStudentExperienceListItemDto>> Handle(GetListStudentExperienceQuery request, CancellationToken cancellationToken)
         {
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
             IPaginate<StudentExperience> studentExperiences = await _studentExperienceRepository.GetListAsync(
+                predicate: se => se.StudentId == cacheMemoryStudentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

@@ -9,6 +9,7 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentExams.Constants.StudentExamsOperationClaims;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.StudentExams.Queries.GetList;
 
@@ -16,7 +17,7 @@ public class GetListStudentExamQuery : IRequest<GetListResponse<GetListStudentEx
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentExams({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -27,16 +28,21 @@ public class GetListStudentExamQuery : IRequest<GetListResponse<GetListStudentEx
     {
         private readonly IStudentExamRepository _studentExamRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListStudentExamQueryHandler(IStudentExamRepository studentExamRepository, IMapper mapper)
+        public GetListStudentExamQueryHandler(IStudentExamRepository studentExamRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _studentExamRepository = studentExamRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListStudentExamListItemDto>> Handle(GetListStudentExamQuery request, CancellationToken cancellationToken)
         {
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
             IPaginate<StudentExam> studentExams = await _studentExamRepository.GetListAsync(
+                predicate: se => se.StudentId == cacheMemoryStudentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

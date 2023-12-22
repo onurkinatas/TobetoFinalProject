@@ -23,7 +23,7 @@ public class CreateStudentExperienceCommand : IRequest<CreatedStudentExperienceR
     public string Description { get; set; }
     public Guid CityId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Create };
+    public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

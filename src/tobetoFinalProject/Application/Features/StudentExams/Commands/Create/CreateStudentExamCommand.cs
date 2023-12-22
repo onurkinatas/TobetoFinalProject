@@ -17,7 +17,7 @@ public class CreateStudentExamCommand : IRequest<CreatedStudentExamResponse>, IS
     public Guid ExamId { get; set; }
     public Guid StudentId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentExamsOperationClaims.Create };
+    public string[] Roles => new[] { Admin, Write, StudentExamsOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

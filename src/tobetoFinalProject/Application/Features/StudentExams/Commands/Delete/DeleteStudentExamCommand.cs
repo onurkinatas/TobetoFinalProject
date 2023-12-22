@@ -17,7 +17,7 @@ public class DeleteStudentExamCommand : IRequest<DeletedStudentExamResponse>, IS
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentExamsOperationClaims.Delete };
+    public string[] Roles => new[] { Admin, Write, StudentExamsOperationClaims.Delete, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

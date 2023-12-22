@@ -18,7 +18,7 @@ public class UpdateStudentExamCommand : IRequest<UpdatedStudentExamResponse>, IS
     public Guid ExamId { get; set; }
     public Guid StudentId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentExamsOperationClaims.Update };
+    public string[] Roles => new[] { Admin, Write, StudentExamsOperationClaims.Update, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

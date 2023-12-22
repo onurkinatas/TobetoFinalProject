@@ -9,6 +9,7 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentCertificates.Constants.StudentCertificatesOperationClaims;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.StudentCertificates.Queries.GetList;
 
@@ -16,7 +17,7 @@ public class GetListStudentCertificateQuery : IRequest<GetListResponse<GetListSt
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentCertificates({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -27,16 +28,21 @@ public class GetListStudentCertificateQuery : IRequest<GetListResponse<GetListSt
     {
         private readonly IStudentCertificateRepository _studentCertificateRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListStudentCertificateQueryHandler(IStudentCertificateRepository studentCertificateRepository, IMapper mapper)
+        public GetListStudentCertificateQueryHandler(IStudentCertificateRepository studentCertificateRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _studentCertificateRepository = studentCertificateRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListStudentCertificateListItemDto>> Handle(GetListStudentCertificateQuery request, CancellationToken cancellationToken)
         {
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
             IPaginate<StudentCertificate> studentCertificates = await _studentCertificateRepository.GetListAsync(
+                predicate: s => s.StudentId == cacheMemoryStudentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

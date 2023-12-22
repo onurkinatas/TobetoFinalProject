@@ -5,6 +5,7 @@ namespace Application.Features.ClassAnnouncements.Queries.GetList;
 public class GetListClassAnnouncementListItemDto : IDto
 {
     public Guid Id { get; set; }
-    public Guid AnnouncementId { get; set; }
-    public Guid StudentClassId { get; set; }
+    public string AnnouncementName { get; set; }
+    public string AnnouncementDescription { get; set; }
+    public string StudentClassName { get; set; }
 }

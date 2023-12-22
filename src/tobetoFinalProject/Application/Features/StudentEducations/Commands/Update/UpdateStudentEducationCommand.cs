@@ -23,7 +23,7 @@ public class UpdateStudentEducationCommand : IRequest<UpdatedStudentEducationRes
     public DateTime StartDate { get; set; }
     public DateTime GraduationDate { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Update };
+    public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Update, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

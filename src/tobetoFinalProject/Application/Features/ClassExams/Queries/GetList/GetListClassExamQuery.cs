@@ -9,6 +9,8 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.ClassExams.Constants.ClassExamsOperationClaims;
+using Microsoft.EntityFrameworkCore;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.ClassExams.Queries.GetList;
 
@@ -16,7 +18,7 @@ public class GetListClassExamQuery : IRequest<GetListResponse<GetListClassExamLi
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListClassExams({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -27,16 +29,23 @@ public class GetListClassExamQuery : IRequest<GetListResponse<GetListClassExamLi
     {
         private readonly IClassExamRepository _classExamRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListClassExamQueryHandler(IClassExamRepository classExamRepository, IMapper mapper)
+        public GetListClassExamQueryHandler(IClassExamRepository classExamRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _classExamRepository = classExamRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListClassExamListItemDto>> Handle(GetListClassExamQuery request, CancellationToken cancellationToken)
         {
+            List<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
+
             IPaginate<ClassExam> classExams = await _classExamRepository.GetListAsync(
+                predicate: ce => getCacheClassIds.Contains(ce.StudentClassId) && ce.Exam.IsActive != false,
+                include: ce => ce.Include(ce => ce.Exam)
+                    .Include(ce => ce.StudentClass),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

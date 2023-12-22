@@ -17,7 +17,7 @@ public class DeleteStudentExperienceCommand : IRequest<DeletedStudentExperienceR
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Delete };
+    public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Delete, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

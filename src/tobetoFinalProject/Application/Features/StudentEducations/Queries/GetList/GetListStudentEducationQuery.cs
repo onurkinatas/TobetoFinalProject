@@ -9,6 +9,7 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentEducations.Constants.StudentEducationsOperationClaims;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.StudentEducations.Queries.GetList;
 
@@ -27,16 +28,21 @@ public class GetListStudentEducationQuery : IRequest<GetListResponse<GetListStud
     {
         private readonly IStudentEducationRepository _studentEducationRepository;
         private readonly IMapper _mapper;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetListStudentEducationQueryHandler(IStudentEducationRepository studentEducationRepository, IMapper mapper)
+        public GetListStudentEducationQueryHandler(IStudentEducationRepository studentEducationRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
         {
             _studentEducationRepository = studentEducationRepository;
             _mapper = mapper;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetListResponse<GetListStudentEducationListItemDto>> Handle(GetListStudentEducationQuery request, CancellationToken cancellationToken)
         {
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
             IPaginate<StudentEducation> studentEducations = await _studentEducationRepository.GetListAsync(
+                predicate: s => s.StudentId == cacheMemoryStudentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

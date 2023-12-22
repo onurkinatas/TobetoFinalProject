@@ -6,6 +6,7 @@ using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentExperiences.Constants.StudentExperiencesOperationClaims;
+using Application.Services.CacheForMemory;
 
 namespace Application.Features.StudentExperiences.Queries.GetById;
 
@@ -13,24 +14,30 @@ public class GetByIdStudentExperienceQuery : IRequest<GetByIdStudentExperienceRe
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public class GetByIdStudentExperienceQueryHandler : IRequestHandler<GetByIdStudentExperienceQuery, GetByIdStudentExperienceResponse>
     {
         private readonly IMapper _mapper;
         private readonly IStudentExperienceRepository _studentExperienceRepository;
         private readonly StudentExperienceBusinessRules _studentExperienceBusinessRules;
+        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetByIdStudentExperienceQueryHandler(IMapper mapper, IStudentExperienceRepository studentExperienceRepository, StudentExperienceBusinessRules studentExperienceBusinessRules)
+        public GetByIdStudentExperienceQueryHandler(IMapper mapper, IStudentExperienceRepository studentExperienceRepository, StudentExperienceBusinessRules studentExperienceBusinessRules, ICacheMemoryService cacheMemoryService)
         {
             _mapper = mapper;
             _studentExperienceRepository = studentExperienceRepository;
             _studentExperienceBusinessRules = studentExperienceBusinessRules;
+            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetByIdStudentExperienceResponse> Handle(GetByIdStudentExperienceQuery request, CancellationToken cancellationToken)
         {
-            StudentExperience? studentExperience = await _studentExperienceRepository.GetAsync(predicate: se => se.Id == request.Id, cancellationToken: cancellationToken);
+            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+
+            StudentExperience? studentExperience = await _studentExperienceRepository.GetAsync(
+                predicate: se => se.Id == request.Id && se.StudentId == cacheMemoryStudentId,
+                cancellationToken: cancellationToken);
             await _studentExperienceBusinessRules.StudentExperienceShouldExistWhenSelected(studentExperience);
 
             GetByIdStudentExperienceResponse response = _mapper.Map<GetByIdStudentExperienceResponse>(studentExperience);
