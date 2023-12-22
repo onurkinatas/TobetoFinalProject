@@ -8,7 +8,5 @@ public class CreateAppealStageCommandValidator : AbstractValidator<CreateAppealS
     {
         RuleFor(c => c.AppealId).NotEmpty();
         RuleFor(c => c.StageId).NotEmpty();
-        RuleFor(c => c.Appeal).NotEmpty();
-        RuleFor(c => c.Stage).NotEmpty();
     }
 }

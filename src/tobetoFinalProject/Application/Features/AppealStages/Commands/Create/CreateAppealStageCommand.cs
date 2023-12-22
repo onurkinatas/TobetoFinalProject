@@ -16,9 +16,6 @@ public class CreateAppealStageCommand : IRequest<CreatedAppealStageResponse>, IS
 {
     public Guid AppealId { get; set; }
     public Guid StageId { get; set; }
-    public Appeal? Appeal { get; set; }
-    public Stage? Stage { get; set; }
-
     public string[] Roles => new[] { Admin, Write, AppealStagesOperationClaims.Create };
 
     public bool BypassCache { get; }

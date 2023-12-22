@@ -6,6 +6,7 @@ using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentStages.Constants.StudentStagesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentStages.Queries.GetById;
 
@@ -30,7 +31,10 @@ public class GetByIdStudentStageQuery : IRequest<GetByIdStudentStageResponse>, I
 
         public async Task<GetByIdStudentStageResponse> Handle(GetByIdStudentStageQuery request, CancellationToken cancellationToken)
         {
-            StudentStage? studentStage = await _studentStageRepository.GetAsync(predicate: ss => ss.Id == request.Id, cancellationToken: cancellationToken);
+            StudentStage? studentStage = await _studentStageRepository.GetAsync(
+                predicate: ss => ss.Id == request.Id,
+                include: ss => ss.Include(ss => ss.Stage),
+                cancellationToken: cancellationToken);
             await _studentStageBusinessRules.StudentStageShouldExistWhenSelected(studentStage);
 
             GetByIdStudentStageResponse response = _mapper.Map<GetByIdStudentStageResponse>(studentStage);

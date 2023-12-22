@@ -9,6 +9,7 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentStages.Constants.StudentStagesOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentStages.Queries.GetList;
 
@@ -37,6 +38,7 @@ public class GetListStudentStageQuery : IRequest<GetListResponse<GetListStudentS
         public async Task<GetListResponse<GetListStudentStageListItemDto>> Handle(GetListStudentStageQuery request, CancellationToken cancellationToken)
         {
             IPaginate<StudentStage> studentStages = await _studentStageRepository.GetListAsync(
+                include: ss => ss.Include(ss => ss.Stage),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

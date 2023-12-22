@@ -7,4 +7,5 @@ public class GetListStudentStageListItemDto : IDto
     public Guid Id { get; set; }
     public Guid StageId { get; set; }
     public Guid StudentId { get; set; }
+    public string StageDescription { get; set; }
 }

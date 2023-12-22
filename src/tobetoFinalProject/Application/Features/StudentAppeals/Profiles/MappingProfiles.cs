@@ -23,5 +23,10 @@ public class MappingProfiles : Profile
         CreateMap<StudentAppeal, GetByIdStudentAppealResponse>().ReverseMap();
         CreateMap<StudentAppeal, GetListStudentAppealListItemDto>().ReverseMap();
         CreateMap<IPaginate<StudentAppeal>, GetListResponse<GetListStudentAppealListItemDto>>().ReverseMap();
+
+        CreateMap<StudentAppeal, GetListStudentAppealListItemDto>()
+            .ForPath(dest => dest.Stages, opt => opt.MapFrom(src => src.Appeal.AppealStages
+            .Select(sa => sa.Stage).ToList()));
+
     }
 }

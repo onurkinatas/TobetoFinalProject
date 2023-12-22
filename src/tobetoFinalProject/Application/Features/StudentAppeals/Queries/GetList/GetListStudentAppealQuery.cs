@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentAppeals.Constants.StudentAppealsOperationClaims;
 using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentAppeals.Queries.GetList;
 
@@ -29,24 +30,74 @@ public class GetListStudentAppealQuery : IRequest<GetListResponse<GetListStudent
         private readonly IStudentAppealRepository _studentAppealRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
+        private readonly IStudentStageRepository _studentStageRepository;
+        private readonly IAppealStageRepository _appealStageRepository;
 
-        public GetListStudentAppealQueryHandler(IStudentAppealRepository studentAppealRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        public GetListStudentAppealQueryHandler(IStudentAppealRepository studentAppealRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IStudentStageRepository studentStageRepository, IAppealStageRepository appealStageRepository)
         {
             _studentAppealRepository = studentAppealRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _studentStageRepository = studentStageRepository;
+            _appealStageRepository = appealStageRepository;
         }
 
         public async Task<GetListResponse<GetListStudentAppealListItemDto>> Handle(GetListStudentAppealQuery request, CancellationToken cancellationToken)
         {
             var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
 
-            IPaginate<StudentAppeal> studentAppeals = await _studentAppealRepository.GetListAsync(
+            IPaginate<StudentStage> studentStages = await _studentStageRepository.GetListAsync(
                 predicate: s => s.StudentId == cacheMemoryStudentId,
-                index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
             );
+            var studentStageIds = studentStages.Items.Select(s => s.StageId).ToList();
+
+            IPaginate<AppealStage> appealStages = await _appealStageRepository.GetListAsync(
+                predicate: s => studentStageIds.Contains(s.StageId),
+                cancellationToken: cancellationToken
+            );
+            var appealStageIds = appealStages.Items.Select(s => s.StageId).ToList();
+
+
+            //IPaginate<StudentAppeal> studentAppeals = await _studentAppealRepository.GetListAsync(
+            //    predicate: s => s.StudentId == cacheMemoryStudentId,
+            //    include: sa => sa.Include(sa => sa.Appeal)
+            //    .ThenInclude(sa => sa.AppealStages)
+            //    .ThenInclude(sa => sa.Stage),
+            //    index: request.PageRequest.PageIndex,
+            //    size: request.PageRequest.PageSize,
+            //    cancellationToken: cancellationToken
+            //);
+
+
+            //IPaginate<StudentAppeal> studentAppeals = await _studentAppealRepository.GetListAsync(
+            //    predicate: sa => sa.StudentId == cacheMemoryStudentId &&
+            //                     sa.Appeal.AppealStages.Any(aps => studentStageIds.Contains(aps.StageId)),
+            //    include: sa => sa.Include(sa => sa.Appeal)
+            //                   .ThenInclude(a => a.AppealStages)
+            //                   .ThenInclude(aps => aps.Stage),
+            //    index: request.PageRequest.PageIndex,
+            //    size: request.PageRequest.PageSize,
+            //    cancellationToken: cancellationToken
+            //);
+
+            IPaginate<StudentAppeal> studentAppeals = await _studentAppealRepository.GetListAsync(
+                predicate: sa => sa.StudentId == cacheMemoryStudentId &&
+                                 sa.Appeal.AppealStages.Any(aps => studentStageIds.Contains(aps.StageId)),
+                include: sa => sa.Include(sa => sa.Appeal)
+                               .ThenInclude(a => a.AppealStages)
+                               .ThenInclude(aps => aps.Stage),
+                index: request.PageRequest.PageIndex,
+                size: request.PageRequest.PageSize,
+                cancellationToken: cancellationToken
+            );
+
+
+            //        var studentAppeals = await _studentAppealRepository
+            //.GetListAsync(sa => sa.StudentId == cacheMemoryStudentId,
+            //              include: sa => sa.Include(sa => sa.Appeal.AppealStages)
+            //                                .ThenInclude(sa => sa.Stage.StudentStages));
+
 
             GetListResponse<GetListStudentAppealListItemDto> response = _mapper.Map<GetListResponse<GetListStudentAppealListItemDto>>(studentAppeals);
             return response;

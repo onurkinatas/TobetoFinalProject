@@ -7,6 +7,7 @@ using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentAppeals.Constants.StudentAppealsOperationClaims;
 using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentAppeals.Queries.GetById;
 
@@ -37,6 +38,9 @@ public class GetByIdStudentAppealQuery : IRequest<GetByIdStudentAppealResponse>,
 
             StudentAppeal? studentAppeal = await _studentAppealRepository.GetAsync(
                 predicate: sa => sa.Id == request.Id && sa.StudentId == cacheMemoryStudentId,
+                include: sa => sa.Include(sa => sa.Appeal)
+                .ThenInclude(sa => sa.AppealStages)
+                .ThenInclude(sa => sa.Stage),
                 cancellationToken: cancellationToken);
             await _studentAppealBusinessRules.StudentAppealShouldExistWhenSelected(studentAppeal);
 
