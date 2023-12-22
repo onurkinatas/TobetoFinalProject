@@ -13,7 +13,7 @@ public class GetByIdStudentStageQuery : IRequest<GetByIdStudentStageResponse>, I
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public class GetByIdStudentStageQueryHandler : IRequestHandler<GetByIdStudentStageQuery, GetByIdStudentStageResponse>
     {

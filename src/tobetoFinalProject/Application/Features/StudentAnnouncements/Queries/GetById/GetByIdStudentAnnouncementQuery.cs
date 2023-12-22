@@ -13,7 +13,7 @@ public class GetByIdStudentAnnouncementQuery : IRequest<GetByIdStudentAnnounceme
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public class GetByIdStudentAnnouncementQueryHandler : IRequestHandler<GetByIdStudentAnnouncementQuery, GetByIdStudentAnnouncementResponse>
     {
