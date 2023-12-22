@@ -7,6 +7,7 @@ using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentExperiences.Constants.StudentExperiencesOperationClaims;
 using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentExperiences.Queries.GetById;
 
@@ -37,6 +38,7 @@ public class GetByIdStudentExperienceQuery : IRequest<GetByIdStudentExperienceRe
 
             StudentExperience? studentExperience = await _studentExperienceRepository.GetAsync(
                 predicate: se => se.Id == request.Id && se.StudentId == cacheMemoryStudentId,
+                include: se => se.Include(se => se.City),
                 cancellationToken: cancellationToken);
             await _studentExperienceBusinessRules.StudentExperienceShouldExistWhenSelected(studentExperience);
 

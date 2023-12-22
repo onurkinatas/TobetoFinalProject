@@ -6,5 +6,6 @@ public class GetListStudentSkillListItemDto : IDto
 {
     public Guid Id { get; set; }
     public Guid StudentId { get; set; }
+    public Guid SkillId { get; set; }
     public string SkillName { get; set; }
 }

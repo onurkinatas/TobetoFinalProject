@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentCertificates.Constants.StudentCertificatesOperationClaims;
 using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentCertificates.Queries.GetList;
 
@@ -43,6 +44,7 @@ public class GetListStudentCertificateQuery : IRequest<GetListResponse<GetListSt
 
             IPaginate<StudentCertificate> studentCertificates = await _studentCertificateRepository.GetListAsync(
                 predicate: s => s.StudentId == cacheMemoryStudentId,
+                include: sc => sc.Include(sc => sc.Certificate),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

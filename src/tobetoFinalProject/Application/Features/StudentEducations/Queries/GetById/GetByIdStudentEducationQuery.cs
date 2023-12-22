@@ -14,7 +14,7 @@ public class GetByIdStudentEducationQuery : IRequest<GetByIdStudentEducationResp
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public class GetByIdStudentEducationQueryHandler : IRequestHandler<GetByIdStudentEducationQuery, GetByIdStudentEducationResponse>
     {

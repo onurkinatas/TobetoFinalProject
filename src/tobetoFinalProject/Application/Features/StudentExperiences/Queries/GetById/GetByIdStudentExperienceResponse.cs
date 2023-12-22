@@ -12,5 +12,5 @@ public class GetByIdStudentExperienceResponse : IResponse
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Description { get; set; }
-    public Guid CityId { get; set; }
+    public string CityName { get; set; }
 }

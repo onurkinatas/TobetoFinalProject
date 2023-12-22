@@ -7,6 +7,7 @@ using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentCertificates.Constants.StudentCertificatesOperationClaims;
 using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentCertificates.Queries.GetById;
 
@@ -38,7 +39,7 @@ public class GetByIdStudentCertificateQuery : IRequest<GetByIdStudentCertificate
 
             StudentCertificate? studentCertificate = await _studentCertificateRepository.GetAsync(
                 predicate: sc => sc.Id == request.Id && sc.StudentId == cacheMemoryStudentId,
-
+                include: sc => sc.Include(sc => sc.Certificate),
                 cancellationToken: cancellationToken);
             await _studentCertificateBusinessRules.StudentCertificateShouldExistWhenSelected(studentCertificate);
 

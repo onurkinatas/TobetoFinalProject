@@ -17,7 +17,7 @@ public class GetListStudentEducationQuery : IRequest<GetListResponse<GetListStud
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentEducations({PageRequest.PageIndex},{PageRequest.PageSize})";

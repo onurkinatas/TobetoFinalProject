@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentExperiences.Constants.StudentExperiencesOperationClaims;
 using Application.Services.CacheForMemory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentExperiences.Queries.GetList;
 
@@ -43,6 +44,7 @@ public class GetListStudentExperienceQuery : IRequest<GetListResponse<GetListStu
 
             IPaginate<StudentExperience> studentExperiences = await _studentExperienceRepository.GetListAsync(
                 predicate: se => se.StudentId == cacheMemoryStudentId,
+                include: se => se.Include(se => se.City),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
