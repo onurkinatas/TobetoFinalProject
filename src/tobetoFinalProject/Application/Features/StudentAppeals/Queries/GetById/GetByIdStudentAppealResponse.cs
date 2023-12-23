@@ -1,3 +1,4 @@
+using Application.Features.Stages.Queries.GetList;
 using Application.Features.StudentStages.Queries.GetById;
 using Application.Features.StudentStages.Queries.GetList;
 using Core.Application.Responses;
@@ -13,4 +14,5 @@ public class GetByIdStudentAppealResponse : IResponse
     public string AppealName { get; set; }
     public DateTime AppealStartTime { get; set; }
     public DateTime AppealEndTime { get; set; }
+    public ICollection<GetListStageListItemDto> Stages { get; set; }
 }

@@ -51,31 +51,25 @@ public class GetListStudentAppealQuery : IRequest<GetListResponse<GetListStudent
         {
             var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
 
-            // Öðrencinin sahip olduðu tüm stage'leri al
             IPaginate<StudentStage> studentStages = await _studentStageRepository.GetListAsync(
                 predicate: s => s.StudentId == cacheMemoryStudentId,
                 cancellationToken: cancellationToken
-            );
+            ); 
             var studentStageIds = studentStages.Items.Select(s => s.StageId).ToList();
 
-            // Bu stage'lerin baðlý olduðu tüm appeal'leri al
-            IPaginate<AppealStage> appealStages = await _appealStageRepository.GetListAsync(
-                predicate: s => studentStageIds.Contains(s.StageId),
-                cancellationToken: cancellationToken
-            );
-            var appealIds = appealStages.Items.Select(s => s.AppealId).ToList();
-
-            // Sadece öðrencinin sahip olduðu appeal'leri ve bu appeal'e ait sadece öðrencinin sahip olduðu stage'leri al
-            var studentAppeals = await _studentAppealRepository
-                .GetListAsync(sa => sa.StudentId == cacheMemoryStudentId && appealIds.Contains(sa.AppealId),
-                    include: sa => sa.Include(sa => sa.Appeal.AppealStages.Where(aps => studentStageIds.Contains(aps.StageId)))
-    .ThenInclude(sas => sas.Stage.StudentStages.Where(ss => ss.StudentId == cacheMemoryStudentId && studentStageIds.Contains(ss.StageId))),
+            var studentAppeals = await _studentAppealRepository.GetListAsync(
+                    predicate: sa => sa.StudentId == cacheMemoryStudentId,
+                    include: sa => sa.Include(sa => sa.Appeal.AppealStages
+                    .Where(aps => studentStageIds
+                    .Contains(aps.StageId)))
+                    .ThenInclude(sas => sas.Stage.StudentStages
+                    .Where(ss => ss.StudentId == cacheMemoryStudentId && studentStageIds
+                    .Contains(ss.StageId))),
                     index: request.PageRequest.PageIndex,
                     size: request.PageRequest.PageSize,
                     cancellationToken: cancellationToken
-                );
+                );;
 
-            // Haritalamayý gerçekleþtir
             var response = _mapper.Map<GetListResponse<GetListStudentAppealListItemDto>>(studentAppeals);
             return response;
         }
