@@ -74,7 +74,21 @@ builder.Services.AddSwaggerGen(opt =>
     opt.OperationFilter<BearerSecurityRequirementOperationFilter>();
 });
 
+builder.Services.AddCors(options =>
+{
+    // this defines a CORS policy called "default"
+    options.AddPolicy("default", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 WebApplication app = builder.Build();
+
+app.UseCors("default");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -88,6 +102,7 @@ if (app.Environment.IsDevelopment())
 
 if (app.Environment.IsProduction())
     app.ConfigureCustomExceptionMiddleware();
+
 
 app.UseAuthentication();
 app.UseAuthorization();

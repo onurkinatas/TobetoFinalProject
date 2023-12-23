@@ -5,6 +5,7 @@ using Application.Services.CacheForMemory;
 using Application.Services.Students;
 using Application.Services.UsersService;
 using Core.Application.Dtos;
+using Core.Application.Pipelines.Caching;
 using Core.Security.Entities;
 using Core.Security.Enums;
 using Core.Security.JWT;
@@ -14,10 +15,15 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Features.Auth.Commands.Login;
 
-public class LoginCommand : IRequest<LoggedResponse>
+public class LoginCommand : IRequest<LoggedResponse>, ICacheRemoverRequest
 {
     public UserForLoginDto UserForLoginDto { get; set; }
     public string IpAddress { get; set; }
+
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+
+    public string CacheGroupKey => "Get";
 
     public LoginCommand()
     {
