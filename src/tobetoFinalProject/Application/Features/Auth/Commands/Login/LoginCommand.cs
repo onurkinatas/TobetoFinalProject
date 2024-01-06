@@ -104,7 +104,9 @@ public class LoginCommand : IRequest<LoggedResponse>, ICacheRemoverRequest
                 cancellationToken: cancellationToken);
             if (student != null)
                 _cacheForMemoryService.AddStudentIdToCache(student.Id);
-
+            loggedResponse.StudentId = student.Id;
+            loggedResponse.UserFirstName = user.FirstName;
+            loggedResponse.UserLastName = user.LastName;
             return loggedResponse;
         }
     }

@@ -7,6 +7,7 @@ public class RegisteredResponse : IResponse
 {
     public AccessToken AccessToken { get; set; }
     public Core.Security.Entities.RefreshToken RefreshToken { get; set; }
+    public int UserId { get; set; }
 
     public RegisteredResponse()
     {

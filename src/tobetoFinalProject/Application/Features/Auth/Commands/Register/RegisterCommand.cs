@@ -6,13 +6,14 @@ using Core.Security.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;
 using MediatR;
+using Org.BouncyCastle.Bcpg;
 
 namespace Application.Features.Auth.Commands.Register;
 
 public class RegisterCommand : IRequest<RegisteredResponse>
 {
     public UserForRegisterDto UserForRegisterDto { get; set; }
-    public string IpAddress { get; set; }
+    public string? IpAddress { get; set; }
 
     public RegisterCommand()
     {
@@ -65,7 +66,7 @@ public class RegisterCommand : IRequest<RegisteredResponse>
             Core.Security.Entities.RefreshToken createdRefreshToken = await _authService.CreateRefreshToken(createdUser, request.IpAddress);
             Core.Security.Entities.RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
 
-            RegisteredResponse registeredResponse = new() { AccessToken = createdAccessToken, RefreshToken = addedRefreshToken };
+            RegisteredResponse registeredResponse = new() { AccessToken = createdAccessToken, RefreshToken = addedRefreshToken, UserId = createdUser.Id };
             return registeredResponse;
         }
     }

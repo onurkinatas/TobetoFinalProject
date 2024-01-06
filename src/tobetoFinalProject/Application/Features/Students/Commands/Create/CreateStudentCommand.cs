@@ -11,17 +11,19 @@ using static Application.Features.Students.Constants.StudentsOperationClaims;
 using Application.Features.Users.Commands.Create;
 using Core.Application.Pipelines.Authorization;
 using Application.Features.UserOperationClaims.Commands.Create;
+using Application.Features.Auth.Commands.Register;
+using Core.Application.Dtos;
 
 namespace Application.Features.Students.Commands.Create;
 
-public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentsOperationClaims.Create };
+    public string[] Roles;
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
@@ -32,21 +34,25 @@ public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ISecuredRe
         private readonly IMapper _mapper;
         private readonly IStudentRepository _studentRepository;
         private readonly IMediator _mediator;
-        private readonly StudentBusinessRules _studentBusinessRules;
 
-        public CreateStudentCommandHandler(IMapper mapper, IStudentRepository studentRepository,
-                                         StudentBusinessRules studentBusinessRules,
-                                          IMediator mediator)
+        public CreateStudentCommandHandler(IMapper mapper, IStudentRepository studentRepository, IMediator mediator)
         {
             _mapper = mapper;
             _studentRepository = studentRepository;
-            _studentBusinessRules = studentBusinessRules;
             _mediator = mediator;
         }
 
         public async Task<CreatedStudentResponse> Handle(CreateStudentCommand request, CancellationToken cancellationToken)
         {
-            CreateUserCommand createUserCommand = new()
+            //CreateUserCommand createUserCommand = new()
+            //{
+            //    Email = request.Email,
+            //    FirstName = request.FirstName,
+            //    LastName = request.LastName,
+            //    Password = request.Password,
+            //};
+
+            UserForRegisterDto userForRegisterDto = new()
             {
                 Email = request.Email,
                 FirstName = request.FirstName,
@@ -54,17 +60,20 @@ public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ISecuredRe
                 Password = request.Password,
             };
 
-            CreatedUserResponse result = await _mediator.Send(createUserCommand);
+            RegisterCommand registerCommand = new() { UserForRegisterDto = userForRegisterDto };
+
+            RegisteredResponse result = await _mediator.Send(registerCommand);
+            //CreatedUserResponse result = await _mediator.Send(createUserCommand);
 
             CreateUserOperationClaimCommand createUserOperationClaimCommand = new()
             {
-                UserId = result.Id,
+                UserId = result.UserId,
                 OperationClaimId = 298,
             };
             await _mediator.Send(createUserOperationClaimCommand);
 
             Student student = _mapper.Map<Student>(request);
-            student.UserId = result.Id;
+            student.UserId = result.UserId;
             await _studentRepository.AddAsync(student);
 
             CreatedStudentResponse response = _mapper.Map<CreatedStudentResponse>(student);

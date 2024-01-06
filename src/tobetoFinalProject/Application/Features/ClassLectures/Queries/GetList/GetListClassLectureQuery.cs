@@ -14,7 +14,7 @@ using Application.Services.CacheForMemory;
 
 namespace Application.Features.ClassLectures.Queries.GetList;
 
-public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLectureListItemDto>>, ISecuredRequest, ICachableRequest
+public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLectureListItemDto>>, /*ISecuredRequest*/ ICachableRequest
 {
     public PageRequest PageRequest { get; set; }
 
