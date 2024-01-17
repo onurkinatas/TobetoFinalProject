@@ -68,7 +68,7 @@ public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ICacheRemo
             CreateUserOperationClaimCommand createUserOperationClaimCommand = new()
             {
                 UserId = result.UserId,
-                OperationClaimId = 298,
+                OperationClaimId = 296,
             };
             await _mediator.Send(createUserOperationClaimCommand);
 

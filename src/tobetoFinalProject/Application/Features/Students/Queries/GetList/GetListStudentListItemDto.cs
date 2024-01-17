@@ -13,6 +13,10 @@ namespace Application.Features.Students.Queries.GetList;
 public class GetListStudentListItemDto : IDto
 {
     public Guid Id { get; set; }
+    public int UserId { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
     public string CityName { get; set; }
     public string DistrictName { get; set; }
     public string NationalIdentity { get; set; }

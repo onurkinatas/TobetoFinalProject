@@ -52,7 +52,8 @@ public class GetListStudentQuery : IRequest<GetListResponse<GetListStudentListIt
                     .Include(s => s.StudentEducations)
                     .Include(s => s.StudentExperiences)
                     .Include(s => s.StudentClassStudentes)
-                    .ThenInclude(s => s.StudentClass),
+                    .ThenInclude(s => s.StudentClass)
+                     .Include(s => s.User),
                     size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
             );

@@ -46,7 +46,8 @@ public class GetByIdStudentQuery : IRequest<GetByIdStudentResponse> /*ISecuredRe
                 .Include(s => s.StudentEducations)
                 .Include(s => s.StudentExperiences)
                 .Include(s => s.StudentClassStudentes)
-                .ThenInclude(s => s.StudentClass),
+                .ThenInclude(s => s.StudentClass)
+                 .Include(s => s.User),
                 cancellationToken: cancellationToken);
             await _studentBusinessRules.StudentShouldExistWhenSelected(student);
 

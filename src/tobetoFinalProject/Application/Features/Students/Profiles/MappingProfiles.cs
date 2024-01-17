@@ -32,7 +32,10 @@ public class MappingProfiles : Profile
              .ForMember(dest => dest.LanguageLevels, opt => opt.MapFrom(src => src.StudentLanguageLevels.Select(si => si.LanguageLevel).ToList()))
              .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.StudentSkills.Select(si => si.Skill).ToList()))
              .ForMember(dest => dest.SocialMedias, opt => opt.MapFrom(src => src.StudentSocialMedias.Select(si => si.SocialMedia).ToList()))
-             .ForMember(dest => dest.StudentClasses, opt => opt.MapFrom(src => src.StudentClassStudentes.Select(si => si.StudentClass).ToList()));
+             .ForMember(dest => dest.StudentClasses, opt => opt.MapFrom(src => src.StudentClassStudentes.Select(si => si.StudentClass).ToList()))
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
+             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email));
 
 
         CreateMap<Student, GetByIdStudentResponse>()
@@ -41,6 +44,9 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.LanguageLevels, opt => opt.MapFrom(src => src.StudentLanguageLevels.Select(si => si.LanguageLevel).ToList()))
             .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.StudentSkills.Select(si => si.Skill).ToList()))
             .ForMember(dest => dest.SocialMedias, opt => opt.MapFrom(src => src.StudentSocialMedias.Select(si => si.SocialMedia).ToList()))
-            .ForMember(dest => dest.StudentClasses, opt => opt.MapFrom(src => src.StudentClassStudentes.Select(si => si.StudentClass).ToList()));
+            .ForMember(dest => dest.StudentClasses, opt => opt.MapFrom(src => src.StudentClassStudentes.Select(si => si.StudentClass).ToList()))
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
+             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email));
     }
 }
