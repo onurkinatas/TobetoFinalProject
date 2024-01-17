@@ -103,10 +103,12 @@ public class LoginCommand : IRequest<LoggedResponse>, ICacheRemoverRequest
                 predicate: s => s.UserId == user.Id,
                 cancellationToken: cancellationToken);
             if (student != null)
+            {
                 _cacheForMemoryService.AddStudentIdToCache(student.Id);
-            loggedResponse.StudentId = student.Id;
-            loggedResponse.UserFirstName = user.FirstName;
-            loggedResponse.UserLastName = user.LastName;
+                loggedResponse.StudentId = student.Id; // Student ID'yi LoggedResponse'a ekleyin
+            }
+            loggedResponse.UserId = user.Id;
+
             return loggedResponse;
         }
     }
