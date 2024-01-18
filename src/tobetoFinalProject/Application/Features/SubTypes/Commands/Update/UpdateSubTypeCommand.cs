@@ -45,6 +45,8 @@ public class UpdateSubTypeCommand : IRequest<UpdatedSubTypeResponse>, ISecuredRe
 
             await _subTypeRepository.UpdateAsync(subType!);
 
+            await _subTypeBusinessRules.SubTypeNameShouldNotExist(subType, cancellationToken);
+
             UpdatedSubTypeResponse response = _mapper.Map<UpdatedSubTypeResponse>(subType);
             return response;
         }

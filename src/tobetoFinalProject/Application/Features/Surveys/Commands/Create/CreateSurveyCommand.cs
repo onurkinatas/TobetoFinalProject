@@ -9,6 +9,8 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Surveys.Constants.SurveysOperationClaims;
+using Application.Features.Languages.Rules;
+using Nest;
 
 namespace Application.Features.Surveys.Commands.Create;
 
@@ -43,6 +45,8 @@ public class CreateSurveyCommand : IRequest<CreatedSurveyResponse>, ISecuredRequ
         public async Task<CreatedSurveyResponse> Handle(CreateSurveyCommand request, CancellationToken cancellationToken)
         {
             Survey survey = _mapper.Map<Survey>(request);
+
+            await _surveyBusinessRules.SurveyNameShouldNotExist(survey, cancellationToken);
 
             await _surveyRepository.AddAsync(survey);
 
