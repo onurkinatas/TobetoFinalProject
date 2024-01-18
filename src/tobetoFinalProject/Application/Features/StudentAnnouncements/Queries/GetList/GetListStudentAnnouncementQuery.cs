@@ -9,6 +9,7 @@ using Core.Application.Responses;
 using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentAnnouncements.Constants.StudentAnnouncementsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentAnnouncements.Queries.GetList;
 
@@ -37,6 +38,7 @@ public class GetListStudentAnnouncementQuery : IRequest<GetListResponse<GetListS
         public async Task<GetListResponse<GetListStudentAnnouncementListItemDto>> Handle(GetListStudentAnnouncementQuery request, CancellationToken cancellationToken)
         {
             IPaginate<StudentAnnouncement> studentAnnouncements = await _studentAnnouncementRepository.GetListAsync(
+                include: sa => sa.Include(sa => sa.Announcement),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

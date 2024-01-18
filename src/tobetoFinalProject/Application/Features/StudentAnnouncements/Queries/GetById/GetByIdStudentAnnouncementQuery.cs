@@ -6,6 +6,10 @@ using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentAnnouncements.Constants.StudentAnnouncementsOperationClaims;
+using Application.Features.StudentAppeals.Queries.GetById;
+using Application.Features.StudentAppeals.Rules;
+using System.Threading;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentAnnouncements.Queries.GetById;
 
@@ -30,7 +34,10 @@ public class GetByIdStudentAnnouncementQuery : IRequest<GetByIdStudentAnnounceme
 
         public async Task<GetByIdStudentAnnouncementResponse> Handle(GetByIdStudentAnnouncementQuery request, CancellationToken cancellationToken)
         {
-            StudentAnnouncement? studentAnnouncement = await _studentAnnouncementRepository.GetAsync(predicate: sa => sa.Id == request.Id, cancellationToken: cancellationToken);
+            StudentAnnouncement? studentAnnouncement = await _studentAnnouncementRepository.GetAsync
+                (predicate: sa => sa.Id == request.Id,
+                include: sa => sa.Include(sa => sa.Announcement),
+                cancellationToken: cancellationToken);
             await _studentAnnouncementBusinessRules.StudentAnnouncementShouldExistWhenSelected(studentAnnouncement);
 
             GetByIdStudentAnnouncementResponse response = _mapper.Map<GetByIdStudentAnnouncementResponse>(studentAnnouncement);
@@ -38,3 +45,4 @@ public class GetByIdStudentAnnouncementQuery : IRequest<GetByIdStudentAnnounceme
         }
     }
 }
+
