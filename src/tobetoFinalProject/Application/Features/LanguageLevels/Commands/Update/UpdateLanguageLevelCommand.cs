@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.LanguageLevels.Constants.LanguageLevelsOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Features.Exams.Rules;
 
 namespace Application.Features.LanguageLevels.Commands.Update;
 
@@ -47,6 +48,8 @@ public class UpdateLanguageLevelCommand : IRequest<UpdatedLanguageLevelResponse>
                 cancellationToken: cancellationToken);
             await _languageLevelBusinessRules.LanguageLevelShouldExistWhenSelected(languageLevel);
             languageLevel = _mapper.Map(request, languageLevel);
+
+            await _languageLevelBusinessRules.DistrictNameShouldNotExist(languageLevel, cancellationToken);
 
             await _languageLevelRepository.UpdateAsync(languageLevel!);
 

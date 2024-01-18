@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Lectures.Constants.LecturesOperationClaims;
+using Application.Features.Exams.Rules;
 
 namespace Application.Features.Lectures.Commands.Create;
 
@@ -46,6 +47,8 @@ public class CreateLectureCommand : IRequest<CreatedLectureResponse>, ISecuredRe
         public async Task<CreatedLectureResponse> Handle(CreateLectureCommand request, CancellationToken cancellationToken)
         {
             Lecture lecture = _mapper.Map<Lecture>(request);
+
+            await _lectureBusinessRules.LectureNameShouldNotExist(lecture, cancellationToken);
 
             await _lectureRepository.AddAsync(lecture);
 

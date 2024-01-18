@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Exams.Constants.ExamsOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Features.Districts.Rules;
 
 namespace Application.Features.Exams.Commands.Update;
 
@@ -48,6 +49,8 @@ public class UpdateExamCommand : IRequest<UpdatedExamResponse>, ISecuredRequest,
                 cancellationToken: cancellationToken);
             await _examBusinessRules.ExamShouldExistWhenSelected(exam);
             exam = _mapper.Map(request, exam);
+
+            await _examBusinessRules.DistrictNameShouldNotExist(exam, cancellationToken);
 
             await _examRepository.UpdateAsync(exam!);
 

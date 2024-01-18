@@ -1,3 +1,4 @@
+using Application.Features.Districts.Constants;
 using Application.Features.Exams.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -30,5 +31,21 @@ public class ExamBusinessRules : BaseBusinessRules
             cancellationToken: cancellationToken
         );
         await ExamShouldExistWhenSelected(exam);
+    }
+
+    public Task ExamShouldNotExist(Exam? exam)
+    {
+        if (exam != null)
+            throw new BusinessException(ExamsBusinessMessages.ExamNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task DistrictNameShouldNotExist(Exam exam, CancellationToken cancellationToken)
+    {
+        Exam? controlExam = await _examRepository.GetAsync(
+            predicate: a => a.Name == exam.Name,
+            enableTracking: false, //Entity Framework'te "tracking" veya "izleme" (tracking) terimi, bir veri nesnesinin (entity) durumunu                          takip etme ve bu durumun veritabanýna nasýl yansýtýlacaðýný belirleme sürecini ifade eder.
+            cancellationToken: cancellationToken //asenkron iþlemlerin iptal edilmesine olanak saðlar(Örnek çok uzun süren bir iþlemde)
+            );
+        await ExamShouldNotExist(controlExam);
     }
 }

@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Districts.Constants.DistrictsOperationClaims;
+using Application.Features.Languages.Rules;
 
 namespace Application.Features.Districts.Commands.Update;
 
@@ -43,6 +44,8 @@ public class UpdateDistrictCommand : IRequest<UpdatedDistrictResponse>, ISecured
             District? district = await _districtRepository.GetAsync(predicate: d => d.Id == request.Id, cancellationToken: cancellationToken);
             await _districtBusinessRules.DistrictShouldExistWhenSelected(district);
             district = _mapper.Map(request, district);
+
+            await _districtBusinessRules.DistrictNameShouldNotExist(district, cancellationToken);
 
             await _districtRepository.UpdateAsync(district!);
 

@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Lectures.Constants.LecturesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Features.Exams.Rules;
 
 namespace Application.Features.Lectures.Commands.Update;
 
@@ -55,6 +56,8 @@ public class UpdateLectureCommand : IRequest<UpdatedLectureResponse>, ISecuredRe
 
             await _lectureBusinessRules.LectureShouldExistWhenSelected(lecture);
             lecture = _mapper.Map(request, lecture);
+
+            await _lectureBusinessRules.LectureNameShouldNotExist(lecture, cancellationToken);
 
             await _lectureRepository.UpdateAsync(lecture!);
 

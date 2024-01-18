@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Exams.Constants.ExamsOperationClaims;
+using Application.Features.Districts.Rules;
 
 namespace Application.Features.Exams.Commands.Create;
 
@@ -42,6 +43,8 @@ public class CreateExamCommand : IRequest<CreatedExamResponse>, ISecuredRequest,
         public async Task<CreatedExamResponse> Handle(CreateExamCommand request, CancellationToken cancellationToken)
         {
             Exam exam = _mapper.Map<Exam>(request);
+
+            await _examBusinessRules.DistrictNameShouldNotExist(exam, cancellationToken);
 
             await _examRepository.AddAsync(exam);
 

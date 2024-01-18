@@ -41,6 +41,8 @@ public class CreateDistrictCommand : IRequest<CreatedDistrictResponse>, ISecured
         {
             District district = _mapper.Map<District>(request);
 
+            await _districtBusinessRules.DistrictNameShouldNotExist(district, cancellationToken);
+
             await _districtRepository.AddAsync(district);
 
             CreatedDistrictResponse response = _mapper.Map<CreatedDistrictResponse>(district);

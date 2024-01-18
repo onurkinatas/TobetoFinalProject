@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.LanguageLevels.Constants.LanguageLevelsOperationClaims;
+using Application.Features.Exams.Rules;
 
 namespace Application.Features.LanguageLevels.Commands.Create;
 
@@ -40,6 +41,8 @@ public class CreateLanguageLevelCommand : IRequest<CreatedLanguageLevelResponse>
         public async Task<CreatedLanguageLevelResponse> Handle(CreateLanguageLevelCommand request, CancellationToken cancellationToken)
         {
             LanguageLevel languageLevel = _mapper.Map<LanguageLevel>(request);
+
+            await _languageLevelBusinessRules.DistrictNameShouldNotExist(languageLevel, cancellationToken);
 
             await _languageLevelRepository.AddAsync(languageLevel);
 
