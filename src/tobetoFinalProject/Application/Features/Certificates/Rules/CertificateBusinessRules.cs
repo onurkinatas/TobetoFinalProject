@@ -22,6 +22,24 @@ public class CertificateBusinessRules : BaseBusinessRules
         return Task.CompletedTask;
     }
 
+    public Task CertificateImgUrlShouldNotExist(Certificate? certificate)
+    {
+        if (certificate == null)
+            throw new BusinessException(CertificatesBusinessMessages.CertificateImgUrlExists);
+        return Task.CompletedTask;
+    }
+
+    public async Task CertificateImgUrlShouldNotExist(Certificate? certificate, CancellationToken cancellationToken) 
+    {
+        Certificate? controlCertificate = await _certificateRepository.GetAsync(
+            predicate: a => a.ImageUrl == certificate.ImageUrl,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+
+        await CertificateImgUrlShouldNotExist(controlCertificate);
+    }
+
     public async Task CertificateIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)
     {
         Certificate? certificate = await _certificateRepository.GetAsync(

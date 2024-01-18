@@ -22,6 +22,23 @@ public class ContentBusinessRules : BaseBusinessRules
         return Task.CompletedTask;
     }
 
+    public Task ContentNameShouldNotExist(Content? content)
+    {
+        if (content == null)
+            throw new BusinessException(ContentsBusinessMessages.ContentNameExists);
+        return Task.CompletedTask;
+    }
+
+    public async Task ContentNameShouldNotExist(Content? content, CancellationToken cancellationToken) 
+    {
+        Content? contentControl = await _contentRepository.GetAsync(
+            predicate: c => c.Name == content.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+        await ContentNameShouldNotExist(content);
+    }
+
     public async Task ContentIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)
     {
         Content? content = await _contentRepository.GetAsync(

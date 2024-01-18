@@ -40,6 +40,8 @@ public class CreateCertificateCommand : IRequest<CreatedCertificateResponse>, IS
         {
             Certificate certificate = _mapper.Map<Certificate>(request);
 
+            _certificateBusinessRules.CertificateImgUrlShouldNotExist(certificate, cancellationToken);
+
             await _certificateRepository.AddAsync(certificate);
 
             CreatedCertificateResponse response = _mapper.Map<CreatedCertificateResponse>(certificate);

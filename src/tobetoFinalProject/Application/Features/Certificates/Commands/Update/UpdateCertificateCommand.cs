@@ -47,6 +47,8 @@ public class UpdateCertificateCommand : IRequest<UpdatedCertificateResponse>, IS
             await _certificateBusinessRules.CertificateShouldExistWhenSelected(certificate);
             certificate = _mapper.Map(request, certificate);
 
+            await _certificateBusinessRules.CertificateImgUrlShouldNotExist(certificate, cancellationToken);
+
             await _certificateRepository.UpdateAsync(certificate!);
 
             UpdatedCertificateResponse response = _mapper.Map<UpdatedCertificateResponse>(certificate);

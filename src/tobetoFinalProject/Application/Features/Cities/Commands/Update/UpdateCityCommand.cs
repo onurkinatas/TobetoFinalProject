@@ -43,6 +43,8 @@ public class UpdateCityCommand : IRequest<UpdatedCityResponse>, ISecuredRequest,
             await _cityBusinessRules.CityShouldExistWhenSelected(city);
             city = _mapper.Map(request, city);
 
+            await _cityBusinessRules.CityNameShouldNotExist(city, cancellationToken);
+
             await _cityRepository.UpdateAsync(city!);
 
             UpdatedCityResponse response = _mapper.Map<UpdatedCityResponse>(city);

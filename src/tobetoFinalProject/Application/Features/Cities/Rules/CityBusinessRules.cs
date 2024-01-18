@@ -22,6 +22,23 @@ public class CityBusinessRules : BaseBusinessRules
         return Task.CompletedTask;
     }
 
+    public Task CityNameShouldNotExist(City? city)
+    {
+        if (city == null)
+            throw new BusinessException(CitiesBusinessMessages.CityNameExists);
+        return Task.CompletedTask;
+    }
+
+    public async Task CityNameShouldNotExist(City city, CancellationToken cancellationToken)
+    {
+        City? cityControl = await _cityRepository.GetAsync(
+            predicate: c => c.Name == city.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+        await CityNameShouldNotExist(city);
+    }
+
     public async Task CityIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)
     {
         City? city = await _cityRepository.GetAsync(

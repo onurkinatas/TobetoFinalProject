@@ -22,6 +22,23 @@ public class CourseBusinessRules : BaseBusinessRules
         return Task.CompletedTask;
     }
 
+    public Task CourseNameShouldNotExist(Course? course)
+    {
+        if (course == null)
+            throw new BusinessException(CoursesBusinessMessages.CourseNameExists);
+        return Task.CompletedTask;
+    }
+
+    public async Task CourseNameShouldNotExist(Course? course, CancellationToken cancellationToken)
+    {
+        Course? courseControl = await _courseRepository.GetAsync(
+            predicate: c => c.Name == course.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+        );
+        await CourseNameShouldNotExist(course);
+    }
+
     public async Task CourseIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)
     {
         Course? course = await _courseRepository.GetAsync(

@@ -58,6 +58,8 @@ public class UpdateContentCommand : IRequest<UpdatedContentResponse>, ISecuredRe
             await _contentBusinessRules.ContentShouldExistWhenSelected(content);
             content = _mapper.Map(request, content);
 
+            await _contentBusinessRules.ContentNameShouldNotExist(content, cancellationToken);
+
             await _contentRepository.UpdateAsync(content!);
 
             UpdatedContentResponse response = _mapper.Map<UpdatedContentResponse>(content);
