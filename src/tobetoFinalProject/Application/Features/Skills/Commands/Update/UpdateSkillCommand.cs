@@ -47,6 +47,8 @@ public class UpdateSkillCommand : IRequest<UpdatedSkillResponse>, ISecuredReques
             await _skillBusinessRules.SkillShouldExistWhenSelected(skill);
             skill = _mapper.Map(request, skill);
 
+            await _skillBusinessRules.SkillNameShouldNotExist(skill, cancellationToken);
+
             await _skillRepository.UpdateAsync(skill!);
 
             UpdatedSkillResponse response = _mapper.Map<UpdatedSkillResponse>(skill);

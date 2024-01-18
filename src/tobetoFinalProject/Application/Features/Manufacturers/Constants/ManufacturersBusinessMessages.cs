@@ -1,6 +1,8 @@
-namespace Application.Features.Manufacturers.Constants;
+﻿namespace Application.Features.Manufacturers.Constants;
 
 public static class ManufacturersBusinessMessages
 {
-    public const string ManufacturerNotExists = "Manufacturer not exists.";
+    public const string ManufacturerNotExists = "Yapımcı firma mevcut değil.";
+
+    public const string ManufacturerNameExists = "Bu isme sahip bir yapımcı firma zaten mevcut.";
 }

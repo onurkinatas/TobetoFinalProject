@@ -1,3 +1,4 @@
+using Application.Features.Languages.Constants;
 using Application.Features.SocialMedias.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -30,5 +31,21 @@ public class SocialMediaBusinessRules : BaseBusinessRules
             cancellationToken: cancellationToken
         );
         await SocialMediaShouldExistWhenSelected(socialMedia);
+    }
+
+    public Task SocialMediaShouldNotExist(SocialMedia? socialMedia)
+    {
+        if (socialMedia != null)
+            throw new BusinessException(SocialMediasBusinessMessages.SocialMediaNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task SocialMediaNameShouldNotExist(SocialMedia socialMedia, CancellationToken cancellationToken)
+    {
+        SocialMedia? controlSocialMedia = await _socialMediaRepository.GetAsync(
+            predicate: a => a.Name == socialMedia.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+            );
+        await SocialMediaShouldNotExist(controlSocialMedia);
     }
 }

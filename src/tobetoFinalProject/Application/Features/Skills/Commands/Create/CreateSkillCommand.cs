@@ -40,6 +40,8 @@ public class CreateSkillCommand : IRequest<CreatedSkillResponse>, ISecuredReques
         {
             Skill skill = _mapper.Map<Skill>(request);
 
+            await _skillBusinessRules.SkillNameShouldNotExist(skill, cancellationToken);
+
             await _skillRepository.AddAsync(skill);
 
             CreatedSkillResponse response = _mapper.Map<CreatedSkillResponse>(skill);

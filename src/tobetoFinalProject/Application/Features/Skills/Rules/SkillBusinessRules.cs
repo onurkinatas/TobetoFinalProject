@@ -1,3 +1,4 @@
+using Application.Features.Languages.Constants;
 using Application.Features.Skills.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -31,4 +32,21 @@ public class SkillBusinessRules : BaseBusinessRules
         );
         await SkillShouldExistWhenSelected(skill);
     }
+
+    public Task SkillShouldNotExist(Skill? skill)
+    {
+        if (skill != null)
+            throw new BusinessException(SkillsBusinessMessages.SkillNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task SkillNameShouldNotExist(Skill skill, CancellationToken cancellationToken)
+    {
+        Skill? controlSkill = await _skillRepository.GetAsync(
+            predicate: a => a.Name == skill.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+            );
+        await SkillShouldNotExist(controlSkill);
+    }
+
 }

@@ -1,6 +1,7 @@
-namespace Application.Features.Skills.Constants;
+﻿namespace Application.Features.Skills.Constants;
 
 public static class SkillsBusinessMessages
 {
-    public const string SkillNotExists = "Skill not exists.";
+    public const string SkillNotExists = "Yetenek bulunamadı.";
+    public const string SkillNameExists = "Bu isme sahip bir yetenek zaten mevcut.";
 }

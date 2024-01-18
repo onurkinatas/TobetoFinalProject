@@ -43,6 +43,8 @@ public class UpdateManufacturerCommand : IRequest<UpdatedManufacturerResponse>, 
             await _manufacturerBusinessRules.ManufacturerShouldExistWhenSelected(manufacturer);
             manufacturer = _mapper.Map(request, manufacturer);
 
+            await _manufacturerBusinessRules.ManufacturerNameShouldNotExist(manufacturer, cancellationToken);
+
             await _manufacturerRepository.UpdateAsync(manufacturer!);
 
             UpdatedManufacturerResponse response = _mapper.Map<UpdatedManufacturerResponse>(manufacturer);

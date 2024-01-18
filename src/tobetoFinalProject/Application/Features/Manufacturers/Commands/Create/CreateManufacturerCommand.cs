@@ -40,6 +40,8 @@ public class CreateManufacturerCommand : IRequest<CreatedManufacturerResponse>, 
         {
             Manufacturer manufacturer = _mapper.Map<Manufacturer>(request);
 
+            await _manufacturerBusinessRules.ManufacturerNameShouldNotExist(manufacturer, cancellationToken);
+
             await _manufacturerRepository.AddAsync(manufacturer);
 
             CreatedManufacturerResponse response = _mapper.Map<CreatedManufacturerResponse>(manufacturer);

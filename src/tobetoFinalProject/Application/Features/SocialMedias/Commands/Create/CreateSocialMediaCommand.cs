@@ -41,6 +41,8 @@ public class CreateSocialMediaCommand : IRequest<CreatedSocialMediaResponse>, IS
         {
             SocialMedia socialMedia = _mapper.Map<SocialMedia>(request);
 
+            await _socialMediaBusinessRules.SocialMediaNameShouldNotExist(socialMedia, cancellationToken);
+
             await _socialMediaRepository.AddAsync(socialMedia);
 
             CreatedSocialMediaResponse response = _mapper.Map<CreatedSocialMediaResponse>(socialMedia);
