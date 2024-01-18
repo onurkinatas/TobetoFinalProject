@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Categories.Constants.CategoriesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Features.Appeals.Rules;
 
 namespace Application.Features.Categories.Commands.Update;
 
@@ -46,6 +47,8 @@ public class UpdateCategoryCommand : IRequest<UpdatedCategoryResponse>, ISecured
                 cancellationToken: cancellationToken);
             await _categoryBusinessRules.CategoryShouldExistWhenSelected(category);
             category = _mapper.Map(request, category);
+
+            await _categoryBusinessRules.CategoryNameShouldNotExist(category, cancellationToken);
 
             await _categoryRepository.UpdateAsync(category!);
 

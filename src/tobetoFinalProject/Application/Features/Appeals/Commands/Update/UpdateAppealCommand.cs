@@ -49,6 +49,8 @@ public class UpdateAppealCommand : IRequest<UpdatedAppealResponse>, ISecuredRequ
             await _appealBusinessRules.AppealShouldExistWhenSelected(appeal);
             appeal = _mapper.Map(request, appeal);
 
+            await _appealBusinessRules.AppealNameShouldNotExist(appeal, cancellationToken);
+
             await _appealRepository.UpdateAsync(appeal!);
 
             UpdatedAppealResponse response = _mapper.Map<UpdatedAppealResponse>(appeal);

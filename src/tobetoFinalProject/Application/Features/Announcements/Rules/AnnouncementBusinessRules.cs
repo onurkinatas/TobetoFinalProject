@@ -31,4 +31,20 @@ public class AnnouncementBusinessRules : BaseBusinessRules
         );
         await AnnouncementShouldExistWhenSelected(announcement);
     }
+
+    public Task AnnouncementShouldNotExist(Announcement? announcement)
+    {
+        if (announcement != null)
+            throw new BusinessException(AnnouncementsBusinessMessages.AnnouncementNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task AnnouncementNameShouldNotExist(Announcement announcement, CancellationToken cancellationToken)
+    {
+        Announcement? controlAnnouncement = await _announcementRepository.GetAsync(
+            predicate: a => a.Name == announcement.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+            );
+        await AnnouncementShouldNotExist(controlAnnouncement);
+    }
 }

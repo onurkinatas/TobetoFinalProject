@@ -1,3 +1,4 @@
+using Application.Features.Appeals.Constants;
 using Application.Features.Categories.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -30,5 +31,21 @@ public class CategoryBusinessRules : BaseBusinessRules
             cancellationToken: cancellationToken
         );
         await CategoryShouldExistWhenSelected(category);
+    }
+
+    public Task CategoryShouldNotExist(Category? category)
+    {
+        if (category != null)
+            throw new BusinessException(CategoriesBusinessMessages.CategoryNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task CategoryNameShouldNotExist(Category category, CancellationToken cancellationToken)
+    {
+        Category? controlCategory = await _categoryRepository.GetAsync(
+            predicate: a => a.Name == category.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+            );
+        await CategoryShouldNotExist(controlCategory);
     }
 }

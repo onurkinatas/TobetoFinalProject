@@ -42,6 +42,8 @@ public class CreateAnnouncementCommand : IRequest<CreatedAnnouncementResponse>, 
         {
             Announcement announcement = _mapper.Map<Announcement>(request);
 
+            await _announcementBusinessRules.AnnouncementNameShouldNotExist(announcement, cancellationToken);
+
             await _announcementRepository.AddAsync(announcement);
 
             CreatedAnnouncementResponse response = _mapper.Map<CreatedAnnouncementResponse>(announcement);

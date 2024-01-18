@@ -42,6 +42,8 @@ public class CreateAppealCommand : IRequest<CreatedAppealResponse>, ISecuredRequ
         {
             Appeal appeal = _mapper.Map<Appeal>(request);
 
+            await _appealBusinessRules.AppealNameShouldNotExist(appeal, cancellationToken);
+
             await _appealRepository.AddAsync(appeal);
 
             CreatedAppealResponse response = _mapper.Map<CreatedAppealResponse>(appeal);

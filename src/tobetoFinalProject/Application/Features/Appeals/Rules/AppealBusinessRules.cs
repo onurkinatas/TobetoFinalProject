@@ -1,4 +1,5 @@
 using Application.Features.Appeals.Constants;
+using Application.Features.Languages.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -31,4 +32,21 @@ public class AppealBusinessRules : BaseBusinessRules
         );
         await AppealShouldExistWhenSelected(appeal);
     }
+
+    public Task AppealShouldNotExist(Appeal? appeal)
+    {
+        if (appeal != null)
+            throw new BusinessException(AppealsBusinessMessages.AppealNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task AppealNameShouldNotExist(Appeal appeal, CancellationToken cancellationToken)
+    {
+        Appeal? controlAppeal = await _appealRepository.GetAsync(
+            predicate: a => a.Name == appeal.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+            );
+        await AppealShouldNotExist(controlAppeal);
+    }
+
 }
