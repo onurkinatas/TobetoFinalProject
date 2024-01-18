@@ -1,3 +1,4 @@
+using Application.Features.Languages.Constants;
 using Application.Features.Surveys.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -30,5 +31,21 @@ public class SurveyBusinessRules : BaseBusinessRules
             cancellationToken: cancellationToken
         );
         await SurveyShouldExistWhenSelected(survey);
+    }
+
+    public Task SurveyShouldNotExist(Survey? survey)
+    {
+        if (survey != null)
+            throw new BusinessException(SurveysBusinessMessages.SurveyNameExists);
+        return Task.CompletedTask;
+    }
+    public async Task SurveyNameShouldNotExist(Survey survey, CancellationToken cancellationToken)
+    {
+        Survey? controlSurvey = await _surveyRepository.GetAsync(
+            predicate: a => a.Name == survey.Name,
+            enableTracking: false,
+            cancellationToken: cancellationToken
+            );
+        await SurveyShouldNotExist(controlSurvey);
     }
 }

@@ -9,7 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Tags.Constants.TagsOperationClaims;
-
+using Application.Features.Languages.Rules;
 namespace Application.Features.Tags.Commands.Create;
 
 public class CreateTagCommand : IRequest<CreatedTagResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
@@ -39,6 +39,8 @@ public class CreateTagCommand : IRequest<CreatedTagResponse>, ISecuredRequest, I
         public async Task<CreatedTagResponse> Handle(CreateTagCommand request, CancellationToken cancellationToken)
         {
             Tag tag = _mapper.Map<Tag>(request);
+
+            await _tagBusinessRules.TagNameShouldNotExist(tag, cancellationToken);
 
             await _tagRepository.AddAsync(tag);
 
