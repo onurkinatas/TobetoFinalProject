@@ -10,7 +10,6 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.SubTypes.Constants.SubTypesOperationClaims;
 using Application.Features.Languages.Rules;
-using Nest;
 
 namespace Application.Features.SubTypes.Commands.Create;
 

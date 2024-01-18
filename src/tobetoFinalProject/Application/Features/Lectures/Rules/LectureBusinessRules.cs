@@ -39,7 +39,7 @@ public class LectureBusinessRules : BaseBusinessRules
             throw new BusinessException(LecturesBusinessMessages.LectureNameExists);
         return Task.CompletedTask;
     }
-    public async Task DistrictNameShouldNotExist(Lecture lecture, CancellationToken cancellationToken)
+    public async Task LectureNameShouldNotExist(Lecture lecture, CancellationToken cancellationToken)
     {
         Lecture? controlLecture = await _lectureRepository.GetAsync(
             predicate: a => a.Name == lecture.Name,

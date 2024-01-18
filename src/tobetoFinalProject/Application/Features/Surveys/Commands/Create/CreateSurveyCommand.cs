@@ -10,7 +10,6 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.Surveys.Constants.SurveysOperationClaims;
 using Application.Features.Languages.Rules;
-using Nest;
 
 namespace Application.Features.Surveys.Commands.Create;
 

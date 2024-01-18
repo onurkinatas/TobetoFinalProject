@@ -36,7 +36,7 @@ public class LanguageBusinessRules : BaseBusinessRules
     public Task LanguageShouldNotExist(Language? language)
     {
         if (language != null)
-            throw new BusinessException(LanguagesBusinessMessages.LanguageShouldNotExists);
+            throw new BusinessException(LanguagesBusinessMessages.LanguageNameNotExists);
         return Task.CompletedTask;
     }
     public async Task LanguageNameShouldNotExist(Language language, CancellationToken cancellationToken)
