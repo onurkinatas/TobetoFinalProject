@@ -21,7 +21,7 @@ public class UpdateStudentEducationCommand : IRequest<UpdatedStudentEducationRes
     public string Branch { get; set; }
     public bool IsContinued { get; set; }
     public DateTime StartDate { get; set; }
-    public DateTime GraduationDate { get; set; }
+    public DateTime? GraduationDate { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Update, "Student" };
 

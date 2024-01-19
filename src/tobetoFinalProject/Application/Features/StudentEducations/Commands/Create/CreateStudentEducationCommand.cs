@@ -20,7 +20,7 @@ public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationRes
     public string Branch { get; set; }
     public bool IsContinued { get; set; }
     public DateTime StartDate { get; set; }
-    public DateTime GraduationDate { get; set; }
+    public DateTime? GraduationDate { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Create, "Student" };
 
