@@ -50,4 +50,11 @@ public class UserBusinessRules : BaseBusinessRules
         if (doesExists)
             throw new BusinessException(AuthMessages.UserMailAlreadyExists);
     }
+
+    public Task UserPasswordShouldNotBeSameAsCurrent(User user, string newPassword)
+    {
+        if (HashingHelper.VerifyPasswordHash(newPassword, user.PasswordHash, user.PasswordSalt))
+            throw new BusinessException(AuthMessages.NewPasswordShouldBeDifferent);
+        return Task.CompletedTask;
+    }
 }
