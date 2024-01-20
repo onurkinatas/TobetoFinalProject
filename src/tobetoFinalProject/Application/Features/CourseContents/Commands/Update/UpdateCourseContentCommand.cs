@@ -36,7 +36,7 @@ public class UpdateCourseContentCommand : IRequest<UpdatedCourseContentResponse>
             CourseContent? courseContent = await _courseContentRepository.GetAsync(predicate: cc => cc.Id == request.Id, cancellationToken: cancellationToken);
             await _courseContentBusinessRules.CourseContentShouldExistWhenSelected(courseContent);
             courseContent = _mapper.Map(request, courseContent);
-
+            await _courseContentBusinessRules.CourseContentShouldNotExistsWhenUpdate(courseContent.ContentId, courseContent.CourseId);
             await _courseContentRepository.UpdateAsync(courseContent!);
 
             UpdatedCourseContentResponse response = _mapper.Map<UpdatedCourseContentResponse>(courseContent);

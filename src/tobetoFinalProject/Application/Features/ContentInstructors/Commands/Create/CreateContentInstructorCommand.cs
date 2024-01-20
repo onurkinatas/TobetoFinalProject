@@ -40,7 +40,7 @@ public class CreateContentInstructorCommand : IRequest<CreatedContentInstructorR
         public async Task<CreatedContentInstructorResponse> Handle(CreateContentInstructorCommand request, CancellationToken cancellationToken)
         {
             ContentInstructor contentInstructor = _mapper.Map<ContentInstructor>(request);
-
+            await _contentInstructorBusinessRules.ContentInstructorShouldNotExistsWhenInsert(contentInstructor.ContentId, contentInstructor.InstructorId);
             await _contentInstructorRepository.AddAsync(contentInstructor);
 
             CreatedContentInstructorResponse response = _mapper.Map<CreatedContentInstructorResponse>(contentInstructor);

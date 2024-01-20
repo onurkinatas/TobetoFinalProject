@@ -43,7 +43,7 @@ public class UpdateContentTagCommand : IRequest<UpdatedContentTagResponse>, ISec
             ContentTag? contentTag = await _contentTagRepository.GetAsync(predicate: ct => ct.Id == request.Id, cancellationToken: cancellationToken);
             await _contentTagBusinessRules.ContentTagShouldExistWhenSelected(contentTag);
             contentTag = _mapper.Map(request, contentTag);
-
+            await _contentTagBusinessRules.ContentTagShouldNotExistsWhenUpdate(contentTag.ContentId, contentTag.TagId);
             await _contentTagRepository.UpdateAsync(contentTag!);
 
             UpdatedContentTagResponse response = _mapper.Map<UpdatedContentTagResponse>(contentTag);

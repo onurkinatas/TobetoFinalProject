@@ -40,7 +40,7 @@ public class CreateLectureCourseCommand : IRequest<CreatedLectureCourseResponse>
         public async Task<CreatedLectureCourseResponse> Handle(CreateLectureCourseCommand request, CancellationToken cancellationToken)
         {
             LectureCourse lectureCourse = _mapper.Map<LectureCourse>(request);
-
+            await _lectureCourseBusinessRules.LectureCourseShouldNotExistsWhenInsert(lectureCourse.LectureId, lectureCourse.CourseId);
             await _lectureCourseRepository.AddAsync(lectureCourse);
 
             CreatedLectureCourseResponse response = _mapper.Map<CreatedLectureCourseResponse>(lectureCourse);

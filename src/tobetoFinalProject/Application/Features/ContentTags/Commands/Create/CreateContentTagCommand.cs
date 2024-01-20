@@ -40,7 +40,7 @@ public class CreateContentTagCommand : IRequest<CreatedContentTagResponse>, ISec
         public async Task<CreatedContentTagResponse> Handle(CreateContentTagCommand request, CancellationToken cancellationToken)
         {
             ContentTag contentTag = _mapper.Map<ContentTag>(request);
-
+            await _contentTagBusinessRules.ContentTagShouldNotExistsWhenInsert(contentTag.ContentId, contentTag.TagId);
             await _contentTagRepository.AddAsync(contentTag);
 
             CreatedContentTagResponse response = _mapper.Map<CreatedContentTagResponse>(contentTag);

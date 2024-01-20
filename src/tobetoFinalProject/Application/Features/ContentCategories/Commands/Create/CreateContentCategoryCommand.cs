@@ -39,7 +39,7 @@ public class CreateContentCategoryCommand : IRequest<CreatedContentCategoryRespo
         public async Task<CreatedContentCategoryResponse> Handle(CreateContentCategoryCommand request, CancellationToken cancellationToken)
         {
             ContentCategory contentCategory = _mapper.Map<ContentCategory>(request);
-
+            await _contentCategoryBusinessRules.ContentCategoryNameShouldNotExist(contentCategory, cancellationToken);
             await _contentCategoryRepository.AddAsync(contentCategory);
 
             CreatedContentCategoryResponse response = _mapper.Map<CreatedContentCategoryResponse>(contentCategory);

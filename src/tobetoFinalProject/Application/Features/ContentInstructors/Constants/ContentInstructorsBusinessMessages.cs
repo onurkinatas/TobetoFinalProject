@@ -2,5 +2,7 @@ namespace Application.Features.ContentInstructors.Constants;
 
 public static class ContentInstructorsBusinessMessages
 {
-    public const string ContentInstructorNotExists = "Content instructor not exists.";
+    public const string ContentInstructorNotExists = "Bu içeriðin böyle bir eðitmeni yok.";
+
+    public static string? ContentInstructorAlreadyExists = "Bu içeriðin zaten böyle bir eðitmeni var.";
 }

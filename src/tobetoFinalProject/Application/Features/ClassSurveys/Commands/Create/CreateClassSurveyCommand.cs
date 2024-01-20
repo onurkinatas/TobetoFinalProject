@@ -40,7 +40,7 @@ public class CreateClassSurveyCommand : IRequest<CreatedClassSurveyResponse>, IS
         public async Task<CreatedClassSurveyResponse> Handle(CreateClassSurveyCommand request, CancellationToken cancellationToken)
         {
             ClassSurvey classSurvey = _mapper.Map<ClassSurvey>(request);
-
+            await _classSurveyBusinessRules.ClassSurveyShouldNotExistsWhenInsert(classSurvey.StudentClassId,classSurvey.SurveyId);
             await _classSurveyRepository.AddAsync(classSurvey);
 
             CreatedClassSurveyResponse response = _mapper.Map<CreatedClassSurveyResponse>(classSurvey);

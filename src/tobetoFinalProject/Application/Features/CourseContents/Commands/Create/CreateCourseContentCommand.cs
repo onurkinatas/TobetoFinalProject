@@ -33,7 +33,7 @@ public class CreateCourseContentCommand : IRequest<CreatedCourseContentResponse>
         public async Task<CreatedCourseContentResponse> Handle(CreateCourseContentCommand request, CancellationToken cancellationToken)
         {
             CourseContent courseContent = _mapper.Map<CourseContent>(request);
-
+            await _courseContentBusinessRules.CourseContentShouldNotExistsWhenInsert( courseContent.ContentId,courseContent.CourseId);
             await _courseContentRepository.AddAsync(courseContent);
 
             CreatedCourseContentResponse response = _mapper.Map<CreatedCourseContentResponse>(courseContent);

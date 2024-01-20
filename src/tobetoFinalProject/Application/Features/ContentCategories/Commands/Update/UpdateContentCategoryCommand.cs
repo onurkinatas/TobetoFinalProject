@@ -42,7 +42,7 @@ public class UpdateContentCategoryCommand : IRequest<UpdatedContentCategoryRespo
             ContentCategory? contentCategory = await _contentCategoryRepository.GetAsync(predicate: cc => cc.Id == request.Id, cancellationToken: cancellationToken);
             await _contentCategoryBusinessRules.ContentCategoryShouldExistWhenSelected(contentCategory);
             contentCategory = _mapper.Map(request, contentCategory);
-
+            await _contentCategoryBusinessRules.ContentCategoryNameShouldNotExist(contentCategory, cancellationToken);
             await _contentCategoryRepository.UpdateAsync(contentCategory!);
 
             UpdatedContentCategoryResponse response = _mapper.Map<UpdatedContentCategoryResponse>(contentCategory);

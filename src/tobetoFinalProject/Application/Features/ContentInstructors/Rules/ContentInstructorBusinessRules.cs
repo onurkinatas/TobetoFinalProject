@@ -1,4 +1,5 @@
 using Application.Features.ContentInstructors.Constants;
+using Application.Features.ContentInstructors.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -13,6 +14,20 @@ public class ContentInstructorBusinessRules : BaseBusinessRules
     public ContentInstructorBusinessRules(IContentInstructorRepository contentInstructorRepository)
     {
         _contentInstructorRepository = contentInstructorRepository;
+    }
+    public async Task ContentInstructorShouldNotExistsWhenInsert(Guid contentId, Guid instructorId)
+    {
+        bool doesExists = await _contentInstructorRepository
+            .AnyAsync(predicate: ca => ca.InstructorId == instructorId && ca.ContentId == contentId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentInstructorsBusinessMessages.ContentInstructorAlreadyExists);
+    }
+    public async Task ContentInstructorShouldNotExistsWhenUpdate(Guid contentId, Guid instructorId)
+    {
+        bool doesExists = await _contentInstructorRepository
+            .AnyAsync(predicate: ca => ca.InstructorId == instructorId && ca.ContentId == contentId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentInstructorsBusinessMessages.ContentInstructorAlreadyExists);
     }
 
     public Task ContentInstructorShouldExistWhenSelected(ContentInstructor? contentInstructor)

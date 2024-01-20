@@ -43,7 +43,7 @@ public class UpdateClassSurveyCommand : IRequest<UpdatedClassSurveyResponse>, IS
             ClassSurvey? classSurvey = await _classSurveyRepository.GetAsync(predicate: cs => cs.Id == request.Id, cancellationToken: cancellationToken);
             await _classSurveyBusinessRules.ClassSurveyShouldExistWhenSelected(classSurvey);
             classSurvey = _mapper.Map(request, classSurvey);
-
+            await _classSurveyBusinessRules.ClassSurveyShouldNotExistsWhenInsert(classSurvey.StudentClassId, classSurvey.SurveyId);
             await _classSurveyRepository.UpdateAsync(classSurvey!);
 
             UpdatedClassSurveyResponse response = _mapper.Map<UpdatedClassSurveyResponse>(classSurvey);

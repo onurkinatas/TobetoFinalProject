@@ -1,4 +1,5 @@
 using Application.Features.ContentTags.Constants;
+using Application.Features.ContentTags.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -14,7 +15,20 @@ public class ContentTagBusinessRules : BaseBusinessRules
     {
         _contentTagRepository = contentTagRepository;
     }
-
+    public async Task ContentTagShouldNotExistsWhenInsert(Guid contentId, Guid tagId)
+    {
+        bool doesExists = await _contentTagRepository
+            .AnyAsync(predicate: ca => ca.TagId == tagId && ca.ContentId == contentId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentTagsBusinessMessages.ContentTagAlreadyExists);
+    }
+    public async Task ContentTagShouldNotExistsWhenUpdate(Guid contentId, Guid tagId)
+    {
+        bool doesExists = await _contentTagRepository
+            .AnyAsync(predicate: ca => ca.TagId == tagId && ca.ContentId == contentId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentTagsBusinessMessages.ContentTagAlreadyExists);
+    }
     public Task ContentTagShouldExistWhenSelected(ContentTag? contentTag)
     {
         if (contentTag == null)
