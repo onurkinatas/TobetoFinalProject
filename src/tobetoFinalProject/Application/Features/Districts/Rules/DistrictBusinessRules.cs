@@ -1,5 +1,6 @@
 using Application.Features.Announcements.Constants;
 using Application.Features.Districts.Constants;
+using Application.Features.Districts.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,19 +34,18 @@ public class DistrictBusinessRules : BaseBusinessRules
         await DistrictShouldExistWhenSelected(district);
     }
 
-    public Task DistrictShouldNotExist(District? district)
+    public async Task DistrictShouldNotExistsWhenInsert(string name)
     {
-        if (district != null)
+        bool doesExists = await _districtRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(DistrictsBusinessMessages.DistrictNameExists);
-        return Task.CompletedTask;
     }
-    public async Task DistrictNameShouldNotExist(District district, CancellationToken cancellationToken)
+    public async Task DistrictShouldNotExistsWhenUpdate(string name)
     {
-        District? controlDistrict = await _districtRepository.GetAsync(
-            predicate: a => a.Name == district.Name,
-            enableTracking: false, //Entity Framework'te "tracking" veya "izleme" (tracking) terimi, bir veri nesnesinin (entity) durumunu                          takip etme ve bu durumun veritabanýna nasýl yansýtýlacaðýný belirleme sürecini ifade eder.
-            cancellationToken: cancellationToken //asenkron iþlemlerin iptal edilmesine olanak saðlar(Örnek çok uzun süren bir iþlemde)
-            );
-        await DistrictShouldNotExist(controlDistrict);
+        bool doesExists = await _districtRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(DistrictsBusinessMessages.DistrictNameExists);
     }
 }

@@ -45,7 +45,7 @@ public class UpdateDistrictCommand : IRequest<UpdatedDistrictResponse>, ISecured
             await _districtBusinessRules.DistrictShouldExistWhenSelected(district);
             district = _mapper.Map(request, district);
 
-            await _districtBusinessRules.DistrictNameShouldNotExist(district, cancellationToken);
+            await _districtBusinessRules.DistrictShouldNotExistsWhenUpdate(district.Name);
 
             await _districtRepository.UpdateAsync(district!);
 

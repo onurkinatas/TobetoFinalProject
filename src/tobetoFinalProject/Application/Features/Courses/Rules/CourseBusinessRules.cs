@@ -1,4 +1,5 @@
 using Application.Features.Courses.Constants;
+using Application.Features.Courses.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -15,28 +16,25 @@ public class CourseBusinessRules : BaseBusinessRules
         _courseRepository = courseRepository;
     }
 
+    public async Task CourseShouldNotExistsWhenInsert(string name)
+    {
+        bool doesExists = await _courseRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CoursesBusinessMessages.CourseNameExists);
+    }
+    public async Task CourseShouldNotExistsWhenUpdate(string name)
+    {
+        bool doesExists = await _courseRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CoursesBusinessMessages.CourseNameExists);
+    }
     public Task CourseShouldExistWhenSelected(Course? course)
     {
         if (course == null)
             throw new BusinessException(CoursesBusinessMessages.CourseNotExists);
         return Task.CompletedTask;
-    }
-
-    public Task CourseNameShouldNotExist(Course? course)
-    {
-        if (course == null)
-            throw new BusinessException(CoursesBusinessMessages.CourseNameExists);
-        return Task.CompletedTask;
-    }
-
-    public async Task CourseNameShouldNotExist(Course? course, CancellationToken cancellationToken)
-    {
-        Course? courseControl = await _courseRepository.GetAsync(
-            predicate: c => c.Name == course.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-        );
-        await CourseNameShouldNotExist(course);
     }
 
     public async Task CourseIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
 using Application.Features.Appeals.Constants;
+using Application.Features.Appeals.Constants;
 using Application.Features.Languages.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -33,20 +34,19 @@ public class AppealBusinessRules : BaseBusinessRules
         await AppealShouldExistWhenSelected(appeal);
     }
 
-    public Task AppealShouldNotExist(Appeal? appeal)
+    public async Task AppealShouldNotExistsWhenInsert(string name)
     {
-        if (appeal != null)
+        bool doesExists = await _appealRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(AppealsBusinessMessages.AppealNameExists);
-        return Task.CompletedTask;
     }
-    public async Task AppealNameShouldNotExist(Appeal appeal, CancellationToken cancellationToken)
+    public async Task AppealShouldNotExistsWhenUpdate(string name)
     {
-        Appeal? controlAppeal = await _appealRepository.GetAsync(
-            predicate: a => a.Name == appeal.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await AppealShouldNotExist(controlAppeal);
+        bool doesExists = await _appealRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(AppealsBusinessMessages.AppealNameExists);
     }
 
 }

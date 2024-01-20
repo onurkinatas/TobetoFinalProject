@@ -1,5 +1,6 @@
 using Application.Features.Languages.Constants;
 using Application.Features.Surveys.Constants;
+using Application.Features.Surveys.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,19 +34,18 @@ public class SurveyBusinessRules : BaseBusinessRules
         await SurveyShouldExistWhenSelected(survey);
     }
 
-    public Task SurveyShouldNotExist(Survey? survey)
+    public async Task SurveyShouldNotExistsWhenInsert(string name)
     {
-        if (survey != null)
+        bool doesExists = await _surveyRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(SurveysBusinessMessages.SurveyNameExists);
-        return Task.CompletedTask;
     }
-    public async Task SurveyNameShouldNotExist(Survey survey, CancellationToken cancellationToken)
+    public async Task SurveyShouldNotExistsWhenUpdate(string name)
     {
-        Survey? controlSurvey = await _surveyRepository.GetAsync(
-            predicate: a => a.Name == survey.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await SurveyShouldNotExist(controlSurvey);
+        bool doesExists = await _surveyRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(SurveysBusinessMessages.SurveyNameExists);
     }
 }

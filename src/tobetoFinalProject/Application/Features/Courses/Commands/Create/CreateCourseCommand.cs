@@ -41,7 +41,7 @@ public class CreateCourseCommand : IRequest<CreatedCourseResponse>, /*ISecuredRe
         {
             Course course = _mapper.Map<Course>(request);
 
-            await _courseBusinessRules.CourseNameShouldNotExist(course, cancellationToken);
+            await _courseBusinessRules.CourseShouldNotExistsWhenInsert(course.Name);
 
             await _courseRepository.AddAsync(course);
 

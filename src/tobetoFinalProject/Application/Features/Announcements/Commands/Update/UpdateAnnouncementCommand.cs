@@ -48,7 +48,7 @@ public class UpdateAnnouncementCommand : IRequest<UpdatedAnnouncementResponse>, 
             await _announcementBusinessRules.AnnouncementShouldExistWhenSelected(announcement);
             announcement = _mapper.Map(request, announcement);
 
-            await _announcementBusinessRules.AnnouncementNameShouldNotExist(announcement, cancellationToken);
+            await _announcementBusinessRules.AnnouncementShouldNotExistsWhenUpdate(announcement.Name;
 
             await _announcementRepository.UpdateAsync(announcement!);
 

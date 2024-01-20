@@ -57,7 +57,7 @@ public class UpdateLectureCommand : IRequest<UpdatedLectureResponse>, ISecuredRe
             await _lectureBusinessRules.LectureShouldExistWhenSelected(lecture);
             lecture = _mapper.Map(request, lecture);
 
-            await _lectureBusinessRules.LectureNameShouldNotExist(lecture, cancellationToken);
+            await _lectureBusinessRules.LectureShouldNotExistsWhenUpdate(lecture.Name);
 
             await _lectureRepository.UpdateAsync(lecture!);
 

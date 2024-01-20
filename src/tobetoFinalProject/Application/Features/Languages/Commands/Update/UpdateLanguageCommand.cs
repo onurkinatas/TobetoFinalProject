@@ -43,7 +43,7 @@ public class UpdateLanguageCommand : IRequest<UpdatedLanguageResponse>, ISecured
             await _languageBusinessRules.LanguageShouldExistWhenSelected(language);
             language = _mapper.Map(request, language);
 
-            await _languageBusinessRules.LanguageNameShouldNotExist(language, cancellationToken);
+            await _languageBusinessRules.LanguageShouldNotExistsWhenUpdate(language.Name);
 
             await _languageRepository.UpdateAsync(language!);
 

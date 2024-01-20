@@ -1,5 +1,6 @@
 using Application.Features.Languages.Constants;
 using Application.Features.Tags.Constants;
+using Application.Features.Tags.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,20 +34,19 @@ public class TagBusinessRules : BaseBusinessRules
         await TagShouldExistWhenSelected(tag);
     }
 
-    public Task TagShouldNotExist(Tag? tag)
+    public async Task TagShouldNotExistsWhenInsert(string name)
     {
-        if (tag != null)
+        bool doesExists = await _tagRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(TagsBusinessMessages.TagNameExists);
-        return Task.CompletedTask;
     }
-    public async Task TagNameShouldNotExist(Tag tag, CancellationToken cancellationToken)
+    public async Task TagShouldNotExistsWhenUpdate(string name)
     {
-        Tag? controlTag = await _tagRepository.GetAsync(
-            predicate: a => a.Name == tag.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await TagShouldNotExist(controlTag);
+        bool doesExists = await _tagRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(TagsBusinessMessages.TagNameExists);
     }
 
 }

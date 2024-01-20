@@ -1,3 +1,4 @@
+using Application.Features.Citys.Constants;
 using Application.Features.Cities.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -15,28 +16,26 @@ public class CityBusinessRules : BaseBusinessRules
         _cityRepository = cityRepository;
     }
 
+    public async Task CityShouldNotExistsWhenInsert(string name)
+    {
+        bool doesExists = await _cityRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CitiesBusinessMessages.CityNameExists);
+    }
+    public async Task CityShouldNotExistsWhenUpdate(string name)
+    {
+        bool doesExists = await _cityRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CitiesBusinessMessages.CityNameExists);
+    }
+
     public Task CityShouldExistWhenSelected(City? city)
     {
         if (city == null)
             throw new BusinessException(CitiesBusinessMessages.CityNotExists);
         return Task.CompletedTask;
-    }
-
-    public Task CityNameShouldNotExist(City? city)
-    {
-        if (city == null)
-            throw new BusinessException(CitiesBusinessMessages.CityNameExists);
-        return Task.CompletedTask;
-    }
-
-    public async Task CityNameShouldNotExist(City city, CancellationToken cancellationToken)
-    {
-        City? cityControl = await _cityRepository.GetAsync(
-            predicate: c => c.Name == city.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-        );
-        await CityNameShouldNotExist(city);
     }
 
     public async Task CityIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)

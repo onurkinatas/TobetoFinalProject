@@ -40,7 +40,7 @@ public class CreateLanguageCommand : IRequest<CreatedLanguageResponse>, ISecured
         {
             Language language = _mapper.Map<Language>(request);
 
-            await _languageBusinessRules.LanguageNameShouldNotExist(language, cancellationToken);
+            await _languageBusinessRules.LanguageShouldNotExistsWhenInsert(language.Name);
 
             await _languageRepository.AddAsync(language);
 

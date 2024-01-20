@@ -1,4 +1,5 @@
 
+using Application.Features.Cities.Constants;
 using Application.Features.ContentCategories.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -15,20 +16,19 @@ public class ContentCategoryBusinessRules : BaseBusinessRules
     {
         _contentCategoryRepository = contentCategoryRepository;
     }
-    public Task ContentCategoryShouldNotExist(ContentCategory? contentCategory)
+    public async Task ContentCategoryShouldNotExistsWhenInsert(string name)
     {
-        if (contentCategory != null)
+        bool doesExists = await _contentCategoryRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(ContentCategoriesBusinessMessages.ContentCategoryNameExists);
-        return Task.CompletedTask;
     }
-    public async Task ContentCategoryNameShouldNotExist(ContentCategory contentCategory, CancellationToken cancellationToken)
+    public async Task ContentCategoryShouldNotExistsWhenUpdate(string name)
     {
-        ContentCategory? controlContentCategory = await _contentCategoryRepository.GetAsync(
-            predicate: a => a.Name == contentCategory.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await ContentCategoryShouldNotExist(controlContentCategory);
+        bool doesExists = await _contentCategoryRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentCategoriesBusinessMessages.ContentCategoryNameExists);
     }
     public Task ContentCategoryShouldExistWhenSelected(ContentCategory? contentCategory)
     {

@@ -1,4 +1,5 @@
 using Application.Features.Announcements.Constants;
+using Application.Features.Announcements.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -32,19 +33,18 @@ public class AnnouncementBusinessRules : BaseBusinessRules
         await AnnouncementShouldExistWhenSelected(announcement);
     }
 
-    public Task AnnouncementShouldNotExist(Announcement? announcement)
+    public async Task AnnouncementShouldNotExistsWhenInsert(string name)
     {
-        if (announcement != null)
+        bool doesExists = await _announcementRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(AnnouncementsBusinessMessages.AnnouncementNameExists);
-        return Task.CompletedTask;
     }
-    public async Task AnnouncementNameShouldNotExist(Announcement announcement, CancellationToken cancellationToken)
+    public async Task AnnouncementShouldNotExistsWhenUpdate(string name)
     {
-        Announcement? controlAnnouncement = await _announcementRepository.GetAsync(
-            predicate: a => a.Name == announcement.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await AnnouncementShouldNotExist(controlAnnouncement);
+        bool doesExists = await _announcementRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(AnnouncementsBusinessMessages.AnnouncementNameExists);
     }
 }

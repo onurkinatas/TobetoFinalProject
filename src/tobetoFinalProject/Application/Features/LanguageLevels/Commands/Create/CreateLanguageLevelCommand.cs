@@ -42,7 +42,7 @@ public class CreateLanguageLevelCommand : IRequest<CreatedLanguageLevelResponse>
         {
             LanguageLevel languageLevel = _mapper.Map<LanguageLevel>(request);
 
-            await _languageLevelBusinessRules.DistrictNameShouldNotExist(languageLevel, cancellationToken);
+            await _languageLevelBusinessRules.LanguageLevelShouldNotExistsWhenInsert(languageLevel);
 
             await _languageLevelRepository.AddAsync(languageLevel);
 

@@ -1,5 +1,6 @@
 using Application.Features.Exams.Constants;
 using Application.Features.Lectures.Constants;
+using Application.Features.Lectures.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,19 +34,18 @@ public class LectureBusinessRules : BaseBusinessRules
         await LectureShouldExistWhenSelected(lecture);
     }
 
-    public Task LectureShouldNotExist(Lecture? lecture)
+    public async Task LectureShouldNotExistsWhenInsert(string name)
     {
-        if (lecture != null)
+        bool doesExists = await _lectureRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(LecturesBusinessMessages.LectureNameExists);
-        return Task.CompletedTask;
     }
-    public async Task LectureNameShouldNotExist(Lecture lecture, CancellationToken cancellationToken)
+    public async Task LectureShouldNotExistsWhenUpdate(string name)
     {
-        Lecture? controlLecture = await _lectureRepository.GetAsync(
-            predicate: a => a.Name == lecture.Name,
-            enableTracking: false, //Entity Framework'te "tracking" veya "izleme" (tracking) terimi, bir veri nesnesinin (entity) durumunu                          takip etme ve bu durumun veritabanýna nasýl yansýtýlacaðýný belirleme sürecini ifade eder.
-            cancellationToken: cancellationToken //asenkron iþlemlerin iptal edilmesine olanak saðlar(Örnek çok uzun süren bir iþlemde)
-            );
-        await LectureShouldNotExist(controlLecture);
+        bool doesExists = await _lectureRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(LecturesBusinessMessages.LectureNameExists);
     }
 }

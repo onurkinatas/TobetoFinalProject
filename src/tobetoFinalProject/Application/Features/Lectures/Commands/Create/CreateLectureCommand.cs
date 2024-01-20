@@ -48,7 +48,7 @@ public class CreateLectureCommand : IRequest<CreatedLectureResponse>, ISecuredRe
         {
             Lecture lecture = _mapper.Map<Lecture>(request);
 
-            await _lectureBusinessRules.LectureNameShouldNotExist(lecture, cancellationToken);
+            await _lectureBusinessRules.LectureShouldNotExistsWhenInsert(lecture.Name);
 
             await _lectureRepository.AddAsync(lecture);
 

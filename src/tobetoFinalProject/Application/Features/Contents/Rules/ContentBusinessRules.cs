@@ -1,4 +1,5 @@
 using Application.Features.Contents.Constants;
+using Application.Features.Contents.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -15,28 +16,25 @@ public class ContentBusinessRules : BaseBusinessRules
         _contentRepository = contentRepository;
     }
 
+    public async Task ContentShouldNotExistsWhenInsert(string name)
+    {
+        bool doesExists = await _contentRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentsBusinessMessages.ContentNameExists);
+    }
+    public async Task ContentShouldNotExistsWhenUpdate(string name)
+    {
+        bool doesExists = await _contentRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ContentsBusinessMessages.ContentNameExists);
+    }
     public Task ContentShouldExistWhenSelected(Content? content)
     {
         if (content == null)
             throw new BusinessException(ContentsBusinessMessages.ContentNotExists);
         return Task.CompletedTask;
-    }
-
-    public Task ContentNameShouldNotExist(Content? content)
-    {
-        if (content == null)
-            throw new BusinessException(ContentsBusinessMessages.ContentNameExists);
-        return Task.CompletedTask;
-    }
-
-    public async Task ContentNameShouldNotExist(Content? content, CancellationToken cancellationToken) 
-    {
-        Content? contentControl = await _contentRepository.GetAsync(
-            predicate: c => c.Name == content.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-        );
-        await ContentNameShouldNotExist(content);
     }
 
     public async Task ContentIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)

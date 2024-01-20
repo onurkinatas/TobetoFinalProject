@@ -48,7 +48,7 @@ public class CreateContentCommand : IRequest<CreatedContentResponse>, ISecuredRe
         {
             Content content = _mapper.Map<Content>(request);
 
-            await _contentBusinessRules.ContentNameShouldNotExist(content, cancellationToken);
+            await _contentBusinessRules.ContentShouldNotExistsWhenInsert(content.Name);
 
             await _contentRepository.AddAsync(content);
 

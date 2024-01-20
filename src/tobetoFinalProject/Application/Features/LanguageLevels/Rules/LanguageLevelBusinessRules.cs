@@ -1,4 +1,4 @@
-using Application.Features.Exams.Constants;
+using Application.Features.LanguageLevels.Constants;
 using Application.Features.LanguageLevels.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -33,19 +33,19 @@ public class LanguageLevelBusinessRules : BaseBusinessRules
         await LanguageLevelShouldExistWhenSelected(languageLevel);
     }
 
-    public Task LanguageLevelShouldNotExist(LanguageLevel? languageLevel)
+
+    public async Task LanguageLevelShouldNotExistsWhenInsert(LanguageLevel languageLevel)
     {
-        if (languageLevel != null)
-            throw new BusinessException(LanguageLevelsBusinessMessages.LanguageLevelNameExists);
-        return Task.CompletedTask;
+        bool doesExists = await _languageLevelRepository
+            .AnyAsync(predicate: ca => ca.Name == languageLevel.Name && ca.LanguageId == languageLevel.LanguageId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(LanguageLevelsBusinessMessages.LanguageLevelExists);
     }
-    public async Task DistrictNameShouldNotExist(LanguageLevel languageLevel, CancellationToken cancellationToken)
+    public async Task LanguageLevelShouldNotExistsWhenUpdate(LanguageLevel languageLevel)
     {
-        LanguageLevel? controlLanguageLevel = await _languageLevelRepository.GetAsync(
-            predicate: a => a.Name == languageLevel.Name,
-            enableTracking: false, //Entity Framework'te "tracking" veya "izleme" (tracking) terimi, bir veri nesnesinin (entity) durumunu                          takip etme ve bu durumun veritabanýna nasýl yansýtýlacaðýný belirleme sürecini ifade eder.
-            cancellationToken: cancellationToken //asenkron iþlemlerin iptal edilmesine olanak saðlar(Örnek çok uzun süren bir iþlemde)
-            );
-        await LanguageLevelShouldNotExist(controlLanguageLevel);
+        bool doesExists = await _languageLevelRepository
+            .AnyAsync(predicate: ca => ca.Name == languageLevel.Name && ca.LanguageId== languageLevel.LanguageId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(LanguageLevelsBusinessMessages.LanguageLevelExists);
     }
 }

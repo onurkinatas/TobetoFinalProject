@@ -45,7 +45,7 @@ public class CreateSurveyCommand : IRequest<CreatedSurveyResponse>, ISecuredRequ
         {
             Survey survey = _mapper.Map<Survey>(request);
 
-            await _surveyBusinessRules.SurveyNameShouldNotExist(survey, cancellationToken);
+            await _surveyBusinessRules.SurveyShouldNotExistsWhenInsert(survey.Name);
 
             await _surveyRepository.AddAsync(survey);
 

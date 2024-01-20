@@ -49,7 +49,7 @@ public class UpdateCourseCommand : IRequest<UpdatedCourseResponse>, ISecuredRequ
             await _courseBusinessRules.CourseShouldExistWhenSelected(course);
             course = _mapper.Map(request, course);
 
-            await _courseBusinessRules.CourseNameShouldNotExist(course, cancellationToken);
+            await _courseBusinessRules.CourseShouldNotExistsWhenUpdate(course.Name);
 
             await _courseRepository.UpdateAsync(course!);
 

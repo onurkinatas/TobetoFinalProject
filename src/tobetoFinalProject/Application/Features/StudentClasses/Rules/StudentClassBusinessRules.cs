@@ -1,3 +1,4 @@
+using Application.Features.StudentClasss.Constants;
 using Application.Features.StudentClasses.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -30,5 +31,19 @@ public class StudentClassBusinessRules : BaseBusinessRules
             cancellationToken: cancellationToken
         );
         await StudentClassShouldExistWhenSelected(studentClass);
+    }
+    public async Task StudentClassShouldNotExistsWhenInsert(string name)
+    {
+        bool doesExists = await _studentClassRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentClassesBusinessMessages.StudentClassNameExists);
+    }
+    public async Task StudentClassShouldNotExistsWhenUpdate(string name)
+    {
+        bool doesExists = await _studentClassRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentClassesBusinessMessages.StudentClassNameExists);
     }
 }

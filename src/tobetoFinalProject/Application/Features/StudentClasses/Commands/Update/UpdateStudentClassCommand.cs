@@ -50,7 +50,7 @@ public class UpdateStudentClassCommand : IRequest<UpdatedStudentClassResponse>, 
                 cancellationToken: cancellationToken);
             await _studentClassBusinessRules.StudentClassShouldExistWhenSelected(studentClass);
             studentClass = _mapper.Map(request, studentClass);
-
+            await _studentClassBusinessRules.StudentClassShouldNotExistsWhenInsert(studentClass.Name);
             await _studentClassRepository.UpdateAsync(studentClass!);
 
             UpdatedStudentClassResponse response = _mapper.Map<UpdatedStudentClassResponse>(studentClass);

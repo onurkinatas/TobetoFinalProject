@@ -51,7 +51,7 @@ public class UpdateSurveyCommand : IRequest<UpdatedSurveyResponse>, ISecuredRequ
             await _surveyBusinessRules.SurveyShouldExistWhenSelected(survey);
             survey = _mapper.Map(request, survey);
 
-            await _surveyBusinessRules.SurveyNameShouldNotExist(survey, cancellationToken);
+            await _surveyBusinessRules.SurveyShouldNotExistsWhenUpdate(survey.Name);
 
             await _surveyRepository.UpdateAsync(survey!);
 

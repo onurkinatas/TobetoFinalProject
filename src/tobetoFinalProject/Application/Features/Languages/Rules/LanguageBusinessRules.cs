@@ -1,5 +1,6 @@
 using Application.Features.Announcements.Constants;
 using Application.Features.Languages.Constants;
+using Application.Features.Languages.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,20 +34,19 @@ public class LanguageBusinessRules : BaseBusinessRules
         await LanguageShouldExistWhenSelected(language);
     }
 
-    public Task LanguageShouldNotExist(Language? language)
+    public async Task LanguageShouldNotExistsWhenInsert(string name)
     {
-        if (language != null)
-            throw new BusinessException(LanguagesBusinessMessages.LanguageNameNotExists);
-        return Task.CompletedTask;
+        bool doesExists = await _languageRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(LanguagesBusinessMessages.LanguageNameExists);
     }
-    public async Task LanguageNameShouldNotExist(Language language, CancellationToken cancellationToken)
+    public async Task LanguageShouldNotExistsWhenUpdate(string name)
     {
-        Language? controlLanguage = await _languageRepository.GetAsync(
-            predicate: a => a.Name == language.Name,
-            enableTracking: false, 
-            cancellationToken: cancellationToken
-            );
-        await LanguageShouldNotExist(controlLanguage);
+        bool doesExists = await _languageRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(LanguagesBusinessMessages.LanguageNameExists);
     }
 
 

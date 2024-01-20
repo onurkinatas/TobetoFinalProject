@@ -1,5 +1,6 @@
 using Application.Features.Languages.Constants;
 using Application.Features.Manufacturers.Constants;
+using Application.Features.Manufacturers.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,19 +34,18 @@ public class ManufacturerBusinessRules : BaseBusinessRules
         await ManufacturerShouldExistWhenSelected(manufacturer);
     }
 
-    public Task ManufacturerShouldNotExist(Manufacturer? manufacturer)
+    public async Task ManufacturerShouldNotExistsWhenInsert(string name)
     {
-        if (manufacturer != null)
+        bool doesExists = await _manufacturerRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(ManufacturersBusinessMessages.ManufacturerNameExists);
-        return Task.CompletedTask;
     }
-    public async Task ManufacturerNameShouldNotExist(Manufacturer manufacturer, CancellationToken cancellationToken)
+    public async Task ManufacturerShouldNotExistsWhenUpdate(string name)
     {
-        Manufacturer? controlManufacturer = await _manufacturerRepository.GetAsync(
-            predicate: a => a.Name == manufacturer.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await ManufacturerShouldNotExist(controlManufacturer);
+        bool doesExists = await _manufacturerRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ManufacturersBusinessMessages.ManufacturerNameExists);
     }
 }

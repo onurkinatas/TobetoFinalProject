@@ -44,7 +44,7 @@ public class UpdateSocialMediaCommand : IRequest<UpdatedSocialMediaResponse>, IS
             await _socialMediaBusinessRules.SocialMediaShouldExistWhenSelected(socialMedia);
             socialMedia = _mapper.Map(request, socialMedia);
 
-            await _socialMediaBusinessRules.SocialMediaNameShouldNotExist(socialMedia, cancellationToken);
+            await _socialMediaBusinessRules.SocialMediaShouldNotExistsWhenUpdate(socialMedia.Name);
 
             await _socialMediaRepository.UpdateAsync(socialMedia!);
 

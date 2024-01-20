@@ -40,7 +40,7 @@ public class CreateSkillCommand : IRequest<CreatedSkillResponse>, ISecuredReques
         {
             Skill skill = _mapper.Map<Skill>(request);
 
-            await _skillBusinessRules.SkillNameShouldNotExist(skill, cancellationToken);
+            await _skillBusinessRules.SkillShouldNotExistsWhenInsert(skill.Name);
 
             await _skillRepository.AddAsync(skill);
 

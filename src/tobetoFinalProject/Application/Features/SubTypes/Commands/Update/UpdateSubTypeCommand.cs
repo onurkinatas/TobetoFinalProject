@@ -42,10 +42,10 @@ public class UpdateSubTypeCommand : IRequest<UpdatedSubTypeResponse>, ISecuredRe
             SubType? subType = await _subTypeRepository.GetAsync(predicate: st => st.Id == request.Id, cancellationToken: cancellationToken);
             await _subTypeBusinessRules.SubTypeShouldExistWhenSelected(subType);
             subType = _mapper.Map(request, subType);
-
+            await _subTypeBusinessRules.SubTypeShouldNotExistsWhenUpdate(subType.Name);
             await _subTypeRepository.UpdateAsync(subType!);
 
-            await _subTypeBusinessRules.SubTypeNameShouldNotExist(subType, cancellationToken);
+           
 
             UpdatedSubTypeResponse response = _mapper.Map<UpdatedSubTypeResponse>(subType);
             return response;

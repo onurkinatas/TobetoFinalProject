@@ -1,4 +1,5 @@
 using Application.Features.Certificates.Constants;
+using Application.Features.Certificates.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -15,31 +16,28 @@ public class CertificateBusinessRules : BaseBusinessRules
         _certificateRepository = certificateRepository;
     }
 
+   
+
+    public async Task CertificateShouldNotExistsWhenInsert(string imageUrl)
+    {
+        bool doesExists = await _certificateRepository
+            .AnyAsync(predicate: ca => ca.ImageUrl == imageUrl, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CertificatesBusinessMessages.CertificateImgUrlExists);
+    }
+    public async Task CertificateShouldNotExistsWhenUpdate(string imageUrl)
+    {
+        bool doesExists = await _certificateRepository
+            .AnyAsync(predicate: ca => ca.ImageUrl == imageUrl, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CertificatesBusinessMessages.CertificateImgUrlExists);
+    }
     public Task CertificateShouldExistWhenSelected(Certificate? certificate)
     {
         if (certificate == null)
             throw new BusinessException(CertificatesBusinessMessages.CertificateNotExists);
         return Task.CompletedTask;
     }
-
-    public Task CertificateImgUrlShouldNotExist(Certificate? certificate)
-    {
-        if (certificate == null)
-            throw new BusinessException(CertificatesBusinessMessages.CertificateImgUrlExists);
-        return Task.CompletedTask;
-    }
-
-    public async Task CertificateImgUrlShouldNotExist(Certificate? certificate, CancellationToken cancellationToken) 
-    {
-        Certificate? controlCertificate = await _certificateRepository.GetAsync(
-            predicate: a => a.ImageUrl == certificate.ImageUrl,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-        );
-
-        await CertificateImgUrlShouldNotExist(controlCertificate);
-    }
-
     public async Task CertificateIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)
     {
         Certificate? certificate = await _certificateRepository.GetAsync(

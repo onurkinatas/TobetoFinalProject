@@ -40,12 +40,12 @@ public class CreateSubTypeCommand : IRequest<CreatedSubTypeResponse>, ISecuredRe
         public async Task<CreatedSubTypeResponse> Handle(CreateSubTypeCommand request, CancellationToken cancellationToken)
         {
             SubType subType = _mapper.Map<SubType>(request);
-
+            await _subTypeBusinessRules.SubTypeShouldNotExistsWhenInsert(subType.Name);
             await _subTypeRepository.AddAsync(subType);
 
             CreatedSubTypeResponse response = _mapper.Map<CreatedSubTypeResponse>(subType);
 
-            await _subTypeBusinessRules.SubTypeNameShouldNotExist(subType, cancellationToken);
+           
 
             return response;
         }

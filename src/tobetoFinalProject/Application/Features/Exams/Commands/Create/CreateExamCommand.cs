@@ -44,7 +44,7 @@ public class CreateExamCommand : IRequest<CreatedExamResponse>, ISecuredRequest,
         {
             Exam exam = _mapper.Map<Exam>(request);
 
-            await _examBusinessRules.DistrictNameShouldNotExist(exam, cancellationToken);
+            await _examBusinessRules.ExamShouldNotExistsWhenInsert(exam.Name);
 
             await _examRepository.AddAsync(exam);
 

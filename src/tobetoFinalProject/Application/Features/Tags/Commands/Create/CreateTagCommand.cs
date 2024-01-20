@@ -40,7 +40,7 @@ public class CreateTagCommand : IRequest<CreatedTagResponse>, ISecuredRequest, I
         {
             Tag tag = _mapper.Map<Tag>(request);
 
-            await _tagBusinessRules.TagNameShouldNotExist(tag, cancellationToken);
+            await _tagBusinessRules.TagShouldNotExistsWhenInsert(tag.Name);
 
             await _tagRepository.AddAsync(tag);
 

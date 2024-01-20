@@ -47,7 +47,7 @@ public class UpdateTagCommand : IRequest<UpdatedTagResponse>, ISecuredRequest, I
             await _tagBusinessRules.TagShouldExistWhenSelected(tag);
             tag = _mapper.Map(request, tag);
 
-            await _tagBusinessRules.TagNameShouldNotExist(tag, cancellationToken);
+            await _tagBusinessRules.TagShouldNotExistsWhenUpdate(tag.Name);
 
             await _tagRepository.UpdateAsync(tag!);
 

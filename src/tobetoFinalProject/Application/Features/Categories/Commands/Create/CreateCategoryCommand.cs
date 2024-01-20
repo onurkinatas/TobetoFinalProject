@@ -40,7 +40,7 @@ public class CreateCategoryCommand : IRequest<CreatedCategoryResponse>, ISecured
         {
             Category category = _mapper.Map<Category>(request);
 
-            await _categoryBusinessRules.CategoryNameShouldNotExist(category, cancellationToken);
+            await _categoryBusinessRules.CategoryShouldNotExistsWhenInsert(category.Name);
 
             await _categoryRepository.AddAsync(category);
 

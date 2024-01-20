@@ -1,5 +1,6 @@
 using Application.Features.Languages.Constants;
 using Application.Features.SocialMedias.Constants;
+using Application.Features.SocialMedias.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,19 +34,18 @@ public class SocialMediaBusinessRules : BaseBusinessRules
         await SocialMediaShouldExistWhenSelected(socialMedia);
     }
 
-    public Task SocialMediaShouldNotExist(SocialMedia? socialMedia)
+    public async Task SocialMediaShouldNotExistsWhenInsert(string name)
     {
-        if (socialMedia != null)
+        bool doesExists = await _socialMediaRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(SocialMediasBusinessMessages.SocialMediaNameExists);
-        return Task.CompletedTask;
     }
-    public async Task SocialMediaNameShouldNotExist(SocialMedia socialMedia, CancellationToken cancellationToken)
+    public async Task SocialMediaShouldNotExistsWhenUpdate(string name)
     {
-        SocialMedia? controlSocialMedia = await _socialMediaRepository.GetAsync(
-            predicate: a => a.Name == socialMedia.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await SocialMediaShouldNotExist(controlSocialMedia);
+        bool doesExists = await _socialMediaRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(SocialMediasBusinessMessages.SocialMediaNameExists);
     }
 }

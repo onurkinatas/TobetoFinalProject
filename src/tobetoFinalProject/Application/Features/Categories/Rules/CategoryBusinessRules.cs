@@ -1,3 +1,4 @@
+using Application.Features.Categorys.Constants;
 using Application.Features.Appeals.Constants;
 using Application.Features.Categories.Constants;
 using Application.Services.Repositories;
@@ -33,19 +34,18 @@ public class CategoryBusinessRules : BaseBusinessRules
         await CategoryShouldExistWhenSelected(category);
     }
 
-    public Task CategoryShouldNotExist(Category? category)
+    public async Task CategoryShouldNotExistsWhenInsert(string name)
     {
-        if (category != null)
+        bool doesExists = await _categoryRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(CategoriesBusinessMessages.CategoryNameExists);
-        return Task.CompletedTask;
     }
-    public async Task CategoryNameShouldNotExist(Category category, CancellationToken cancellationToken)
+    public async Task CategoryShouldNotExistsWhenUpdate(string name)
     {
-        Category? controlCategory = await _categoryRepository.GetAsync(
-            predicate: a => a.Name == category.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await CategoryShouldNotExist(controlCategory);
+        bool doesExists = await _categoryRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(CategoriesBusinessMessages.CategoryNameExists);
     }
 }

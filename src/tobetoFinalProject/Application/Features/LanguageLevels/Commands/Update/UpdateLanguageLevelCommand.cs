@@ -49,7 +49,7 @@ public class UpdateLanguageLevelCommand : IRequest<UpdatedLanguageLevelResponse>
             await _languageLevelBusinessRules.LanguageLevelShouldExistWhenSelected(languageLevel);
             languageLevel = _mapper.Map(request, languageLevel);
 
-            await _languageLevelBusinessRules.DistrictNameShouldNotExist(languageLevel, cancellationToken);
+            await _languageLevelBusinessRules.LanguageLevelShouldNotExistsWhenUpdate(languageLevel);
 
             await _languageLevelRepository.UpdateAsync(languageLevel!);
 

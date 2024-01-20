@@ -1,5 +1,6 @@
 using Application.Features.SubTypes.Constants;
 using Application.Features.SubTypes.Constants;
+using Application.Features.SubTypes.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,19 +34,18 @@ public class SubTypeBusinessRules : BaseBusinessRules
         await SubTypeShouldExistWhenSelected(subType);
     }
 
-    public Task SubTypeShouldNotExist(SubType? subType)
+    public async Task SubTypeShouldNotExistsWhenInsert(string name)
     {
-        if (subType != null)
+        bool doesExists = await _subTypeRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(SubTypesBusinessMessages.SubTypeNameExists);
-        return Task.CompletedTask;
     }
-    public async Task SubTypeNameShouldNotExist(SubType subType, CancellationToken cancellationToken)
+    public async Task SubTypeShouldNotExistsWhenUpdate(string name)
     {
-        SubType? controlSubType = await _subTypeRepository.GetAsync(
-            predicate: a => a.Name == subType.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await SubTypeShouldNotExist(controlSubType);
+        bool doesExists = await _subTypeRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(SubTypesBusinessMessages.SubTypeNameExists);
     }
 }

@@ -40,7 +40,7 @@ public class CreateCityCommand : IRequest<CreatedCityResponse>, ISecuredRequest,
         {
             City city = _mapper.Map<City>(request);
 
-            await _cityBusinessRules.CityNameShouldNotExist(city, cancellationToken);
+            await _cityBusinessRules.CityShouldNotExistsWhenInsert(city.Name);
 
             await _cityRepository.AddAsync(city);
 

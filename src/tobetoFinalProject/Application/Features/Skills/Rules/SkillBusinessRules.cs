@@ -1,5 +1,6 @@
 using Application.Features.Languages.Constants;
 using Application.Features.Skills.Constants;
+using Application.Features.Skills.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -33,20 +34,19 @@ public class SkillBusinessRules : BaseBusinessRules
         await SkillShouldExistWhenSelected(skill);
     }
 
-    public Task SkillShouldNotExist(Skill? skill)
+    public async Task SkillShouldNotExistsWhenInsert(string name)
     {
-        if (skill != null)
+        bool doesExists = await _skillRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
             throw new BusinessException(SkillsBusinessMessages.SkillNameExists);
-        return Task.CompletedTask;
     }
-    public async Task SkillNameShouldNotExist(Skill skill, CancellationToken cancellationToken)
+    public async Task SkillShouldNotExistsWhenUpdate(string name)
     {
-        Skill? controlSkill = await _skillRepository.GetAsync(
-            predicate: a => a.Name == skill.Name,
-            enableTracking: false,
-            cancellationToken: cancellationToken
-            );
-        await SkillShouldNotExist(controlSkill);
+        bool doesExists = await _skillRepository
+            .AnyAsync(predicate: ca => ca.Name == name, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(SkillsBusinessMessages.SkillNameExists);
     }
 
 }

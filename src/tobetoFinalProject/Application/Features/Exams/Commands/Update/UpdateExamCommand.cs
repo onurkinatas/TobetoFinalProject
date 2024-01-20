@@ -50,7 +50,7 @@ public class UpdateExamCommand : IRequest<UpdatedExamResponse>, ISecuredRequest,
             await _examBusinessRules.ExamShouldExistWhenSelected(exam);
             exam = _mapper.Map(request, exam);
 
-            await _examBusinessRules.DistrictNameShouldNotExist(exam, cancellationToken);
+            await _examBusinessRules.ExamShouldNotExistsWhenUpdate(exam.Name);
 
             await _examRepository.UpdateAsync(exam!);
 
