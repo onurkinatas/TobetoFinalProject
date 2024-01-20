@@ -41,8 +41,8 @@ public class CreateStudentSocialMediaCommand : IRequest<CreatedStudentSocialMedi
         public async Task<CreatedStudentSocialMediaResponse> Handle(CreateStudentSocialMediaCommand request, CancellationToken cancellationToken)
         {
             StudentSocialMedia studentSocialMedia = _mapper.Map<StudentSocialMedia>(request);
-
-            await _studentSocialMediaBusinessRules.StudentSocialMediaSelectionControl(studentSocialMedia, cancellationToken);
+            await _studentSocialMediaBusinessRules.StudentSocialMediaShouldNotExistsWhenInsert(studentSocialMedia);
+            await _studentSocialMediaBusinessRules.StudentSocialMediaSelectionControl(cancellationToken);
 
             await _studentSocialMediaRepository.AddAsync(studentSocialMedia);
 

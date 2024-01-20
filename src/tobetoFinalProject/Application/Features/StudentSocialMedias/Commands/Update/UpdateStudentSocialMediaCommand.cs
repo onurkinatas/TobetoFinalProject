@@ -44,7 +44,7 @@ public class UpdateStudentSocialMediaCommand : IRequest<UpdatedStudentSocialMedi
             StudentSocialMedia? studentSocialMedia = await _studentSocialMediaRepository.GetAsync(predicate: ssm => ssm.Id == request.Id, cancellationToken: cancellationToken);
             await _studentSocialMediaBusinessRules.StudentSocialMediaShouldExistWhenSelected(studentSocialMedia);
             studentSocialMedia = _mapper.Map(request, studentSocialMedia);
-
+            await _studentSocialMediaBusinessRules.StudentSocialMediaShouldNotExistsWhenUpdate(studentSocialMedia);
             await _studentSocialMediaRepository.UpdateAsync(studentSocialMedia!);
 
             UpdatedStudentSocialMediaResponse response = _mapper.Map<UpdatedStudentSocialMediaResponse>(studentSocialMedia);

@@ -42,8 +42,8 @@ public class UpdateContentInstructorCommand : IRequest<UpdatedContentInstructorR
         {
             ContentInstructor? contentInstructor = await _contentInstructorRepository.GetAsync(predicate: ci => ci.Id == request.Id, cancellationToken: cancellationToken);
             await _contentInstructorBusinessRules.ContentInstructorShouldExistWhenSelected(contentInstructor);
-            contentInstructor = _mapper.Map(request, contentInstructor);
             await _contentInstructorBusinessRules.ContentInstructorShouldNotExistsWhenUpdate(contentInstructor.ContentId, contentInstructor.InstructorId);
+            contentInstructor = _mapper.Map(request, contentInstructor);
             await _contentInstructorRepository.UpdateAsync(contentInstructor!);
 
             UpdatedContentInstructorResponse response = _mapper.Map<UpdatedContentInstructorResponse>(contentInstructor);

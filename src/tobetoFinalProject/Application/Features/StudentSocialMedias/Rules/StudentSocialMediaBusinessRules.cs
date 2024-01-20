@@ -1,4 +1,5 @@
 using Application.Features.StudentSocialMedias.Constants;
+using Application.Features.StudentSocialMedias.Constants;
 using Application.Services.CacheForMemory;
 using Application.Services.Repositories;
 using Core.Application.Rules;
@@ -20,13 +21,35 @@ public class StudentSocialMediaBusinessRules : BaseBusinessRules
         _studentSocialMediaRepository = studentSocialMediaRepository;
         _cacheMemoryService = cacheMemoryService;
     }
-
+    public async Task StudentSocialMediaShouldNotExistsWhenInsert(StudentSocialMedia studentSocialMedia)
+    {
+        bool doesExists = await _studentSocialMediaRepository
+            .AnyAsync(predicate: se =>
+            se.StudentId == studentSocialMedia.StudentId
+            && se.SocialMediaId == studentSocialMedia.SocialMediaId
+            && se.MediaAccountUrl == studentSocialMedia.MediaAccountUrl
+            , enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentSocialMediasBusinessMessages.StudentSocialMediaAlreadyExists);
+    }
+    public async Task StudentSocialMediaShouldNotExistsWhenUpdate(StudentSocialMedia studentSocialMedia)
+    {
+        bool doesExists = await _studentSocialMediaRepository
+            .AnyAsync(predicate: se =>
+            se.StudentId == studentSocialMedia.StudentId
+            && se.SocialMediaId == studentSocialMedia.SocialMediaId
+            && se.MediaAccountUrl == studentSocialMedia.MediaAccountUrl
+            , enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentSocialMediasBusinessMessages.StudentSocialMediaAlreadyExists);
+    }
     public Task StudentSocialMediaShouldExistWhenSelected(StudentSocialMedia? studentSocialMedia)
     {
         if (studentSocialMedia == null)
             throw new BusinessException(StudentSocialMediasBusinessMessages.StudentSocialMediaNotExists);
         return Task.CompletedTask;
     }
+   
 
     public async Task StudentSocialMediaIdShouldExistWhenSelected(Guid id, CancellationToken cancellationToken)
     {
@@ -38,7 +61,7 @@ public class StudentSocialMediaBusinessRules : BaseBusinessRules
         await StudentSocialMediaShouldExistWhenSelected(studentSocialMedia);
     }
 
-    public async Task StudentSocialMediaSelectionControl(StudentSocialMedia? studentSocialMedia, CancellationToken cancellationToken) 
+    public async Task StudentSocialMediaSelectionControl(CancellationToken cancellationToken) 
     {
         var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
 
@@ -49,6 +72,6 @@ public class StudentSocialMediaBusinessRules : BaseBusinessRules
         );
 
         if (studentSocialMedias.Count == 3)
-            throw new BusinessException(StudentSocialMediasBusinessMessages.MaxStudenSocialMediaCapacity);
+            throw new BusinessException(StudentSocialMediasBusinessMessages.MaxStudentSocialMediaCapacity);
     }
 }
