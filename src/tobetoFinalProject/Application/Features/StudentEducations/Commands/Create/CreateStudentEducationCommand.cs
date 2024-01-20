@@ -45,7 +45,7 @@ public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationRes
         public async Task<CreatedStudentEducationResponse> Handle(CreateStudentEducationCommand request, CancellationToken cancellationToken)
         {
             StudentEducation studentEducation = _mapper.Map<StudentEducation>(request);
-
+            await _studentEducationBusinessRules.StudentEducationShouldNotExistsWhenInsert(studentEducation);
             await _studentEducationRepository.AddAsync(studentEducation);
 
             CreatedStudentEducationResponse response = _mapper.Map<CreatedStudentEducationResponse>(studentEducation);

@@ -1,4 +1,5 @@
 using Application.Features.StudentEducations.Constants;
+using Application.Features.StudentEducations.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -14,7 +15,30 @@ public class StudentEducationBusinessRules : BaseBusinessRules
     {
         _studentEducationRepository = studentEducationRepository;
     }
-
+    public async Task StudentEducationShouldNotExistsWhenInsert(StudentEducation studentEducation)
+    {
+        bool doesExists = await _studentEducationRepository
+            .AnyAsync(predicate: se =>
+            se.StudentId == studentEducation.StudentId
+            && se.Branch==studentEducation.Branch
+            &&se.EducationStatus==studentEducation.EducationStatus
+            &&se.SchoolName ==studentEducation.SchoolName
+            , enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentEducationsBusinessMessages.StudentEducationAlreadyExists);
+    }
+    public async Task StudentEducationShouldNotExistsWhenUpdate(StudentEducation? studentEducation)
+    {
+        bool doesExists = await _studentEducationRepository
+            .AnyAsync(predicate: se =>
+            se.StudentId == studentEducation.StudentId
+            && se.Branch == studentEducation.Branch
+            && se.EducationStatus == studentEducation.EducationStatus
+            && se.SchoolName == studentEducation.SchoolName
+            , enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentEducationsBusinessMessages.StudentEducationAlreadyExists);
+    }
     public Task StudentEducationShouldExistWhenSelected(StudentEducation? studentEducation)
     {
         if (studentEducation == null)

@@ -40,7 +40,7 @@ public class CreateStudentLanguageLevelCommand : IRequest<CreatedStudentLanguage
         public async Task<CreatedStudentLanguageLevelResponse> Handle(CreateStudentLanguageLevelCommand request, CancellationToken cancellationToken)
         {
             StudentLanguageLevel studentLanguageLevel = _mapper.Map<StudentLanguageLevel>(request);
-
+            await _studentLanguageLevelBusinessRules.StudentLanguageLevelShouldNotExistsWhenInsert(studentLanguageLevel.LanguageLevelId, studentLanguageLevel.StudentId);
             await _studentLanguageLevelRepository.AddAsync(studentLanguageLevel);
 
             CreatedStudentLanguageLevelResponse response = _mapper.Map<CreatedStudentLanguageLevelResponse>(studentLanguageLevel);

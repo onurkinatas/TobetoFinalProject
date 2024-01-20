@@ -1,4 +1,5 @@
 using Application.Features.StudentLanguageLevels.Constants;
+using Application.Features.StudentLanguageLevels.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -14,7 +15,13 @@ public class StudentLanguageLevelBusinessRules : BaseBusinessRules
     {
         _studentLanguageLevelRepository = studentLanguageLevelRepository;
     }
-
+    public async Task StudentLanguageLevelShouldNotExistsWhenInsert(Guid languageLevelId, Guid studentId)
+    {
+        bool doesExists = await _studentLanguageLevelRepository
+            .AnyAsync(predicate: ca => ca.LanguageLevelId == languageLevelId && ca.StudentId == studentId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(StudentLanguageLevelsBusinessMessages.StudentLanguageLevelAlreadyExists);
+    }
     public Task StudentLanguageLevelShouldExistWhenSelected(StudentLanguageLevel? studentLanguageLevel)
     {
         if (studentLanguageLevel == null)
