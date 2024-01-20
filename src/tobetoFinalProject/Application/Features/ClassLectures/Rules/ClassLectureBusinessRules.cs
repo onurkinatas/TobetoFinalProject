@@ -15,20 +15,23 @@ public class ClassLectureBusinessRules : BaseBusinessRules
     {
         _classLectureRepository = classLectureRepository;
     }
-    public async Task ClassLectureShouldNotExistsWhenInsert(Guid classId, Guid announcementId)
+
+    public async Task ClassLectureShouldNotExistsWhenInsert(Guid classId, Guid lectureId)
     {
         bool doesExists = await _classLectureRepository
-            .AnyAsync(predicate: ca => ca.LectureId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+            .AnyAsync(predicate: ca => ca.LectureId == lectureId && ca.StudentClassId == classId, enableTracking: false);
         if (doesExists)
             throw new BusinessException(ClassLecturesBusinessMessages.ClassLectureAlreadyExists);
     }
-    public async Task ClassLectureShouldNotExistsWhenUpdate(Guid classId, Guid announcementId)
+
+    public async Task ClassLectureShouldNotExistsWhenUpdate(Guid classId, Guid lectureId)
     {
         bool doesExists = await _classLectureRepository
-            .AnyAsync(predicate: ca => ca.LectureId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+            .AnyAsync(predicate: ca => ca.LectureId == lectureId && ca.StudentClassId == classId, enableTracking: false);
         if (doesExists)
             throw new BusinessException(ClassLecturesBusinessMessages.ClassLectureAlreadyExists);
     }
+
     public Task ClassLectureShouldExistWhenSelected(ClassLecture? classLecture)
     {
         if (classLecture == null)

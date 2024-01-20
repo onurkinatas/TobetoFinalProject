@@ -15,17 +15,17 @@ public class ClassExamBusinessRules : BaseBusinessRules
     {
         _classExamRepository = classExamRepository;
     }
-    public async Task ClassExamShouldNotExistsWhenInsert(Guid classId, Guid announcementId)
+    public async Task ClassExamShouldNotExistsWhenInsert(Guid classId, Guid examId)
     {
         bool doesExists = await _classExamRepository
-            .AnyAsync(predicate: ca => ca.ExamId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+            .AnyAsync(predicate: ca => ca.ExamId == examId && ca.StudentClassId == classId, enableTracking: false);
         if (doesExists)
             throw new BusinessException(ClassExamsBusinessMessages.ClassExamAlreadyExists);
     }
-    public async Task ClassExamShouldNotExistsWhenUpdate(Guid classId, Guid announcementId)
+    public async Task ClassExamShouldNotExistsWhenUpdate(Guid classId, Guid examId)
     {
         bool doesExists = await _classExamRepository
-            .AnyAsync(predicate: ca => ca.ExamId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+            .AnyAsync(predicate: ca => ca.ExamId == examId && ca.StudentClassId == classId, enableTracking: false);
         if (doesExists)
             throw new BusinessException(ClassExamsBusinessMessages.ClassExamAlreadyExists);
     }

@@ -4,5 +4,5 @@ public static class ContentInstructorsBusinessMessages
 {
     public const string ContentInstructorNotExists = "Bu içeriðin böyle bir eðitmeni yok.";
 
-    public static string? ContentInstructorAlreadyExists = "Bu içeriðin zaten böyle bir eðitmeni var.";
+    public const string ContentInstructorAlreadyExists = "Bu içeriðin zaten böyle bir eðitmeni var.";
 }

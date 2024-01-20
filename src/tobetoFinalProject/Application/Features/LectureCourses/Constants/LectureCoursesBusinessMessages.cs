@@ -4,5 +4,5 @@ public static class LectureCoursesBusinessMessages
 {
     public const string LectureCourseNotExists = "Ders veya kurs bulunamadý.";
 
-    public static string? LectureCourseAlreadyExists = "Bu dersin zaten böyle bir kursu var.";
+    public const string LectureCourseAlreadyExists = "Bu dersin zaten böyle bir kursu var.";
 }

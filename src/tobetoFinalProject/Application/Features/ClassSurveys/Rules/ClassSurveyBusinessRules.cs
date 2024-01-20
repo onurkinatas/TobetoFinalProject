@@ -4,6 +4,7 @@ using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
 using Domain.Entities;
+using MongoDB.Driver.Core.Servers;
 
 namespace Application.Features.ClassSurveys.Rules;
 
@@ -15,17 +16,17 @@ public class ClassSurveyBusinessRules : BaseBusinessRules
     {
         _classSurveyRepository = classSurveyRepository;
     }
-    public async Task ClassSurveyShouldNotExistsWhenInsert(Guid classId, Guid announcementId)
+    public async Task ClassSurveyShouldNotExistsWhenInsert(Guid classId, Guid surveyId)
     {
         bool doesExists = await _classSurveyRepository
-            .AnyAsync(predicate: ca => ca.SurveyId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+            .AnyAsync(predicate: ca => ca.SurveyId == surveyId && ca.StudentClassId == classId, enableTracking: false);
         if (doesExists)
             throw new BusinessException(ClassSurveysBusinessMessages.ClassSurveyAlreadyExists);
     }
-    public async Task ClassSurveyShouldNotExistsWhenUpdate(Guid classId, Guid announcementId)
+    public async Task ClassSurveyShouldNotExistsWhenUpdate(Guid classId, Guid surveyId)
     {
         bool doesExists = await _classSurveyRepository
-            .AnyAsync(predicate: ca => ca.SurveyId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+            .AnyAsync(predicate: ca => ca.SurveyId == surveyId && ca.StudentClassId == classId, enableTracking: false);
         if (doesExists)
             throw new BusinessException(ClassSurveysBusinessMessages.ClassSurveyAlreadyExists);
     }
