@@ -40,7 +40,7 @@ public class CreateStudentSkillCommand : IRequest<CreatedStudentSkillResponse>, 
         public async Task<CreatedStudentSkillResponse> Handle(CreateStudentSkillCommand request, CancellationToken cancellationToken)
         {
             StudentSkill studentSkill = _mapper.Map<StudentSkill>(request);
-
+            await _studentSkillBusinessRules.StudentSkillShouldNotExistsWhenInsert(studentSkill.SkillId, studentSkill.StudentId);
             await _studentSkillRepository.AddAsync(studentSkill);
 
             CreatedStudentSkillResponse response = _mapper.Map<CreatedStudentSkillResponse>(studentSkill);

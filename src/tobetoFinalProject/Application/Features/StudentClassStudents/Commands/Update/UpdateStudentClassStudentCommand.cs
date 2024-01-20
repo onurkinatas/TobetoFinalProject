@@ -43,7 +43,7 @@ public class UpdateStudentClassStudentCommand : IRequest<UpdatedStudentClassStud
             StudentClassStudent? studentClassStudent = await _studentClassStudentRepository.GetAsync(predicate: scs => scs.Id == request.Id, cancellationToken: cancellationToken);
             await _studentClassStudentBusinessRules.StudentClassStudentShouldExistWhenSelected(studentClassStudent);
             studentClassStudent = _mapper.Map(request, studentClassStudent);
-
+            await _studentClassStudentBusinessRules.StudentClassStudentShouldNotExistsWhenUpdate(studentClassStudent.StudentClassId, studentClassStudent.StudentId);
             await _studentClassStudentRepository.UpdateAsync(studentClassStudent!);
 
             UpdatedStudentClassStudentResponse response = _mapper.Map<UpdatedStudentClassStudentResponse>(studentClassStudent);

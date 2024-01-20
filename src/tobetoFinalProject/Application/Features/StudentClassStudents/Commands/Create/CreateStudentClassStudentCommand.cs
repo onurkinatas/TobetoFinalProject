@@ -40,7 +40,7 @@ public class CreateStudentClassStudentCommand : IRequest<CreatedStudentClassStud
         public async Task<CreatedStudentClassStudentResponse> Handle(CreateStudentClassStudentCommand request, CancellationToken cancellationToken)
         {
             StudentClassStudent studentClassStudent = _mapper.Map<StudentClassStudent>(request);
-
+            await _studentClassStudentBusinessRules.StudentClassStudentShouldNotExistsWhenInsert(studentClassStudent.StudentClassId, studentClassStudent.StudentId);
             await _studentClassStudentRepository.AddAsync(studentClassStudent);
 
             CreatedStudentClassStudentResponse response = _mapper.Map<CreatedStudentClassStudentResponse>(studentClassStudent);

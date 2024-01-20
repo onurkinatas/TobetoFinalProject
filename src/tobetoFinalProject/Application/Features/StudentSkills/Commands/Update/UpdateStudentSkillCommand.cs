@@ -43,7 +43,7 @@ public class UpdateStudentSkillCommand : IRequest<UpdatedStudentSkillResponse>, 
             StudentSkill? studentSkill = await _studentSkillRepository.GetAsync(predicate: ss => ss.Id == request.Id, cancellationToken: cancellationToken);
             await _studentSkillBusinessRules.StudentSkillShouldExistWhenSelected(studentSkill);
             studentSkill = _mapper.Map(request, studentSkill);
-
+            await _studentSkillBusinessRules.StudentSkillShouldNotExistsWhenUpdate(studentSkill.SkillId, studentSkill.StudentId);
             await _studentSkillRepository.UpdateAsync(studentSkill!);
 
             UpdatedStudentSkillResponse response = _mapper.Map<UpdatedStudentSkillResponse>(studentSkill);
