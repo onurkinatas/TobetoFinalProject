@@ -1,4 +1,4 @@
-using Application.Features.Categorys.Constants;
+
 using Application.Features.Appeals.Constants;
 using Application.Features.Categories.Constants;
 using Application.Services.Repositories;

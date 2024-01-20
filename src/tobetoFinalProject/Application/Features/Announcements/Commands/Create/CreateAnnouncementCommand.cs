@@ -42,7 +42,7 @@ public class CreateAnnouncementCommand : IRequest<CreatedAnnouncementResponse>, 
         {
             Announcement announcement = _mapper.Map<Announcement>(request);
 
-            await _announcementBusinessRules.AnnouncementShouldNotExistsWhenInsert(announcement.Name;
+            await _announcementBusinessRules.AnnouncementShouldNotExistsWhenInsert(announcement.Name);
 
             await _announcementRepository.AddAsync(announcement);
 
