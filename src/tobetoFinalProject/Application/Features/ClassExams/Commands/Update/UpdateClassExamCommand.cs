@@ -43,7 +43,7 @@ public class UpdateClassExamCommand : IRequest<UpdatedClassExamResponse>, ISecur
             ClassExam? classExam = await _classExamRepository.GetAsync(predicate: ce => ce.Id == request.Id, cancellationToken: cancellationToken);
             await _classExamBusinessRules.ClassExamShouldExistWhenSelected(classExam);
             classExam = _mapper.Map(request, classExam);
-
+            await _classExamBusinessRules.ClassExamShouldNotExistsWhenUpdate(classExam.StudentClassId, classExam.ExamId);
             await _classExamRepository.UpdateAsync(classExam!);
 
             UpdatedClassExamResponse response = _mapper.Map<UpdatedClassExamResponse>(classExam);

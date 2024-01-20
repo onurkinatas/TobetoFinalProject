@@ -43,7 +43,7 @@ public class UpdateClassAnnouncementCommand : IRequest<UpdatedClassAnnouncementR
             ClassAnnouncement? classAnnouncement = await _classAnnouncementRepository.GetAsync(predicate: ca => ca.Id == request.Id, cancellationToken: cancellationToken);
             await _classAnnouncementBusinessRules.ClassAnnouncementShouldExistWhenSelected(classAnnouncement);
             classAnnouncement = _mapper.Map(request, classAnnouncement);
-
+            await _classAnnouncementBusinessRules.ClassAnnouncementShouldNotExistsWhenUpdate(classAnnouncement.StudentClassId,classAnnouncement.AnnouncementId);
             await _classAnnouncementRepository.UpdateAsync(classAnnouncement!);
 
             UpdatedClassAnnouncementResponse response = _mapper.Map<UpdatedClassAnnouncementResponse>(classAnnouncement);

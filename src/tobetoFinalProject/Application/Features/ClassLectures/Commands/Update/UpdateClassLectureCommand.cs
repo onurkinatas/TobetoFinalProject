@@ -43,7 +43,7 @@ public class UpdateClassLectureCommand : IRequest<UpdatedClassLectureResponse>, 
             ClassLecture? classLecture = await _classLectureRepository.GetAsync(predicate: cl => cl.Id == request.Id, cancellationToken: cancellationToken);
             await _classLectureBusinessRules.ClassLectureShouldExistWhenSelected(classLecture);
             classLecture = _mapper.Map(request, classLecture);
-
+            await _classLectureBusinessRules.ClassLectureShouldNotExistsWhenUpdate(classLecture.StudentClassId, classLecture.LectureId);
             await _classLectureRepository.UpdateAsync(classLecture!);
 
             UpdatedClassLectureResponse response = _mapper.Map<UpdatedClassLectureResponse>(classLecture);

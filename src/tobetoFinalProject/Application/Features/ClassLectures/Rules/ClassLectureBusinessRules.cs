@@ -1,4 +1,5 @@
 using Application.Features.ClassLectures.Constants;
+using Application.Features.ClassLectures.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -14,7 +15,20 @@ public class ClassLectureBusinessRules : BaseBusinessRules
     {
         _classLectureRepository = classLectureRepository;
     }
-
+    public async Task ClassLectureShouldNotExistsWhenInsert(Guid classId, Guid announcementId)
+    {
+        bool doesExists = await _classLectureRepository
+            .AnyAsync(predicate: ca => ca.LectureId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ClassLecturesBusinessMessages.ClassLectureAlreadyExists);
+    }
+    public async Task ClassLectureShouldNotExistsWhenUpdate(Guid classId, Guid announcementId)
+    {
+        bool doesExists = await _classLectureRepository
+            .AnyAsync(predicate: ca => ca.LectureId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ClassLecturesBusinessMessages.ClassLectureAlreadyExists);
+    }
     public Task ClassLectureShouldExistWhenSelected(ClassLecture? classLecture)
     {
         if (classLecture == null)

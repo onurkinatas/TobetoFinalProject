@@ -1,4 +1,5 @@
 using Application.Features.ClassExams.Constants;
+using Application.Features.ClassExams.Constants;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -14,7 +15,20 @@ public class ClassExamBusinessRules : BaseBusinessRules
     {
         _classExamRepository = classExamRepository;
     }
-
+    public async Task ClassExamShouldNotExistsWhenInsert(Guid classId, Guid announcementId)
+    {
+        bool doesExists = await _classExamRepository
+            .AnyAsync(predicate: ca => ca.ExamId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ClassExamsBusinessMessages.ClassExamAlreadyExists);
+    }
+    public async Task ClassExamShouldNotExistsWhenUpdate(Guid classId, Guid announcementId)
+    {
+        bool doesExists = await _classExamRepository
+            .AnyAsync(predicate: ca => ca.ExamId == announcementId && ca.StudentClassId == classId, enableTracking: false);
+        if (doesExists)
+            throw new BusinessException(ClassExamsBusinessMessages.ClassExamAlreadyExists);
+    }
     public Task ClassExamShouldExistWhenSelected(ClassExam? classExam)
     {
         if (classExam == null)

@@ -40,7 +40,7 @@ public class CreateClassAnnouncementCommand : IRequest<CreatedClassAnnouncementR
         public async Task<CreatedClassAnnouncementResponse> Handle(CreateClassAnnouncementCommand request, CancellationToken cancellationToken)
         {
             ClassAnnouncement classAnnouncement = _mapper.Map<ClassAnnouncement>(request);
-
+            await _classAnnouncementBusinessRules.ClassAnnouncementShouldNotExistsWhenInsert(classAnnouncement.StudentClassId, classAnnouncement.AnnouncementId);
             await _classAnnouncementRepository.AddAsync(classAnnouncement);
 
             CreatedClassAnnouncementResponse response = _mapper.Map<CreatedClassAnnouncementResponse>(classAnnouncement);

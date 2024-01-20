@@ -40,7 +40,7 @@ public class CreateClassExamCommand : IRequest<CreatedClassExamResponse>, ISecur
         public async Task<CreatedClassExamResponse> Handle(CreateClassExamCommand request, CancellationToken cancellationToken)
         {
             ClassExam classExam = _mapper.Map<ClassExam>(request);
-
+            await _classExamBusinessRules.ClassExamShouldNotExistsWhenInsert(classExam.StudentClassId, classExam.ExamId);
             await _classExamRepository.AddAsync(classExam);
 
             CreatedClassExamResponse response = _mapper.Map<CreatedClassExamResponse>(classExam);
