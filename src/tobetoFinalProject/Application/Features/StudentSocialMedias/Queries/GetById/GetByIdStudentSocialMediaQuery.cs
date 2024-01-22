@@ -35,10 +35,10 @@ public class GetByIdStudentSocialMediaQuery : IRequest<GetByIdStudentSocialMedia
 
         public async Task<GetByIdStudentSocialMediaResponse> Handle(GetByIdStudentSocialMediaQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId =  _cacheMemoryService.GetStudentIdFromCache();
+           
 
             StudentSocialMedia? studentSocialMedia = await _studentSocialMediaRepository.GetAsync(
-                predicate: ssm => ssm.Id == request.Id && ssm.StudentId == cacheMemoryStudentId,
+                predicate: ssm => ssm.Id == request.Id,
                 include: se => se.Include(se => se.SocialMedia)
                 .Include(se => se.Student)
                 .ThenInclude(s => s.User),

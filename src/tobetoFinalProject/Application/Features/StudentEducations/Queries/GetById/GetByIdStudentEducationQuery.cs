@@ -33,10 +33,9 @@ public class GetByIdStudentEducationQuery : IRequest<GetByIdStudentEducationResp
 
         public async Task<GetByIdStudentEducationResponse> Handle(GetByIdStudentEducationQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
 
             StudentEducation? studentEducation = await _studentEducationRepository.GetAsync(
-                predicate: se => se.Id == request.Id && se.StudentId == cacheMemoryStudentId,
+                predicate: se => se.Id == request.Id ,
                 cancellationToken: cancellationToken);
             await _studentEducationBusinessRules.StudentEducationShouldExistWhenSelected(studentEducation);
 

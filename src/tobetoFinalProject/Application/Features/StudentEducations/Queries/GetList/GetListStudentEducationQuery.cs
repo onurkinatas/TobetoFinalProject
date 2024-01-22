@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentEducations.Constants.StudentEducationsOperationClaims;
 using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentEducations.Queries.GetList;
 
@@ -29,20 +30,21 @@ public class GetListStudentEducationQuery : IRequest<GetListResponse<GetListStud
         private readonly IStudentEducationRepository _studentEducationRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListStudentEducationQueryHandler(IStudentEducationRepository studentEducationRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListStudentEducationQueryHandler(IStudentEducationRepository studentEducationRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _studentEducationRepository = studentEducationRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListStudentEducationListItemDto>> Handle(GetListStudentEducationQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+            Student getStudentFromContext = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentEducation> studentEducations = await _studentEducationRepository.GetListAsync(
-                predicate: s => s.StudentId == cacheMemoryStudentId,
+                predicate: s => s.StudentId == getStudentFromContext.Id,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken

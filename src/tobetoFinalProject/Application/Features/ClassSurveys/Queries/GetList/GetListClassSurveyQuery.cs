@@ -11,6 +11,7 @@ using MediatR;
 using static Application.Features.ClassSurveys.Constants.ClassSurveysOperationClaims;
 using Application.Services.CacheForMemory;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassSurveys.Queries.GetList;
 
@@ -29,21 +30,20 @@ public class GetListClassSurveyQuery : IRequest<GetListResponse<GetListClassSurv
     {
         private readonly IClassSurveyRepository _classSurveyRepository;
         private readonly IMapper _mapper;
-        private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListClassSurveyQueryHandler(IClassSurveyRepository classSurveyRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListClassSurveyQueryHandler(IClassSurveyRepository classSurveyRepository, IMapper mapper, IContextOperationService contextOperationService)
         {
             _classSurveyRepository = classSurveyRepository;
             _mapper = mapper;
-            _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListClassSurveyListItemDto>> Handle(GetListClassSurveyQuery request, CancellationToken cancellationToken)
         {
-            IList<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
+            ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();
 
             IPaginate<ClassSurvey> classSurveys = await _classSurveyRepository.GetListAsync(
-                predicate: c => getCacheClassIds.Contains(c.StudentClassId),
+                predicate: c => getClassIds.Contains(c.StudentClassId),
                 include: c => c.Include(c => c.StudentClass)
                     .Include(c => c.Survey),
                 index: request.PageRequest.PageIndex,

@@ -34,10 +34,10 @@ public class GetByIdStudentSkillQuery : IRequest<GetByIdStudentSkillResponse>, I
 
         public async Task<GetByIdStudentSkillResponse> Handle(GetByIdStudentSkillQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+       
 
             StudentSkill? studentSkill = await _studentSkillRepository.GetAsync(
-                predicate: ss => ss.Id == request.Id && ss.StudentId == cacheMemoryStudentId,
+                predicate: ss => ss.Id == request.Id,
                 include: ss => ss.Include(ss => ss.Skill)
                     .Include(ss => ss.Student),
                 cancellationToken: cancellationToken);

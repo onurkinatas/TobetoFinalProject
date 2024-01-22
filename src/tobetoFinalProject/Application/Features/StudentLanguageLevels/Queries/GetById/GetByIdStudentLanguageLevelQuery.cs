@@ -34,10 +34,10 @@ public class GetByIdStudentLanguageLevelQuery : IRequest<GetByIdStudentLanguageL
 
         public async Task<GetByIdStudentLanguageLevelResponse> Handle(GetByIdStudentLanguageLevelQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+           
 
             StudentLanguageLevel? studentLanguageLevel = await _studentLanguageLevelRepository.GetAsync(
-                predicate: sll => sll.Id == request.Id && sll.StudentId == cacheMemoryStudentId,
+                predicate: sll => sll.Id == request.Id,
                 include: sll => sll.Include(sll => sll.Student)
                     .Include(sll => sll.LanguageLevel)
                     .ThenInclude(ll => ll.Language),

@@ -11,6 +11,7 @@ using MediatR;
 using static Application.Features.ClassLectures.Constants.ClassLecturesOperationClaims;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassLectures.Queries.GetList;
 
@@ -29,21 +30,20 @@ public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLec
     {
         private readonly IClassLectureRepository _classLectureRepository;
         private readonly IMapper _mapper;
-        private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListClassLectureQueryHandler(IClassLectureRepository classLectureRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListClassLectureQueryHandler(IClassLectureRepository classLectureRepository, IMapper mapper, IContextOperationService contextOperationService)
         {
             _classLectureRepository = classLectureRepository;
             _mapper = mapper;
-            _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListClassLectureListItemDto>> Handle(GetListClassLectureQuery request, CancellationToken cancellationToken)
         {
-            List<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
+            ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();
 
             IPaginate<ClassLecture> classLectures = await _classLectureRepository.GetListAsync(
-                predicate: ce => getCacheClassIds.Contains(ce.StudentClassId),
+                predicate: ce => getClassIds.Contains(ce.StudentClassId),
                 include: ca => ca.Include(ca => ca.Lecture)
                     .ThenInclude(m => m.Manufacturer)
                     .Include(ca => ca.Lecture)

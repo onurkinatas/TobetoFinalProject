@@ -11,6 +11,7 @@ using MediatR;
 using static Application.Features.StudentLanguageLevels.Constants.StudentLanguageLevelsOperationClaims;
 using Application.Services.CacheForMemory;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentLanguageLevels.Queries.GetList;
 
@@ -30,20 +31,21 @@ public class GetListStudentLanguageLevelQuery : IRequest<GetListResponse<GetList
         private readonly IStudentLanguageLevelRepository _studentLanguageLevelRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListStudentLanguageLevelQueryHandler(IStudentLanguageLevelRepository studentLanguageLevelRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListStudentLanguageLevelQueryHandler(IStudentLanguageLevelRepository studentLanguageLevelRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _studentLanguageLevelRepository = studentLanguageLevelRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListStudentLanguageLevelListItemDto>> Handle(GetListStudentLanguageLevelQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+            Student student = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentLanguageLevel> studentLanguageLevels = await _studentLanguageLevelRepository.GetListAsync(
-                predicate: cc => cc.StudentId == cacheMemoryStudentId,
+                predicate: cc => cc.StudentId == student.Id,
                 include: sll => sll.Include(sll => sll.Student)
                     .Include(sll => sll.LanguageLevel)
                     .ThenInclude(ll => ll.Language),

@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentStages.Constants.StudentStagesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentStages.Queries.GetList;
 
@@ -28,11 +29,12 @@ public class GetListStudentStageQuery : IRequest<GetListResponse<GetListStudentS
     {
         private readonly IStudentStageRepository _studentStageRepository;
         private readonly IMapper _mapper;
-
-        public GetListStudentStageQueryHandler(IStudentStageRepository studentStageRepository, IMapper mapper)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListStudentStageQueryHandler(IStudentStageRepository studentStageRepository, IMapper mapper, IContextOperationService contextOperationService)
         {
             _studentStageRepository = studentStageRepository;
             _mapper = mapper;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListStudentStageListItemDto>> Handle(GetListStudentStageQuery request, CancellationToken cancellationToken)

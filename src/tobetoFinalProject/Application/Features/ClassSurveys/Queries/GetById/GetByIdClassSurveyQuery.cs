@@ -22,22 +22,19 @@ public class GetByIdClassSurveyQuery : IRequest<GetByIdClassSurveyResponse>, ISe
         private readonly IMapper _mapper;
         private readonly IClassSurveyRepository _classSurveyRepository;
         private readonly ClassSurveyBusinessRules _classSurveyBusinessRules;
-        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetByIdClassSurveyQueryHandler(IMapper mapper, IClassSurveyRepository classSurveyRepository, ClassSurveyBusinessRules classSurveyBusinessRules, ICacheMemoryService cacheMemoryService)
+        public GetByIdClassSurveyQueryHandler(IMapper mapper, IClassSurveyRepository classSurveyRepository, ClassSurveyBusinessRules classSurveyBusinessRules)
         {
             _mapper = mapper;
             _classSurveyRepository = classSurveyRepository;
             _classSurveyBusinessRules = classSurveyBusinessRules;
-            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetByIdClassSurveyResponse> Handle(GetByIdClassSurveyQuery request, CancellationToken cancellationToken)
         {
-            IList<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
 
             ClassSurvey? classSurvey = await _classSurveyRepository.GetAsync(
-                predicate: c => getCacheClassIds.Contains(c.StudentClassId),
+                predicate: c => c.Id == request.Id,
                 include: c => c.Include(c => c.StudentClass)
                     .Include(c => c.Survey),
                 cancellationToken: cancellationToken);

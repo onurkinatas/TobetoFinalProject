@@ -22,22 +22,20 @@ public class GetByIdClassLectureQuery : IRequest<GetByIdClassLectureResponse>, I
         private readonly IMapper _mapper;
         private readonly IClassLectureRepository _classLectureRepository;
         private readonly ClassLectureBusinessRules _classLectureBusinessRules;
-        private readonly ICacheMemoryService _cacheMemoryService;
 
-        public GetByIdClassLectureQueryHandler(IMapper mapper, IClassLectureRepository classLectureRepository, ClassLectureBusinessRules classLectureBusinessRules, ICacheMemoryService cacheMemoryService)
+        public GetByIdClassLectureQueryHandler(IMapper mapper, IClassLectureRepository classLectureRepository, ClassLectureBusinessRules classLectureBusinessRules)
         {
             _mapper = mapper;
             _classLectureRepository = classLectureRepository;
             _classLectureBusinessRules = classLectureBusinessRules;
-            _cacheMemoryService = cacheMemoryService;
         }
 
         public async Task<GetByIdClassLectureResponse> Handle(GetByIdClassLectureQuery request, CancellationToken cancellationToken)
         {
-            List<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
+        
 
             ClassLecture? classLecture = await _classLectureRepository.GetAsync(
-                predicate: ce => getCacheClassIds.Contains(ce.StudentClassId),
+                predicate: c => c.Id == request.Id,
                 include: ca => ca.Include(ca => ca.Lecture)
                     .ThenInclude(m => m.Manufacturer)
                     .Include(ca => ca.Lecture)

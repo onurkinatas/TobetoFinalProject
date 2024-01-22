@@ -11,6 +11,7 @@ using MediatR;
 using static Application.Features.ClassExams.Constants.ClassExamsOperationClaims;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassExams.Queries.GetList;
 
@@ -30,20 +31,20 @@ public class GetListClassExamQuery : IRequest<GetListResponse<GetListClassExamLi
         private readonly IClassExamRepository _classExamRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListClassExamQueryHandler(IClassExamRepository classExamRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListClassExamQueryHandler(IClassExamRepository classExamRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _classExamRepository = classExamRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListClassExamListItemDto>> Handle(GetListClassExamQuery request, CancellationToken cancellationToken)
         {
-            List<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
-
+            ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();
             IPaginate<ClassExam> classExams = await _classExamRepository.GetListAsync(
-                predicate: ce => getCacheClassIds.Contains(ce.StudentClassId) && ce.Exam.IsActive != false,
+                predicate: ce => getClassIds.Contains(ce.StudentClassId) && ce.Exam.IsActive != false,
                 include: ce => ce.Include(ce => ce.Exam)
                     .Include(ce => ce.StudentClass),
                 index: request.PageRequest.PageIndex,

@@ -44,13 +44,7 @@ public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ICacheRemo
 
         public async Task<CreatedStudentResponse> Handle(CreateStudentCommand request, CancellationToken cancellationToken)
         {
-            //CreateUserCommand createUserCommand = new()
-            //{
-            //    Email = request.Email,
-            //    FirstName = request.FirstName,
-            //    LastName = request.LastName,
-            //    Password = request.Password,
-            //};
+       
 
             UserForRegisterDto userForRegisterDto = new()
             {
@@ -63,7 +57,6 @@ public class CreateStudentCommand : IRequest<CreatedStudentResponse>, ICacheRemo
             RegisterCommand registerCommand = new() { UserForRegisterDto = userForRegisterDto };
 
             RegisteredResponse result = await _mediator.Send(registerCommand);
-            //CreatedUserResponse result = await _mediator.Send(createUserCommand);
 
             CreateUserOperationClaimCommand createUserOperationClaimCommand = new()
             {

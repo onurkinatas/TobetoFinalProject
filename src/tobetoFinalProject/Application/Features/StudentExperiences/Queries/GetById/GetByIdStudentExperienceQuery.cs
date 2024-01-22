@@ -34,10 +34,9 @@ public class GetByIdStudentExperienceQuery : IRequest<GetByIdStudentExperienceRe
 
         public async Task<GetByIdStudentExperienceResponse> Handle(GetByIdStudentExperienceQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
 
             StudentExperience? studentExperience = await _studentExperienceRepository.GetAsync(
-                predicate: se => se.Id == request.Id && se.StudentId == cacheMemoryStudentId,
+                predicate: se => se.Id == request.Id,
                 include: se => se.Include(se => se.City),
                 cancellationToken: cancellationToken);
             await _studentExperienceBusinessRules.StudentExperienceShouldExistWhenSelected(studentExperience);

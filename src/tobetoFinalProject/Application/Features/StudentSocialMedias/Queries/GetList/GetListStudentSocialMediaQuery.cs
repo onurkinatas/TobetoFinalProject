@@ -11,6 +11,7 @@ using MediatR;
 using static Application.Features.StudentSocialMedias.Constants.StudentSocialMediasOperationClaims;
 using Application.Services.CacheForMemory;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentSocialMedias.Queries.GetList;
 
@@ -30,20 +31,21 @@ public class GetListStudentSocialMediaQuery : IRequest<GetListResponse<GetListSt
         private readonly IStudentSocialMediaRepository _studentSocialMediaRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListStudentSocialMediaQueryHandler(IStudentSocialMediaRepository studentSocialMediaRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListStudentSocialMediaQueryHandler(IStudentSocialMediaRepository studentSocialMediaRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _studentSocialMediaRepository = studentSocialMediaRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListStudentSocialMediaListItemDto>> Handle(GetListStudentSocialMediaQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+            Student student = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentSocialMedia> studentSocialMedias = await _studentSocialMediaRepository.GetListAsync(
-                predicate: ssm => ssm.StudentId == cacheMemoryStudentId,
+                predicate: ssm => ssm.StudentId == student.Id,
                 include: se => se.Include(se => se.SocialMedia)
                     .Include(se => se.Student)
                     .ThenInclude(s => s.User),

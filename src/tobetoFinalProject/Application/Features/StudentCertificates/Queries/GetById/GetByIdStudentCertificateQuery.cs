@@ -35,10 +35,8 @@ public class GetByIdStudentCertificateQuery : IRequest<GetByIdStudentCertificate
         public async Task<GetByIdStudentCertificateResponse> Handle(GetByIdStudentCertificateQuery request, CancellationToken cancellationToken)
         {
 
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
-
             StudentCertificate? studentCertificate = await _studentCertificateRepository.GetAsync(
-                predicate: sc => sc.Id == request.Id && sc.StudentId == cacheMemoryStudentId,
+                predicate: sc => sc.Id == request.Id,
                 include: sc => sc.Include(sc => sc.Certificate),
                 cancellationToken: cancellationToken);
             await _studentCertificateBusinessRules.StudentCertificateShouldExistWhenSelected(studentCertificate);

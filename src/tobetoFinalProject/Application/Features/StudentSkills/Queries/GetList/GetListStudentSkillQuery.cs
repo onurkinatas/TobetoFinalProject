@@ -11,6 +11,7 @@ using MediatR;
 using static Application.Features.StudentSkills.Constants.StudentSkillsOperationClaims;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentSkills.Queries.GetList;
 
@@ -30,20 +31,21 @@ public class GetListStudentSkillQuery : IRequest<GetListResponse<GetListStudentS
         private readonly IStudentSkillRepository _studentSkillRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListStudentSkillQueryHandler(IStudentSkillRepository studentSkillRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListStudentSkillQueryHandler(IStudentSkillRepository studentSkillRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _studentSkillRepository = studentSkillRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListStudentSkillListItemDto>> Handle(GetListStudentSkillQuery request, CancellationToken cancellationToken)
         {
-            var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+            Student student = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentSkill> studentSkills = await _studentSkillRepository.GetListAsync(
-                predicate: ss => ss.StudentId == cacheMemoryStudentId,
+                predicate: ss => ss.StudentId == student.Id,
                 include: ss => ss.Include(ss => ss.Skill)
                     .Include(ss => ss.Student),
                 index: request.PageRequest.PageIndex,
