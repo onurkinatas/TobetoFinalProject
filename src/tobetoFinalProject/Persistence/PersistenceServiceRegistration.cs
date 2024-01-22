@@ -1,3 +1,4 @@
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IUserOperationClaimRepository, UserOperationClaimRepository>();
 
         services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+       
         services.AddScoped<IAppealRepository, AppealRepository>();
         services.AddScoped<IAppealStageRepository, AppealStageRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();

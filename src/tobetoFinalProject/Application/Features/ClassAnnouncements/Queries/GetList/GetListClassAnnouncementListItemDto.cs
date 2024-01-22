@@ -9,4 +9,5 @@ public class GetListClassAnnouncementListItemDto : IDto
     public string AnnouncementDescription { get; set; }
     public string StudentClassName { get; set; }
     public DateTime AnnouncementCreatedDate { get; set; }
+    public string RefreshToken { get; set; }
 }

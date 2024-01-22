@@ -89,24 +89,23 @@ public class LoginCommand : IRequest<LoggedResponse>, ICacheRemoverRequest
 
                 await _authenticatorService.VerifyAuthenticatorCode(user, request.UserForLoginDto.AuthenticatorCode);
             }
-
-            AccessToken createdAccessToken = await _authService.CreateAccessToken(user);
-
-            Core.Security.Entities.RefreshToken createdRefreshToken = await _authService.CreateRefreshToken(user, request.IpAddress);
-            Core.Security.Entities.RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
-            await _authService.DeleteOldRefreshTokens(user.Id);
-
-            loggedResponse.AccessToken = createdAccessToken;
-            loggedResponse.RefreshToken = addedRefreshToken;
-
             Student? student = await _studentsService.GetAsync(
                 predicate: s => s.UserId == user.Id,
                 cancellationToken: cancellationToken);
             if (student != null)
             {
                 _cacheForMemoryService.AddStudentIdToCache(student.Id);
-                loggedResponse.StudentId = student.Id; // Student ID'yi LoggedResponse'a ekleyin
+                loggedResponse.StudentId = student.Id;
             }
+            AccessToken createdAccessToken = await _authService.CreateAccessToken(user);
+            
+            Core.Security.Entities.RefreshToken createdRefreshToken = await _authService.CreateRefreshToken(user, request.IpAddress);
+            Core.Security.Entities.RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
+            await _authService.DeleteOldRefreshTokens(user.Id);
+
+            loggedResponse.AccessToken = createdAccessToken;
+            loggedResponse.RefreshToken = addedRefreshToken;
+            
             loggedResponse.UserId = user.Id;
 
             return loggedResponse;

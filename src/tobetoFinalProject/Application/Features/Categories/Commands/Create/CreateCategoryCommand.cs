@@ -12,7 +12,7 @@ using static Application.Features.Categories.Constants.CategoriesOperationClaims
 
 namespace Application.Features.Categories.Commands.Create;
 
-public class CreateCategoryCommand : IRequest<CreatedCategoryResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+public class CreateCategoryCommand : IRequest<CreatedCategoryResponse>/*, ISecuredRequest*/, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
     public string Name { get; set; }
 

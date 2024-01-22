@@ -47,8 +47,9 @@ public class ClassAnnouncementsController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
-        GetListClassAnnouncementQuery getListClassAnnouncementQuery = new() { PageRequest = pageRequest };
+        GetListClassAnnouncementQuery getListClassAnnouncementQuery = new() { PageRequest = pageRequest};
         GetListResponse<GetListClassAnnouncementListItemDto> response = await Mediator.Send(getListClassAnnouncementQuery);
         return Ok(response);
     }
+   
 }

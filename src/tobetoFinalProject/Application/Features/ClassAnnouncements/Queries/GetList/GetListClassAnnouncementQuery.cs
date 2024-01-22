@@ -11,13 +11,13 @@ using MediatR;
 using static Application.Features.ClassAnnouncements.Constants.ClassAnnouncementsOperationClaims;
 using Application.Services.CacheForMemory;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassAnnouncements.Queries.GetList;
 
 public class GetListClassAnnouncementQuery : IRequest<GetListResponse<GetListClassAnnouncementListItemDto>>, ISecuredRequest, ICachableRequest
 {
     public PageRequest PageRequest { get; set; }
-
     public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
@@ -30,28 +30,29 @@ public class GetListClassAnnouncementQuery : IRequest<GetListResponse<GetListCla
         private readonly IClassAnnouncementRepository _classAnnouncementRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
-
-        public GetListClassAnnouncementQueryHandler(IClassAnnouncementRepository classAnnouncementRepository, IMapper mapper, ICacheMemoryService cacheMemoryService)
+        private readonly IContextOperationService _contextOperationService;
+        public GetListClassAnnouncementQueryHandler(IClassAnnouncementRepository classAnnouncementRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _classAnnouncementRepository = classAnnouncementRepository;
             _mapper = mapper;
             _cacheMemoryService = cacheMemoryService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListClassAnnouncementListItemDto>> Handle(GetListClassAnnouncementQuery request, CancellationToken cancellationToken)
         {
-            ICollection<Guid> getCacheClassIds = _cacheMemoryService.GetStudentClassIdFromCache();
-
+            ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();   
             IPaginate<ClassAnnouncement> classAnnouncements = await _classAnnouncementRepository.GetListAsync(
-                predicate: ce => getCacheClassIds.Contains(ce.StudentClassId),
+                predicate: ce => getClassIds.Contains(ce.StudentClassId),
                 include: ca => ca.Include(ca => ca.Announcement)
                     .Include(ca => ca.StudentClass),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
             );
-
+            
             GetListResponse<GetListClassAnnouncementListItemDto> response = _mapper.Map<GetListResponse<GetListClassAnnouncementListItemDto>>(classAnnouncements);
+           
             return response;
         }
     }

@@ -8,6 +8,7 @@ using Application.Features.Auth.Commands.VerifyEmailAuthenticator;
 using Application.Features.Auth.Commands.VerifyOtpAuthenticator;
 using Core.Application.Dtos;
 using Core.Security.Entities;
+using Core.Security.JWT;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -35,6 +36,8 @@ public class AuthController : BaseController
 
         if (result.RefreshToken is not null)
             setRefreshTokenToCookie(result.RefreshToken);
+       
+       
 
         return Ok(result.ToHttpResponse());
     }
@@ -100,7 +103,7 @@ public class AuthController : BaseController
         await Mediator.Send(verifyEmailAuthenticatorCommand);
         return Ok();
     }
-
+  
     private string getRefreshTokenFromCookies() =>
         Request.Cookies["refreshToken"] ?? throw new ArgumentException("Refresh token is not found in request cookies.");
 

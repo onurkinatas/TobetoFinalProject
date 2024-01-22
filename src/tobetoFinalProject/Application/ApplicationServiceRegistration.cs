@@ -64,6 +64,7 @@ using Application.Services.Surveys;
 using Application.Services.Tags;
 using Application.Services.StudentSurveys;
 using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 
 namespace Application;
 
@@ -93,7 +94,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IAuthService, AuthManager>();
         services.AddScoped<IAuthenticatorService, AuthenticatorManager>();
         services.AddScoped<IUserService, UserManager>();
-
+        services.AddScoped<IContextOperationService, ContextOperationManager>();
         services.AddScoped<IAnnouncementsService, AnnouncementsManager>();
         services.AddScoped<IAppealsService, AppealsManager>();
         services.AddScoped<IAppealStagesService, AppealStagesManager>();

@@ -16,6 +16,7 @@ namespace Application.Features.StudentClasses.Queries.GetList;
 public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentClasses>>, ISecuredRequest/*, ICachableRequest*/
 {
     public PageRequest PageRequest { get; set; }
+   
 
     public string[] Roles => new[] { Admin, Read };
 

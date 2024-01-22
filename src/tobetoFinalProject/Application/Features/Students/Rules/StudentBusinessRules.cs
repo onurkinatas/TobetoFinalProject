@@ -31,4 +31,10 @@ public class StudentBusinessRules : BaseBusinessRules
         );
         await StudentShouldExistWhenSelected(student);
     }
+    public async Task StudentShouldBeExist(int? userId)
+    {
+        Student student = await _studentRepository.GetAsync(predicate: s => s.UserId == userId);
+        if (student is null)
+            throw new BusinessException(StudentsBusinessMessages.StudentShouldBeExist);
+    }
 }

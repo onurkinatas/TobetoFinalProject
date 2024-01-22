@@ -41,7 +41,7 @@ public class GetListStudentAnnouncementQuery : IRequest<GetListResponse<GetListS
         public async Task<GetListResponse<GetListStudentAnnouncementListItemDto>> Handle(GetListStudentAnnouncementQuery request, CancellationToken cancellationToken)
         {
             var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
-
+            
             IPaginate<StudentAnnouncement> studentAnnouncements = await _studentAnnouncementRepository.GetListAsync(
                 predicate: sa => sa.StudentId == cacheMemoryStudentId,
                 include: sa => sa.Include(sa => sa.Announcement),
