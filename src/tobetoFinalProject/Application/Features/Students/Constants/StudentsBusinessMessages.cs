@@ -2,7 +2,7 @@ namespace Application.Features.Students.Constants;
 
 public static class StudentsBusinessMessages
 {
-    public const string StudentNotExists = "Student not exists.";
+    public const string StudentNotExists = "Öðrenci Bulunamadý.";
 
-    public static string? StudentShouldBeExist { get; internal set; }
+    public const string StudentShouldBeExist = "Öðrenci bulunamadý lütfen tekrar giriþ yapýnýz";
 }

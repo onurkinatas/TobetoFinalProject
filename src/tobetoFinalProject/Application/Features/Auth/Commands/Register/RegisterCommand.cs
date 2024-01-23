@@ -1,7 +1,9 @@
 ﻿using Application.Features.Auth.Rules;
+using Application.Features.Categories.Constants;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using Core.Application.Dtos;
+using Core.Application.Pipelines.Authorization;
 using Core.Security.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;

@@ -4,6 +4,7 @@ using Application.Features.Auth.Commands.Login;
 using Application.Features.Auth.Commands.RefreshToken;
 using Application.Features.Auth.Commands.Register;
 using Application.Features.Auth.Commands.RevokeToken;
+using Application.Features.Auth.Commands.StudentLogin;
 using Application.Features.Auth.Commands.VerifyEmailAuthenticator;
 using Application.Features.Auth.Commands.VerifyOtpAuthenticator;
 using Core.Application.Dtos;
@@ -41,7 +42,19 @@ public class AuthController : BaseController
 
         return Ok(result.ToHttpResponse());
     }
+    [HttpPost("StudentLogin")]
+    public async Task<IActionResult> StudentLogin([FromBody] UserForLoginDto userForLoginDto)
+    {
+        StudentLoginCommand loginCommand = new() { UserForLoginDto = userForLoginDto, IpAddress = getIpAddress() };
+        StudentLoggedResponse result = await Mediator.Send(loginCommand);
 
+        if (result.RefreshToken is not null)
+            setRefreshTokenToCookie(result.RefreshToken);
+
+
+
+        return Ok(result.ToHttpResponse());
+    }
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
     {
