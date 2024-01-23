@@ -98,14 +98,14 @@ public class AuthBusinessRules : BaseBusinessRules
     {
         await UserOperationClaimShouldBeExist(userId);
         UserOperationClaim userOperationClaim = await _userOperationClaimRepository.GetAsync(predicate: s => s.UserId == userId, enableTracking: false);
-        await OperationClaimShouldBeExist(userOperationClaim.Id);
+        await OperationClaimShouldBeExist(userOperationClaim.OperationClaimId);
         OperationClaim operationClaim  = await _operationClaimRepository.GetAsync(predicate:oc=>oc.Id==userOperationClaim.OperationClaimId, enableTracking: false);
         if (operationClaim.Name!="Admin")
             throw new BusinessException(AuthMessages.UserIsNotAAdmin);
     }
-    public async Task OperationClaimShouldBeExist(int userOperationClaimId)
+    public async Task OperationClaimShouldBeExist(int operationClaimId)
     {
-        bool doesExist = await _operationClaimRepository.AnyAsync(predicate: oc => oc.Id == userOperationClaimId, enableTracking: false);
+        bool doesExist = await _operationClaimRepository.AnyAsync(predicate: oc => oc.Id == operationClaimId, enableTracking: false);
         if (!doesExist)
             throw new BusinessException(AuthMessages.OperationClaimShouldBeExist);
     }

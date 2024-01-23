@@ -14,7 +14,7 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
 {
     public Guid Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read,"Student" };
 
     public class GetByIdLectureQueryHandler : IRequestHandler<GetByIdLectureQuery, GetByIdLectureResponse>
     {
@@ -55,12 +55,17 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
                    .ThenInclude(c => c. Language)
                    .Include(m => m.Manufacturer)
                    .Include(m => m.Category)
+
                    .Include(m => m.LectureCourses)
                    .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(cc => cc.ContentInstructors)
-                   .ThenInclude(cc => cc.Instructor),
+                    .ThenInclude(c => c.CourseContents)
+                    .ThenInclude(cc => cc.Content)
+                    .ThenInclude(cc => cc.ContentInstructors)
+                    .ThenInclude(cc => cc.Instructor),
+
+
+
+                //10 dk mola ahmet yalan etti 17:30
                 cancellationToken: cancellationToken);
             await _lectureBusinessRules.LectureShouldExistWhenSelected(lecture);
 
