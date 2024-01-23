@@ -98,8 +98,6 @@ public class LoginCommand : IRequest<LoggedResponse>, ICacheRemoverRequest
 
             loggedResponse.AccessToken = createdAccessToken;
             loggedResponse.RefreshToken = addedRefreshToken;
-            
-            loggedResponse.UserId = user.Id;
 
             return loggedResponse;
         }

@@ -44,6 +44,13 @@ public class StudentsController : BaseController
         return Ok(response);
     }
 
+    [HttpGet("getByToken")]
+    public async Task<IActionResult> GetSingle()
+    {
+        GetByTokenStudentResponse response = await Mediator.Send(new GetByTokenStudentQuery { });
+        return Ok(response);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {

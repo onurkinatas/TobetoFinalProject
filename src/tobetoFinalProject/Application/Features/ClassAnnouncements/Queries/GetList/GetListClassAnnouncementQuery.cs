@@ -15,7 +15,7 @@ using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassAnnouncements.Queries.GetList;
 
-public class GetListClassAnnouncementQuery : IRequest<GetListResponse<GetListClassAnnouncementListItemDto>>, ISecuredRequest, ICachableRequest
+public class GetListClassAnnouncementQuery : IRequest<GetListResponse<GetListClassAnnouncementListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
     public string[] Roles => new[] { Admin, Read, "Student" };
