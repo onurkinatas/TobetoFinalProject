@@ -1,6 +1,7 @@
 using Application.Features.StudentSocialMedias.Constants;
 using Application.Features.StudentSocialMedias.Constants;
 using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using Core.Application.Rules;
 using Core.CrossCuttingConcerns.Exceptions.Types;
@@ -15,11 +16,13 @@ public class StudentSocialMediaBusinessRules : BaseBusinessRules
 {
     private readonly IStudentSocialMediaRepository _studentSocialMediaRepository;
     private readonly ICacheMemoryService _cacheMemoryService;
+    private readonly IContextOperationService _contextOperationService;
 
-    public StudentSocialMediaBusinessRules(IStudentSocialMediaRepository studentSocialMediaRepository, ICacheMemoryService cacheMemoryService)
+    public StudentSocialMediaBusinessRules(IStudentSocialMediaRepository studentSocialMediaRepository, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
     {
         _studentSocialMediaRepository = studentSocialMediaRepository;
         _cacheMemoryService = cacheMemoryService;
+        _contextOperationService = contextOperationService;
     }
     public async Task StudentSocialMediaShouldNotExistsWhenInsert(StudentSocialMedia studentSocialMedia)
     {
@@ -63,10 +66,10 @@ public class StudentSocialMediaBusinessRules : BaseBusinessRules
 
     public async Task StudentSocialMediaSelectionControl(CancellationToken cancellationToken) 
     {
-        var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
+        Student getStudent = await _contextOperationService.GetStudentFromContext();
 
         IPaginate<StudentSocialMedia> studentSocialMedias = await _studentSocialMediaRepository.GetListAsync(
-                predicate: s => s.StudentId == cacheMemoryStudentId,
+                predicate: s => s.StudentId == getStudent.Id,
                 include: sc => sc.Include(sc => sc.SocialMedia),
                 cancellationToken: cancellationToken
         );
