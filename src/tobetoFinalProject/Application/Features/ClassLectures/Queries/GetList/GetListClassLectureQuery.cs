@@ -15,7 +15,7 @@ using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassLectures.Queries.GetList;
 
-public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLectureListItemDto>>, /*ISecuredRequest*/ ICachableRequest
+public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLectureListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
 
