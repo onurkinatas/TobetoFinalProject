@@ -53,17 +53,8 @@ public class CreateLectureLikeCommand : IRequest<CreatedLectureLikeResponse>, IS
             LectureLike? doesExistLectureLike = await _lectureLikeRepository.GetAsync(predicate:ll=>ll.StudentId==getStudent.Id&&ll.LectureId==lectureLike.LectureId, cancellationToken:cancellationToken);
             if(doesExistLectureLike is not null)
             {
-                if (doesExistLectureLike.IsLiked)
-                { 
-                    doesExistLectureLike.IsLiked=false;
-                    await _lectureLikeRepository.UpdateAsync(doesExistLectureLike);
-                    
-                }
-                else if(!doesExistLectureLike.IsLiked)
-                {
-                    doesExistLectureLike.IsLiked = true;
-                    await _lectureLikeRepository.UpdateAsync(doesExistLectureLike);
-                }
+                doesExistLectureLike.IsLiked = !doesExistLectureLike.IsLiked;
+                await _lectureLikeRepository.UpdateAsync(doesExistLectureLike);
                 
             }
             if(doesExistLectureLike is null)
