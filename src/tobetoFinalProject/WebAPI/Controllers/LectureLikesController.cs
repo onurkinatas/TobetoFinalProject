@@ -2,7 +2,9 @@ using Application.Features.LectureLikes.Commands.Create;
 using Application.Features.LectureLikes.Commands.Delete;
 using Application.Features.LectureLikes.Commands.Update;
 using Application.Features.LectureLikes.Queries.GetById;
+using Application.Features.LectureLikes.Queries.GetByLectureId;
 using Application.Features.LectureLikes.Queries.GetList;
+using Application.Features.LectureLikes.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -43,12 +45,25 @@ public class LectureLikesController : BaseController
         GetByIdLectureLikeResponse response = await Mediator.Send(new GetByIdLectureLikeQuery { Id = id });
         return Ok(response);
     }
+    [HttpGet("getByLectureId{lectureId}")]
+    public async Task<IActionResult> GetByLectureId([FromRoute] Guid lectureId)
+    {
+        GetByLectureIdLectureLikeResponse response = await Mediator.Send(new GetByLectureIdLectureLikeQuery { LectureId = lectureId });
+        return Ok(response);
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
         GetListLectureLikeQuery getListLectureLikeQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListLectureLikeListItemDto> response = await Mediator.Send(getListLectureLikeQuery);
+        return Ok(response);
+    }
+    [HttpGet("GetListForActiveStudent")]
+    public async Task<IActionResult> GetListForActiveStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListLectureLikeForLoggedStudentQuery getListLectureLikeForLoggedStudentQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListLectureLikeForLoggedStudentListItemDto> response = await Mediator.Send(getListLectureLikeForLoggedStudentQuery);
         return Ok(response);
     }
 }

@@ -17,7 +17,6 @@ namespace Application.Features.StudentAnnouncements.Queries.GetList;
 
 public class GetListStudentAnnouncementQuery : IRequest<ICollection<StudentAnnouncement>>, ISecuredRequest
 {
-
     public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
@@ -44,7 +43,6 @@ public class GetListStudentAnnouncementQuery : IRequest<ICollection<StudentAnnou
           
             var studentAnnouncements = _studentAnnouncementRepository.GetAllWithoutPaginate(sa => sa.StudentId == getStudent.Id);
 
-            
             return studentAnnouncements;
         }
     }

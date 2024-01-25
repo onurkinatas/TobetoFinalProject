@@ -5,7 +5,6 @@ namespace Application.Features.LectureLikes.Commands.Create;
 public class CreatedLectureLikeResponse : IResponse
 {
     public Guid Id { get; set; }
-    public bool IsLiked { get; set; }
     public Guid StudentId { get; set; }
     public Guid LectureId { get; set; }
 }

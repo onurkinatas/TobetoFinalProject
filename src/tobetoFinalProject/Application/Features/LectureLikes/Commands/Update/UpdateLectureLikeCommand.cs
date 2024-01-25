@@ -19,7 +19,7 @@ public class UpdateLectureLikeCommand : IRequest<UpdatedLectureLikeResponse>, IS
     public Guid StudentId { get; set; }
     public Guid LectureId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, LectureLikesOperationClaims.Update };
+    public string[] Roles => new[] { Admin, Write, LectureLikesOperationClaims.Update , "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }

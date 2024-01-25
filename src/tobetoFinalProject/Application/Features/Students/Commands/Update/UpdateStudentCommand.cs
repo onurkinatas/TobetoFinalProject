@@ -27,7 +27,7 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
     public string? ProfilePhotoPath { get; set; }
     public string? Country { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentsOperationClaims.Update };
+    public string[] Roles => new[] { Admin, Write, StudentsOperationClaims.Update ,"Student"};
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
