@@ -5,6 +5,7 @@ using Application.Features.StudentAnnouncements.Queries.GetById;
 using Application.Features.StudentAnnouncements.Queries.GetList;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -45,10 +46,10 @@ public class StudentAnnouncementsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
+    public async Task<IActionResult> GetList()
     {
-        GetListStudentAnnouncementQuery getListStudentAnnouncementQuery = new() { PageRequest = pageRequest };
-        GetListResponse<GetListStudentAnnouncementListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        GetListStudentAnnouncementQuery getListStudentAnnouncementQuery = new() {};
+        ICollection<StudentAnnouncement> response = await Mediator.Send(getListStudentAnnouncementQuery);
         return Ok(response);
     }
 }

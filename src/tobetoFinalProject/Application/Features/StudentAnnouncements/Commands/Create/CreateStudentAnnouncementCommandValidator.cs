@@ -7,6 +7,5 @@ public class CreateStudentAnnouncementCommandValidator : AbstractValidator<Creat
     public CreateStudentAnnouncementCommandValidator()
     {
         RuleFor(c => c.AnnouncementId).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
     }
 }

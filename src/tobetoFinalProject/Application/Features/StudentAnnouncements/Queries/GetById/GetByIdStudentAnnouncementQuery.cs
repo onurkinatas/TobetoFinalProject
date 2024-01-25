@@ -41,7 +41,7 @@ public class GetByIdStudentAnnouncementQuery : IRequest<GetByIdStudentAnnounceme
 
             StudentAnnouncement? studentAnnouncement = await _studentAnnouncementRepository.GetAsync
                 (predicate: sa => sa.Id == request.Id && sa.StudentId == cacheMemoryStudentId,
-                include: sa => sa.Include(sa => sa.Announcement),
+
                 cancellationToken: cancellationToken);
             await _studentAnnouncementBusinessRules.StudentAnnouncementShouldExistWhenSelected(studentAnnouncement);
 
