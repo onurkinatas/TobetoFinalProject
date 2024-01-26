@@ -6,7 +6,6 @@ public class CreateStudentSocialMediaCommandValidator : AbstractValidator<Create
 {
     public CreateStudentSocialMediaCommandValidator()
     {
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.SocialMediaId).NotEmpty();
         RuleFor(c => c.MediaAccountUrl).NotEmpty();
     }

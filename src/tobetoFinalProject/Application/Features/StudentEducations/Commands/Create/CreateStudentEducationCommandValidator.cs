@@ -7,7 +7,6 @@ public class CreateStudentEducationCommandValidator : AbstractValidator<CreateSt
 {
     public CreateStudentEducationCommandValidator()
     {
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.EducationStatus).NotEmpty();
         RuleFor(c => c.SchoolName).NotEmpty().WithMessage("Okul alaný boþ býrakýlamaz.").MinimumLength(2).WithMessage("Okul alaný en az 2 karakter olmalýdýr.");
         RuleFor(c => c.Branch).NotEmpty().WithMessage("Bölüm alaný boþ býrakýlamaz.").Length(2, 50).WithMessage("Bölüm alaný en az 2, en fazla 50 karakter olmalýdýr.");

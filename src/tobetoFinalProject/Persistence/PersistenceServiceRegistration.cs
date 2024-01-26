@@ -77,6 +77,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<ISurveyRepository, SurveyRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IStudentSurveyRepository, StudentSurveyRepository>();
+       services.AddScoped<ILectureViewRepository, LectureViewRepository>();
         return services;
     }
 }

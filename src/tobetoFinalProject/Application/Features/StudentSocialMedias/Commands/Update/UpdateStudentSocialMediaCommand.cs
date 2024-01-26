@@ -9,13 +9,14 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentSocialMedias.Constants.StudentSocialMediasOperationClaims;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentSocialMedias.Commands.Update;
 
 public class UpdateStudentSocialMediaCommand : IRequest<UpdatedStudentSocialMediaResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
     public Guid Id { get; set; }
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
     public Guid SocialMediaId { get; set; }
     public string MediaAccountUrl { get; set; }
 
@@ -30,17 +31,20 @@ public class UpdateStudentSocialMediaCommand : IRequest<UpdatedStudentSocialMedi
         private readonly IMapper _mapper;
         private readonly IStudentSocialMediaRepository _studentSocialMediaRepository;
         private readonly StudentSocialMediaBusinessRules _studentSocialMediaBusinessRules;
-
+        private readonly IContextOperationService _contextOperationService;
         public UpdateStudentSocialMediaCommandHandler(IMapper mapper, IStudentSocialMediaRepository studentSocialMediaRepository,
-                                         StudentSocialMediaBusinessRules studentSocialMediaBusinessRules)
+                                         StudentSocialMediaBusinessRules studentSocialMediaBusinessRules, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _studentSocialMediaRepository = studentSocialMediaRepository;
             _studentSocialMediaBusinessRules = studentSocialMediaBusinessRules;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<UpdatedStudentSocialMediaResponse> Handle(UpdateStudentSocialMediaCommand request, CancellationToken cancellationToken)
         {
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
+            request.StudentId = getStudent.Id;
             StudentSocialMedia? studentSocialMedia = await _studentSocialMediaRepository.GetAsync(predicate: ssm => ssm.Id == request.Id, cancellationToken: cancellationToken);
             await _studentSocialMediaBusinessRules.StudentSocialMediaShouldExistWhenSelected(studentSocialMedia);
             studentSocialMedia = _mapper.Map(request, studentSocialMedia);

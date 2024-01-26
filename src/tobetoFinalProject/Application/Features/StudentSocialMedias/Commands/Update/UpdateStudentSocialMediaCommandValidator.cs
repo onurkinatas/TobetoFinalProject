@@ -7,7 +7,6 @@ public class UpdateStudentSocialMediaCommandValidator : AbstractValidator<Update
     public UpdateStudentSocialMediaCommandValidator()
     {
         RuleFor(c => c.Id).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.SocialMediaId).NotEmpty();
         RuleFor(c => c.MediaAccountUrl).NotEmpty();
     }

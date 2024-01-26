@@ -9,13 +9,14 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentExperiences.Constants.StudentExperiencesOperationClaims;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentExperiences.Commands.Update;
 
 public class UpdateStudentExperienceCommand : IRequest<UpdatedStudentExperienceResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
     public Guid Id { get; set; }
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
     public string CompanyName { get; set; }
     public string Sector { get; set; }
     public string Position { get; set; }
@@ -35,19 +36,22 @@ public class UpdateStudentExperienceCommand : IRequest<UpdatedStudentExperienceR
         private readonly IMapper _mapper;
         private readonly IStudentExperienceRepository _studentExperienceRepository;
         private readonly StudentExperienceBusinessRules _studentExperienceBusinessRules;
-
+        private readonly IContextOperationService _contextOperationService;
         public UpdateStudentExperienceCommandHandler(IMapper mapper, IStudentExperienceRepository studentExperienceRepository,
-                                         StudentExperienceBusinessRules studentExperienceBusinessRules)
+                                         StudentExperienceBusinessRules studentExperienceBusinessRules, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _studentExperienceRepository = studentExperienceRepository;
             _studentExperienceBusinessRules = studentExperienceBusinessRules;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<UpdatedStudentExperienceResponse> Handle(UpdateStudentExperienceCommand request, CancellationToken cancellationToken)
         {
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
             StudentExperience? studentExperience = await _studentExperienceRepository.GetAsync(predicate: se => se.Id == request.Id, cancellationToken: cancellationToken);
             await _studentExperienceBusinessRules.StudentExperienceShouldExistWhenSelected(studentExperience);
+            request.StudentId = getStudent.Id;
             studentExperience = _mapper.Map(request, studentExperience);
 
             await _studentExperienceRepository.UpdateAsync(studentExperience!);

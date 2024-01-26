@@ -9,13 +9,14 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentSkills.Constants.StudentSkillsOperationClaims;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentSkills.Commands.Update;
 
 public class UpdateStudentSkillCommand : IRequest<UpdatedStudentSkillResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
     public Guid Id { get; set; }
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
     public Guid SkillId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentSkillsOperationClaims.Update, "Student" };
@@ -29,17 +30,20 @@ public class UpdateStudentSkillCommand : IRequest<UpdatedStudentSkillResponse>, 
         private readonly IMapper _mapper;
         private readonly IStudentSkillRepository _studentSkillRepository;
         private readonly StudentSkillBusinessRules _studentSkillBusinessRules;
-
+        private readonly IContextOperationService _contextOperationService;
         public UpdateStudentSkillCommandHandler(IMapper mapper, IStudentSkillRepository studentSkillRepository,
-                                         StudentSkillBusinessRules studentSkillBusinessRules)
+                                         StudentSkillBusinessRules studentSkillBusinessRules, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _studentSkillRepository = studentSkillRepository;
             _studentSkillBusinessRules = studentSkillBusinessRules;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<UpdatedStudentSkillResponse> Handle(UpdateStudentSkillCommand request, CancellationToken cancellationToken)
         {
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
+            request.StudentId = getStudent.Id;
             StudentSkill? studentSkill = await _studentSkillRepository.GetAsync(predicate: ss => ss.Id == request.Id, cancellationToken: cancellationToken);
             await _studentSkillBusinessRules.StudentSkillShouldExistWhenSelected(studentSkill);
             studentSkill = _mapper.Map(request, studentSkill);

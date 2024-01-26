@@ -7,7 +7,6 @@ public class UpdateStudentSkillCommandValidator : AbstractValidator<UpdateStuden
     public UpdateStudentSkillCommandValidator()
     {
         RuleFor(c => c.Id).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.SkillId).NotEmpty();
     }
 }

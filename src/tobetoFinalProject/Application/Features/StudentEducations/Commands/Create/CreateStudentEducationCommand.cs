@@ -9,12 +9,13 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentEducations.Constants.StudentEducationsOperationClaims;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentEducations.Commands.Create;
 
 public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
     public string EducationStatus { get; set; }
     public string SchoolName { get; set; }
     public string Branch { get; set; }
@@ -32,19 +33,24 @@ public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationRes
     {
         private readonly IMapper _mapper;
         private readonly IStudentEducationRepository _studentEducationRepository;
+        private readonly IContextOperationService _contextOperationService;
         private readonly StudentEducationBusinessRules _studentEducationBusinessRules;
 
         public CreateStudentEducationCommandHandler(IMapper mapper, IStudentEducationRepository studentEducationRepository,
-                                         StudentEducationBusinessRules studentEducationBusinessRules)
+                                         StudentEducationBusinessRules studentEducationBusinessRules, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _studentEducationRepository = studentEducationRepository;
             _studentEducationBusinessRules = studentEducationBusinessRules;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<CreatedStudentEducationResponse> Handle(CreateStudentEducationCommand request, CancellationToken cancellationToken)
         {
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
+            request.StudentId = getStudent.Id;
             StudentEducation studentEducation = _mapper.Map<StudentEducation>(request);
+            
             await _studentEducationBusinessRules.StudentEducationShouldNotExistsWhenInsert(studentEducation);
             await _studentEducationRepository.AddAsync(studentEducation);
 

@@ -9,12 +9,13 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentSocialMedias.Constants.StudentSocialMediasOperationClaims;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentSocialMedias.Commands.Create;
 
 public class CreateStudentSocialMediaCommand : IRequest<CreatedStudentSocialMediaResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
     public Guid SocialMediaId { get; set; }
     public string MediaAccountUrl { get; set; }
 
@@ -29,17 +30,20 @@ public class CreateStudentSocialMediaCommand : IRequest<CreatedStudentSocialMedi
         private readonly IMapper _mapper;
         private readonly IStudentSocialMediaRepository _studentSocialMediaRepository;
         private readonly StudentSocialMediaBusinessRules _studentSocialMediaBusinessRules;
-
+        private readonly IContextOperationService _contextOperationService;
         public CreateStudentSocialMediaCommandHandler(IMapper mapper, IStudentSocialMediaRepository studentSocialMediaRepository,
-                                         StudentSocialMediaBusinessRules studentSocialMediaBusinessRules)
+                                         StudentSocialMediaBusinessRules studentSocialMediaBusinessRules, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _studentSocialMediaRepository = studentSocialMediaRepository;
             _studentSocialMediaBusinessRules = studentSocialMediaBusinessRules;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<CreatedStudentSocialMediaResponse> Handle(CreateStudentSocialMediaCommand request, CancellationToken cancellationToken)
         {
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
+            request.StudentId = getStudent.Id;
             StudentSocialMedia studentSocialMedia = _mapper.Map<StudentSocialMedia>(request);
             await _studentSocialMediaBusinessRules.StudentSocialMediaShouldNotExistsWhenInsert(studentSocialMedia);
             await _studentSocialMediaBusinessRules.StudentSocialMediaSelectionControl(cancellationToken);

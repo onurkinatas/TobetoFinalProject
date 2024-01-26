@@ -6,7 +6,6 @@ public class CreateStudentExperienceCommandValidator : AbstractValidator<CreateS
 {
     public CreateStudentExperienceCommandValidator()
     {
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.CompanyName).NotEmpty().WithMessage("Kurum alaný boþ býrakýlamaz.").Length(5, 50).WithMessage("CompanyName en az 5, en fazla 50 karakter olmalýdýr.");
         RuleFor(c => c.Sector).NotEmpty();
         RuleFor(c => c.Position).NotEmpty().WithMessage("Pozisyon alaný boþ býrakýlamaz.")

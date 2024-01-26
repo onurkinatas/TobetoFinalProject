@@ -41,6 +41,7 @@ public class GetListLectureLikeForLoggedStudentQuery : IRequest<GetListResponse<
         public async Task<GetListResponse<GetListLectureLikeForLoggedStudentListItemDto>> Handle(GetListLectureLikeForLoggedStudentQuery request, CancellationToken cancellationToken)
         {
             Student student = await _contextOperationService.GetStudentFromContext();
+
             IPaginate<LectureLike> lectureLikes = await _lectureLikeRepository.GetListAsync(
                 predicate:ll=>ll.StudentId == student.Id,
                 include:ll=>ll.Include(ll=>ll.Lecture),
@@ -50,7 +51,9 @@ public class GetListLectureLikeForLoggedStudentQuery : IRequest<GetListResponse<
             );
 
             GetListResponse<GetListLectureLikeForLoggedStudentListItemDto> response = _mapper.Map<GetListResponse<GetListLectureLikeForLoggedStudentListItemDto>>(lectureLikes);
+
             return response;
+
         }
     }
 }

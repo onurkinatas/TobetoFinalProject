@@ -6,7 +6,6 @@ public class CreateStudentLanguageLevelCommandValidator : AbstractValidator<Crea
 {
     public CreateStudentLanguageLevelCommandValidator()
     {
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.LanguageLevelId).NotEmpty();
     }
 }

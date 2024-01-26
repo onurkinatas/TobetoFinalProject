@@ -7,7 +7,6 @@ public class UpdateStudentLanguageLevelCommandValidator : AbstractValidator<Upda
     public UpdateStudentLanguageLevelCommandValidator()
     {
         RuleFor(c => c.Id).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.LanguageLevelId).NotEmpty();
     }
 }
