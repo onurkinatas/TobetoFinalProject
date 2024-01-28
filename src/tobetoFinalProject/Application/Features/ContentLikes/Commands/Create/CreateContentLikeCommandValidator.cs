@@ -6,8 +6,6 @@ public class CreateContentLikeCommandValidator : AbstractValidator<CreateContent
 {
     public CreateContentLikeCommandValidator()
     {
-        RuleFor(c => c.IsLiked).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.ContentId).NotEmpty();
     }
 }

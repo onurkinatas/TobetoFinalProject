@@ -3,6 +3,9 @@ using Application.Features.ContentLikes.Commands.Delete;
 using Application.Features.ContentLikes.Commands.Update;
 using Application.Features.ContentLikes.Queries.GetById;
 using Application.Features.ContentLikes.Queries.GetList;
+using Application.Features.ContentLikes.Queries.GetListForLoggedStudent;
+using Application.Features.ContentLikes.Queries.GetByContentId;
+using Application.Features.ContentLikes.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +47,13 @@ public class ContentLikesController : BaseController
         return Ok(response);
     }
 
+    [HttpGet("getByContentId{contentId}")]
+    public async Task<IActionResult> GetByContentId([FromRoute] Guid contentId)
+    {
+        GetByContentIdContentLikeResponse response = await Mediator.Send(new GetByContentIdContentLikeQuery { ContentId = contentId });
+        return Ok(response);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
@@ -51,4 +61,12 @@ public class ContentLikesController : BaseController
         GetListResponse<GetListContentLikeListItemDto> response = await Mediator.Send(getListContentLikeQuery);
         return Ok(response);
     }
+    [HttpGet("GetListForActiveStudent")]
+    public async Task<IActionResult> GetListForActiveStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListContentLikeForLoggedStudentQuery getListContentLikeForLoggedStudentQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListContentLikeForLoggedStudentListItemDto> response = await Mediator.Send(getListContentLikeForLoggedStudentQuery);
+        return Ok(response);
+    }
+
 }
