@@ -1,3 +1,4 @@
+using Application.Features.LectureLikes.Queries.GetLectureLikeCount;
 using Application.Features.LectureLikes.Commands.Create;
 using Application.Features.LectureLikes.Commands.Delete;
 using Application.Features.LectureLikes.Commands.Update;
@@ -64,6 +65,13 @@ public class LectureLikesController : BaseController
     {
         GetListLectureLikeForLoggedStudentQuery getListLectureLikeForLoggedStudentQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListLectureLikeForLoggedStudentListItemDto> response = await Mediator.Send(getListLectureLikeForLoggedStudentQuery);
+        return Ok(response);
+    }
+    [HttpGet("GetCount{lectureId}")]
+    public async Task<IActionResult> GetCount([FromRoute] Guid lectureId)
+    {
+        GetLectureLikeCountQueryResponse response = await Mediator.Send(new GetLectureLikeCountQuery { LectureId = lectureId });
+
         return Ok(response);
     }
 }
