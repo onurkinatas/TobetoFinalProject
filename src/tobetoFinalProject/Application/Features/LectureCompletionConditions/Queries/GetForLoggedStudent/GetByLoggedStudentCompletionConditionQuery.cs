@@ -44,6 +44,7 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
         public async Task<GetByLoggedStudentCompletionConditionResponse> Handle(GetByLoggedStudentCompletionConditionQuery request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
+            
             Lecture lecture = await _lectureRepository.GetAsync(
                 predicate:l=>l.Id ==request.LectureId, 
                 include:l=>l.Include(l => l.LectureCourses)
@@ -51,17 +52,22 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
                    .ThenInclude(c => c.CourseContents)
                    .ThenInclude(cc => cc.Content),
                 cancellationToken:cancellationToken);
+
             var contentCount = lecture.LectureCourses
                 .SelectMany(lc => lc.Course.CourseContents)
                 .Count();
+
             ICollection<LectureView> lectureView = await _lectureViewRepository.GetAll(lv=>lv.LectureId==request.LectureId&&lv.StudentId==getStudent.Id);
             int lectureViewCount = lectureView.Count;
+           
 
-            float x = (lectureViewCount * 100) / contentCount;
-            LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.Id == request.LectureId, cancellationToken: cancellationToken);
-            await _lectureCompletionConditionBusinessRules.LectureCompletionConditionShouldExistWhenSelected(lectureCompletionCondition);
+            LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == request.LectureId&&lcc.StudentId==getStudent.Id, cancellationToken: cancellationToken);
 
-            GetByLoggedStudentCompletionConditionResponse response = _mapper.Map<GetByLoggedStudentCompletionConditionResponse>(lectureCompletionCondition);
+
+            GetByLoggedStudentCompletionConditionResponse response = new GetByLoggedStudentCompletionConditionResponse();
+            response.CompletionPercentage = lectureCompletionCondition.CompletionPercentage;
+            response.TotalWatchedCount = lectureViewCount;
+            response.TotalVideoCount = contentCount;
             return response;
         }
     }

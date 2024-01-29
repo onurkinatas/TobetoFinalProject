@@ -35,7 +35,6 @@ public class GetByContentIdContentLikeQuery : IRequest<GetByContentIdContentLike
             ContentLike? contentLike = await _contentLikeRepository.GetAsync(
                 predicate: ll => ll.ContentId == request.ContentId && ll.StudentId == getStudent.Id,
                 cancellationToken: cancellationToken);
-            await _contentLikeBusinessRules.ContentLikeShouldExistWhenSelected(contentLike);
 
             GetByContentIdContentLikeResponse response = _mapper.Map<GetByContentIdContentLikeResponse>(contentLike);
             return response;
