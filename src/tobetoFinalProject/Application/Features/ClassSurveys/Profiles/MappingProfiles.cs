@@ -23,5 +23,7 @@ public class MappingProfiles : Profile
         CreateMap<ClassSurvey, GetByIdClassSurveyResponse>().ReverseMap();
         CreateMap<ClassSurvey, GetListClassSurveyListItemDto>().ReverseMap();
         CreateMap<IPaginate<ClassSurvey>, GetListResponse<GetListClassSurveyListItemDto>>().ReverseMap();
+        CreateMap<ClassSurvey, GetListClassSurveyListItemDto>()
+    .ForMember(dest => dest.SurveyUrl, opt => opt.MapFrom(src => src.Survey.SurveyUrl));
     }
 }

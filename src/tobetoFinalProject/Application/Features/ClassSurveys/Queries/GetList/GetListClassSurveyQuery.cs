@@ -15,7 +15,7 @@ using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassSurveys.Queries.GetList;
 
-public class GetListClassSurveyQuery : IRequest<GetListResponse<GetListClassSurveyListItemDto>>, ISecuredRequest, ICachableRequest
+public class GetListClassSurveyQuery : IRequest<GetListResponse<GetListClassSurveyListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
 

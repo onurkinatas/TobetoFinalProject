@@ -19,6 +19,7 @@ public class GetListStudentListItemDto : IDto
     public string Email { get; set; }
     public string CityName { get; set; }
     public string DistrictName { get; set; }
+    public string ProfilePhotoPath { get; set; }
     public string NationalIdentity { get; set; }
     public string Phone { get; set; }
     public DateTime BirthDate { get; set; }

@@ -15,7 +15,7 @@ using Application.Services.ContextOperations;
 
 namespace Application.Features.ClassExams.Queries.GetList;
 
-public class GetListClassExamQuery : IRequest<GetListResponse<GetListClassExamListItemDto>>, ISecuredRequest, ICachableRequest
+public class GetListClassExamQuery : IRequest<GetListResponse<GetListClassExamListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
 

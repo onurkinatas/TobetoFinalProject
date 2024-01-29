@@ -22,6 +22,7 @@ public class GetByTokenStudentResponse : IResponse
     public string DistrictName { get; set; }
     public string NationalIdentity { get; set; }
     public string Phone { get; set; }
+    public string ProfilePhotoPath { get; set; }
     public DateTime BirthDate { get; set; }
     public string AdrressDetail { get; set; }
     public string Description { get; set; }
