@@ -3,8 +3,10 @@ using Application.Features.LectureViews.Commands.Delete;
 using Application.Features.LectureViews.Commands.Update;
 using Application.Features.LectureViews.Queries.GetById;
 using Application.Features.LectureViews.Queries.GetList;
+using Application.Features.LectureViews.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -49,6 +51,13 @@ public class LectureViewsController : BaseController
     {
         GetListLectureViewQuery getListLectureViewQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListLectureViewListItemDto> response = await Mediator.Send(getListLectureViewQuery);
+        return Ok(response);
+    }
+    [HttpGet("getForLoggedStudent{lectureId}")]
+    public async Task<IActionResult> GetAllForLoggedStudent([FromRoute] Guid lectureId)
+    {
+        GetListLectureViewForLoggedStudentQuery getListLectureViewQuery = new() { LectureId=lectureId};
+        ICollection<LectureView> response = await Mediator.Send(getListLectureViewQuery);
         return Ok(response);
     }
 }

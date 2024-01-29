@@ -6,7 +6,6 @@ public class CreateLectureViewCommandValidator : AbstractValidator<CreateLecture
 {
     public CreateLectureViewCommandValidator()
     {
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.LectureId).NotEmpty();
         RuleFor(c => c.ContentId).NotEmpty();
     }
