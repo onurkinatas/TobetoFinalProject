@@ -35,7 +35,6 @@ public class GetByLectureIdLectureLikeQuery : IRequest<GetByLectureIdLectureLike
             LectureLike? lectureLike = await _lectureLikeRepository.GetAsync(
                 predicate: ll => ll.LectureId == request.LectureId && ll.StudentId== getStudent.Id, 
                 cancellationToken: cancellationToken);
-            await _lectureLikeBusinessRules.LectureLikeShouldExistWhenSelected(lectureLike);
 
             GetByLectureIdLectureLikeResponse response = _mapper.Map<GetByLectureIdLectureLikeResponse>(lectureLike);
             return response;

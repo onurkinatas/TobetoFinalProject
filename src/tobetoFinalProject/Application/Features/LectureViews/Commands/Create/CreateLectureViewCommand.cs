@@ -29,15 +29,19 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
     {
         private readonly IMapper _mapper;
         private readonly ILectureViewRepository _lectureViewRepository;
+        private readonly ILectureCompletionConditionRepository _lectureCompletionConditionRepository;
         private readonly LectureViewBusinessRules _lectureViewBusinessRules;
         private readonly IContextOperationService _contextOperationService;
+        private readonly ILectureRepository _lectureRepository;
         public CreateLectureViewCommandHandler(IMapper mapper, ILectureViewRepository lectureViewRepository,
-                                         LectureViewBusinessRules lectureViewBusinessRules, IContextOperationService contextOperationService)
+                                         LectureViewBusinessRules lectureViewBusinessRules, IContextOperationService contextOperationService, ILectureRepository lectureRepository, ILectureCompletionConditionRepository lectureCompletionConditionRepository)
         {
             _mapper = mapper;
             _lectureViewRepository = lectureViewRepository;
             _lectureViewBusinessRules = lectureViewBusinessRules;
             _contextOperationService = contextOperationService;
+            _lectureRepository = lectureRepository;
+            _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
         }
 
         public async Task<CreatedLectureViewResponse> Handle(CreateLectureViewCommand request, CancellationToken cancellationToken)
@@ -49,7 +53,10 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
             LectureView? existLectureView = await _lectureViewRepository.GetAsync(predicate: lw => lw.StudentId == getStudent.Id && lw.ContentId == lectureView.ContentId &&lw.LectureId==lectureView.LectureId ,cancellationToken: cancellationToken);
             
             if (existLectureView is null)
+            {
                 await _lectureViewRepository.AddAsync(lectureView);
+            }
+                
             
           
 

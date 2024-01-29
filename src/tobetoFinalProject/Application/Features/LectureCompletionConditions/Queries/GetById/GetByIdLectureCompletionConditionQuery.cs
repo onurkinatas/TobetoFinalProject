@@ -6,6 +6,7 @@ using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.LectureCompletionConditions.Constants.LectureCompletionConditionsOperationClaims;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.LectureCompletionConditions.Queries.GetById;
 
@@ -20,16 +21,18 @@ public class GetByIdLectureCompletionConditionQuery : IRequest<GetByIdLectureCom
         private readonly IMapper _mapper;
         private readonly ILectureCompletionConditionRepository _lectureCompletionConditionRepository;
         private readonly LectureCompletionConditionBusinessRules _lectureCompletionConditionBusinessRules;
-
-        public GetByIdLectureCompletionConditionQueryHandler(IMapper mapper, ILectureCompletionConditionRepository lectureCompletionConditionRepository, LectureCompletionConditionBusinessRules lectureCompletionConditionBusinessRules)
+        private readonly IContextOperationService _contextOperationService;
+        public GetByIdLectureCompletionConditionQueryHandler(IMapper mapper, ILectureCompletionConditionRepository lectureCompletionConditionRepository, LectureCompletionConditionBusinessRules lectureCompletionConditionBusinessRules, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
             _lectureCompletionConditionBusinessRules = lectureCompletionConditionBusinessRules;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetByIdLectureCompletionConditionResponse> Handle(GetByIdLectureCompletionConditionQuery request, CancellationToken cancellationToken)
         {
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
             LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.Id == request.Id, cancellationToken: cancellationToken);
             await _lectureCompletionConditionBusinessRules.LectureCompletionConditionShouldExistWhenSelected(lectureCompletionCondition);
 
