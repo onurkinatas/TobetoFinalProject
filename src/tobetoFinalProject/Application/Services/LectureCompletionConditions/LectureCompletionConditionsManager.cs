@@ -74,4 +74,6 @@ public class LectureCompletionConditionsManager : ILectureCompletionConditionsSe
 
         return deletedLectureCompletionCondition;
     }
+
+    public async Task<int> CompletionPercentageCalculator(int lectureViewCount, int contentCount) => (lectureViewCount * 100) / contentCount;
 }

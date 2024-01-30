@@ -2,8 +2,10 @@ using Application.Features.Lectures.Rules;
 using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace Application.Services.Lectures;
 
@@ -73,5 +75,21 @@ public class LecturesManager : ILecturesService
         Lecture deletedLecture = await _lectureRepository.DeleteAsync(lecture);
 
         return deletedLecture;
+    }
+
+    public async Task<int> GetAllContentCountByLectureId(Guid lectureId,CancellationToken cancellationToken)
+    {
+        Lecture lecture = await _lectureRepository.GetAsync(
+                predicate: l => l.Id == lectureId,
+                include: l => l.Include(l => l.LectureCourses)
+                   .ThenInclude(lc => lc.Course)
+                   .ThenInclude(c => c.CourseContents)
+                   .ThenInclude(cc => cc.Content),
+                cancellationToken: cancellationToken);
+
+        var contentCount = lecture.LectureCourses
+            .SelectMany(lc => lc.Course.CourseContents)
+            .Count();
+        return contentCount;
     }
 }

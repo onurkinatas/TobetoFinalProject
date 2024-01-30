@@ -74,4 +74,11 @@ public class LectureViewsManager : ILectureViewsService
 
         return deletedLectureView;
     }
+
+    public async Task<int> ContentViewedByLectureId(Guid lectureId, Guid studentId) 
+    {
+        var lectureViews = await _lectureViewRepository.GetAll(lv => lv.LectureId == lectureId && lv.StudentId == studentId);
+        int lectureViewCount = lectureViews.Count;
+        return lectureViewCount;
+    }
 }

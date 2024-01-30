@@ -1,6 +1,8 @@
 ﻿using Application.Features.LectureCompletionConditions.Queries.GetById;
 using Application.Features.LectureCompletionConditions.Rules;
 using Application.Services.ContextOperations;
+using Application.Services.Lectures;
+using Application.Services.LectureViews;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
@@ -28,10 +30,12 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
         private readonly LectureCompletionConditionBusinessRules _lectureCompletionConditionBusinessRules;
         private readonly IContextOperationService _contextOperationService;
         private readonly ILectureRepository _lectureRepository;
+        private readonly ILecturesService _lecturesService;
+        private readonly ILectureViewsService _lectureViewsService;
         private readonly ILectureViewRepository _lectureViewRepository;
 
 
-        public GetByLoggedStudentCompletionConditionQueryHandler(IMapper mapper, ILectureCompletionConditionRepository lectureCompletionConditionRepository, LectureCompletionConditionBusinessRules lectureCompletionConditionBusinessRules, IContextOperationService contextOperationService, ILectureRepository lectureRepository, ILectureViewRepository lectureViewRepository)
+        public GetByLoggedStudentCompletionConditionQueryHandler(IMapper mapper, ILectureCompletionConditionRepository lectureCompletionConditionRepository, LectureCompletionConditionBusinessRules lectureCompletionConditionBusinessRules, IContextOperationService contextOperationService, ILectureRepository lectureRepository, ILectureViewRepository lectureViewRepository, ILecturesService lecturesService, ILectureViewsService lectureViewsService)
         {
             _mapper = mapper;
             _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
@@ -39,35 +43,24 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
             _contextOperationService = contextOperationService;
             _lectureRepository = lectureRepository;
             _lectureViewRepository = lectureViewRepository;
+            _lecturesService = lecturesService;
+            _lectureViewsService = lectureViewsService;
         }
 
         public async Task<GetByLoggedStudentCompletionConditionResponse> Handle(GetByLoggedStudentCompletionConditionQuery request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
             
-            Lecture lecture = await _lectureRepository.GetAsync(
-                predicate:l=>l.Id ==request.LectureId, 
-                include:l=>l.Include(l => l.LectureCourses)
-                   .ThenInclude(lc => lc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content),
-                cancellationToken:cancellationToken);
-
-            var contentCount = lecture.LectureCourses
-                .SelectMany(lc => lc.Course.CourseContents)
-                .Count();
-
-            ICollection<LectureView> lectureView = await _lectureViewRepository.GetAll(lv=>lv.LectureId==request.LectureId&&lv.StudentId==getStudent.Id);
-            int lectureViewCount = lectureView.Count;
-           
+            int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
+            int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
 
             LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == request.LectureId&&lcc.StudentId==getStudent.Id, cancellationToken: cancellationToken);
 
 
             GetByLoggedStudentCompletionConditionResponse response = new GetByLoggedStudentCompletionConditionResponse();
-            response.CompletionPercentage = lectureCompletionCondition.CompletionPercentage;
+            response.CompletionPercentage = lectureCompletionCondition == null ? 0 : lectureCompletionCondition.CompletionPercentage;
             response.TotalWatchedCount = lectureViewCount;
-            response.TotalVideoCount = contentCount;
+            response.TotalContentCount = contentCount;
             return response;
         }
     }

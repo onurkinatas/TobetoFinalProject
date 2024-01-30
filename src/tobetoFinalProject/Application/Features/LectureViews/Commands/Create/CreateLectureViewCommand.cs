@@ -11,6 +11,9 @@ using MediatR;
 using static Application.Features.LectureViews.Constants.LectureViewsOperationClaims;
 using Application.Services.ContextOperations;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.Lectures;
+using Application.Services.LectureViews;
+using Application.Services.LectureCompletionConditions;
 
 namespace Application.Features.LectureViews.Commands.Create;
 
@@ -34,15 +37,23 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
         private readonly LectureViewBusinessRules _lectureViewBusinessRules;
         private readonly IContextOperationService _contextOperationService;
         private readonly ILectureRepository _lectureRepository;
+        private readonly ILecturesService _lecturesService;
+        private readonly ILectureViewsService _lectureViewsService;
+        private readonly ILectureCompletionConditionsService _lectureCompletionConditionsService;
         public CreateLectureViewCommandHandler(IMapper mapper, ILectureViewRepository lectureViewRepository,
-                                         LectureViewBusinessRules lectureViewBusinessRules, IContextOperationService contextOperationService, ILectureRepository lectureRepository, ILectureCompletionConditionRepository lectureCompletionConditionRepository)
+                                         LectureViewBusinessRules lectureViewBusinessRules, IContextOperationService contextOperationService,
+                                         ILectureRepository lectureRepository, ILectureCompletionConditionRepository lectureCompletionConditionRepository
+                                         , ILecturesService lecturesService, ILectureViewsService lectureViewsService, ILectureCompletionConditionsService lectureCompletionConditionsService)
         {
+            _lecturesService = lecturesService;
             _mapper = mapper;
             _lectureViewRepository = lectureViewRepository;
             _lectureViewBusinessRules = lectureViewBusinessRules;
             _contextOperationService = contextOperationService;
             _lectureRepository = lectureRepository;
             _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
+            _lectureViewsService = lectureViewsService;
+            _lectureCompletionConditionsService = lectureCompletionConditionsService;
         }
 
         public async Task<CreatedLectureViewResponse> Handle(CreateLectureViewCommand request, CancellationToken cancellationToken)
@@ -59,23 +70,9 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
 
                 LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureView.LectureId && lcc.StudentId == getStudent.Id);
 
-                Lecture lecture = await _lectureRepository.GetAsync(
-                predicate: l => l.Id == request.LectureId,
-                include: l => l.Include(l => l.LectureCourses)
-                   .ThenInclude(lc => lc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content),
-                cancellationToken: cancellationToken);
-
-                var contentCount = lecture.LectureCourses
-                    .SelectMany(lc => lc.Course.CourseContents)
-                    .Count();
-
-                ICollection<LectureView> lectureViews = await _lectureViewRepository.GetAll(lv => lv.LectureId == request.LectureId && lv.StudentId == getStudent.Id);
-                int lectureViewCount = lectureViews.Count;
-                int completionPercentage = (lectureViewCount * 100) / contentCount;
-
-                
+                int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
+                int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
+                int completionPercentage = await _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount); 
 
                 if (doesExistLectureCompletionCondition is null)
                 {

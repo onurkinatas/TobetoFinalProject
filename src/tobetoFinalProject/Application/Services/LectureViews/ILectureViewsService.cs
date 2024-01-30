@@ -27,4 +27,5 @@ public interface ILectureViewsService
     Task<LectureView> AddAsync(LectureView lectureView);
     Task<LectureView> UpdateAsync(LectureView lectureView);
     Task<LectureView> DeleteAsync(LectureView lectureView, bool permanent = false);
+    Task<int> ContentViewedByLectureId(Guid lectureId,Guid studentId);
 }

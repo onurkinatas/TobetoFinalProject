@@ -27,4 +27,5 @@ public interface ILecturesService
     Task<Lecture> AddAsync(Lecture lecture);
     Task<Lecture> UpdateAsync(Lecture lecture);
     Task<Lecture> DeleteAsync(Lecture lecture, bool permanent = false);
+    Task<int> GetAllContentCountByLectureId(Guid lectureId,CancellationToken cancellationToken);
 }

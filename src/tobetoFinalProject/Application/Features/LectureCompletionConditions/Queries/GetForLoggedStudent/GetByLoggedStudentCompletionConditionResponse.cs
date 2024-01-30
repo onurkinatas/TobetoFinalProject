@@ -10,6 +10,6 @@ public class GetByLoggedStudentCompletionConditionResponse: IResponse
 {
     public int CompletionPercentage { get; set; }
     public int TotalWatchedCount { get; set; }
-    public int TotalVideoCount { get; set; }
+    public int TotalContentCount { get; set; }
 }
 

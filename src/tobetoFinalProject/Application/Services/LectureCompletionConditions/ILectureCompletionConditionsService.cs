@@ -27,4 +27,5 @@ public interface ILectureCompletionConditionsService
     Task<LectureCompletionCondition> AddAsync(LectureCompletionCondition lectureCompletionCondition);
     Task<LectureCompletionCondition> UpdateAsync(LectureCompletionCondition lectureCompletionCondition);
     Task<LectureCompletionCondition> DeleteAsync(LectureCompletionCondition lectureCompletionCondition, bool permanent = false);
+    Task<int> CompletionPercentageCalculator(int lectureViewCount,int contentCount);
 }
