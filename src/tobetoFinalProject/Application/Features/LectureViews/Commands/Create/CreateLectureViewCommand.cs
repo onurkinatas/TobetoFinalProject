@@ -72,7 +72,7 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
 
                 int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
                 int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
-                int completionPercentage = await _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount); 
+                int completionPercentage = await _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
 
                 if (doesExistLectureCompletionCondition is null)
                 {

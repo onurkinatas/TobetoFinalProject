@@ -21,7 +21,7 @@ public class GetListByLectureAndContentIdLectureViewQuery : IRequest<GetListResp
     public Guid LectureId { get; set; }
     public Guid ContentId { get; set; }
 
-    public string[] Roles => new[] { "Admin" };
+    public string[] Roles => new[] { "Admin","Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureViews({PageRequest.PageIndex},{PageRequest.PageSize})";

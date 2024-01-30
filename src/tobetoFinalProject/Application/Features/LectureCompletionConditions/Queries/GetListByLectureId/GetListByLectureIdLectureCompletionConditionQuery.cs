@@ -21,7 +21,7 @@ public class GetListByLectureIdLectureCompletionConditionQuery : IRequest<GetLis
     public PageRequest PageRequest { get; set; }
     public Guid LectureId { get; set; }
 
-    public string[] Roles => new[] { "Admin" };
+    public string[] Roles => new[] { "Admin","Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureCompletionConditions({PageRequest.PageIndex},{PageRequest.PageSize})";

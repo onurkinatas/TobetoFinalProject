@@ -4,6 +4,7 @@ using Application.Features.LectureViews.Commands.Create;
 using Application.Features.LectureViews.Commands.Delete;
 using Application.Features.LectureViews.Commands.Update;
 using Application.Features.LectureViews.Queries.GetById;
+using Application.Features.LectureViews.Queries.GetLectureViewCount;
 using Application.Features.LectureViews.Queries.GetList;
 using Application.Features.LectureViews.Queries.GetListByLectureAndContentId;
 using Application.Features.LectureViews.Queries.GetListForLoggedStudent;
@@ -69,6 +70,13 @@ public class LectureViewsController : BaseController
     {
         GetListByLectureAndContentIdLectureViewQuery getListByLectureIdLikeQuery = new() { PageRequest = pageRequest, LectureId = lectureId ,ContentId=contentId};
         GetListResponse<GetListLectureViewListItemDto> response = await Mediator.Send(getListByLectureIdLikeQuery);
+        return Ok(response);
+    }
+    [HttpGet("getCountWithLectureAndContentId")]
+    public async Task<IActionResult> GetCountWithLectureAndContentId([FromQuery] Guid lectureId, [FromQuery] Guid contentId)
+    {
+        GetLectureViewCountQuery getListByLectureLikeQuery = new() {  LectureId = lectureId, ContentId = contentId };
+        GetLectureViewCountQueryResponse response = await Mediator.Send(getListByLectureLikeQuery);
         return Ok(response);
     }
 }

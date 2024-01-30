@@ -54,7 +54,10 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
             int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
             int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
 
-            LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == request.LectureId&&lcc.StudentId==getStudent.Id, cancellationToken: cancellationToken);
+            LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(
+                predicate: lcc => lcc.LectureId == request.LectureId
+                &&lcc.StudentId==getStudent.Id,
+                cancellationToken: cancellationToken);
 
 
             GetByLoggedStudentCompletionConditionResponse response = new GetByLoggedStudentCompletionConditionResponse();
