@@ -1,13 +1,17 @@
+using Application.Features.LectureLikes.Queries.GetList;
+using Application.Features.LectureLikes.Queries.GetListByLectureId;
 using Application.Features.LectureViews.Commands.Create;
 using Application.Features.LectureViews.Commands.Delete;
 using Application.Features.LectureViews.Commands.Update;
 using Application.Features.LectureViews.Queries.GetById;
 using Application.Features.LectureViews.Queries.GetList;
+using Application.Features.LectureViews.Queries.GetListByLectureAndContentId;
 using Application.Features.LectureViews.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using static Application.Features.LectureViews.Queries.GetListByLectureAndContentId.GetListByLectureAndContentIdLectureViewQuery;
 
 namespace WebAPI.Controllers;
 
@@ -58,6 +62,13 @@ public class LectureViewsController : BaseController
     {
         GetListLectureViewForLoggedStudentQuery getListLectureViewQuery = new() { LectureId=lectureId};
         ICollection<LectureView> response = await Mediator.Send(getListLectureViewQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListWithLectureId")]
+    public async Task<IActionResult> GetListByLectureAndContentId([FromQuery] PageRequest pageRequest, [FromQuery] Guid lectureId, [FromQuery] Guid contentId)
+    {
+        GetListByLectureAndContentIdLectureViewQuery getListByLectureIdLikeQuery = new() { PageRequest = pageRequest, LectureId = lectureId ,ContentId=contentId};
+        GetListResponse<GetListLectureViewListItemDto> response = await Mediator.Send(getListByLectureIdLikeQuery);
         return Ok(response);
     }
 }

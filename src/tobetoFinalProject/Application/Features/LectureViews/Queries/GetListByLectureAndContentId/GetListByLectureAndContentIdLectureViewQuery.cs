@@ -1,41 +1,45 @@
-using Application.Features.LectureViews.Constants;
+﻿using Application.Features.LectureViews.Queries.GetList;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
-using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.LectureViews.Constants.LectureViewsOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Features.LectureViews.Queries.GetList;
-
-public class GetListLectureViewQuery : IRequest<GetListResponse<GetListLectureViewListItemDto>>, ISecuredRequest
+namespace Application.Features.LectureViews.Queries.GetListByLectureAndContentId;
+public class GetListByLectureAndContentIdLectureViewQuery : IRequest<GetListResponse<GetListLectureViewListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
+    public Guid LectureId { get; set; }
+    public Guid ContentId { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { "Admin" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureViews({PageRequest.PageIndex},{PageRequest.PageSize})";
     public string CacheGroupKey => "GetLectureViews";
     public TimeSpan? SlidingExpiration { get; }
 
-    public class GetListLectureViewQueryHandler : IRequestHandler<GetListLectureViewQuery, GetListResponse<GetListLectureViewListItemDto>>
+    public class GetListByLectureAndContentIdLectureViewQueryHandler : IRequestHandler<GetListByLectureAndContentIdLectureViewQuery, GetListResponse<GetListLectureViewListItemDto>>
     {
         private readonly ILectureViewRepository _lectureViewRepository;
         private readonly IMapper _mapper;
 
-        public GetListLectureViewQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper)
+        public GetListByLectureAndContentIdLectureViewQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper)
         {
             _lectureViewRepository = lectureViewRepository;
             _mapper = mapper;
         }
 
-        public async Task<GetListResponse<GetListLectureViewListItemDto>> Handle(GetListLectureViewQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListLectureViewListItemDto>> Handle(GetListByLectureAndContentIdLectureViewQuery request, CancellationToken cancellationToken)
         {
             IPaginate<LectureView> lectureViews = await _lectureViewRepository.GetListAsync(
                 include: lv => lv.Include(lv => lv.Student)
@@ -43,8 +47,9 @@ public class GetListLectureViewQuery : IRequest<GetListResponse<GetListLectureVi
                 .Include(lv => lv.Content)
                 .Include(lv => lv.Lecture)
                 ,
+                predicate:lv=>lv.LectureId==request.LectureId&&lv.ContentId==request.ContentId,
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
 

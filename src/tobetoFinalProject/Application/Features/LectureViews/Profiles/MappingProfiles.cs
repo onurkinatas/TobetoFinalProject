@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Application.Responses;
 using Domain.Entities;
 using Core.Persistence.Paging;
+using Application.Features.ContentLikes.Queries.GetList;
 
 namespace Application.Features.LectureViews.Profiles;
 
@@ -23,5 +24,10 @@ public class MappingProfiles : Profile
         CreateMap<LectureView, GetByIdLectureViewResponse>().ReverseMap();
         CreateMap<LectureView, GetListLectureViewListItemDto>().ReverseMap();
         CreateMap<IPaginate<LectureView>, GetListResponse<GetListLectureViewListItemDto>>().ReverseMap();
+
+        CreateMap<LectureView, GetListLectureViewListItemDto>()
+          .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
+          .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+          .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
     }
 }
