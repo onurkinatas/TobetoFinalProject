@@ -1,49 +1,53 @@
-using Application.Features.LectureLikes.Constants;
+﻿using Application.Features.LectureLikes.Queries.GetList;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.LectureLikes.Constants.LectureLikesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Features.LectureLikes.Queries.GetList;
-
-public class GetListLectureLikeQuery : IRequest<GetListResponse<GetListLectureLikeListItemDto>>, ISecuredRequest
+namespace Application.Features.LectureLikes.Queries.GetListByLectureId;
+public class GetListByLectureIdLectureLikeQuery : IRequest<GetListResponse<GetListLectureLikeListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
+    public Guid LectureId { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { "Admin" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureLikes({PageRequest.PageIndex},{PageRequest.PageSize})";
     public string CacheGroupKey => "GetLectureLikes";
     public TimeSpan? SlidingExpiration { get; }
 
-    public class GetListLectureLikeQueryHandler : IRequestHandler<GetListLectureLikeQuery, GetListResponse<GetListLectureLikeListItemDto>>
+    public class GetListByLectureIdLectureLikeQueryHandler : IRequestHandler<GetListByLectureIdLectureLikeQuery, GetListResponse<GetListLectureLikeListItemDto>>
     {
         private readonly ILectureLikeRepository _lectureLikeRepository;
         private readonly IMapper _mapper;
 
-        public GetListLectureLikeQueryHandler(ILectureLikeRepository lectureLikeRepository, IMapper mapper)
+        public GetListByLectureIdLectureLikeQueryHandler(ILectureLikeRepository lectureLikeRepository, IMapper mapper)
         {
             _lectureLikeRepository = lectureLikeRepository;
             _mapper = mapper;
         }
 
-        public async Task<GetListResponse<GetListLectureLikeListItemDto>> Handle(GetListLectureLikeQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListLectureLikeListItemDto>> Handle(GetListByLectureIdLectureLikeQuery request, CancellationToken cancellationToken)
         {
             IPaginate<LectureLike> lectureLikes = await _lectureLikeRepository.GetListAsync(
-                include: ll => ll.Include(ll => ll.Student)
+                include: lcc => lcc.Include(lcc => lcc.Student)
                 .ThenInclude(s => s.User)
-                .Include(ll => ll.Lecture),
-                predicate: ll => ll.IsLiked==true,
+                .Include(lcc => lcc.Lecture),
+                predicate: lcc => lcc.IsLiked == true&&lcc.LectureId==request.LectureId,
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
 

@@ -15,7 +15,7 @@ using Application.Features.LectureLikes.Queries.GetListForLoggedStudent;
 
 namespace Application.Features.ContentLikes.Queries.GetListForLoggedStudent;
 
-public class GetListContentLikeForLoggedStudentQuery : IRequest<GetListResponse<GetListContentLikeForLoggedStudentListItemDto>>, ISecuredRequest, ICachableRequest
+public class GetListContentLikeForLoggedStudentQuery : IRequest<GetListResponse<GetListContentLikeForLoggedStudentListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
 

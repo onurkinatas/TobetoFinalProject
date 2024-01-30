@@ -10,6 +10,9 @@ using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.ContentLikes.Queries.GetLectureLikeCount;
+using Application.Features.LectureLikes.Queries.GetList;
+using Application.Features.LectureLikes.Queries.GetListByLectureId;
+using Application.Features.ContentLikes.Queries.GetListByContentId;
 
 namespace WebAPI.Controllers;
 
@@ -47,7 +50,13 @@ public class ContentLikesController : BaseController
         GetByIdContentLikeResponse response = await Mediator.Send(new GetByIdContentLikeQuery { Id = id });
         return Ok(response);
     }
-
+    [HttpGet("getListWithContentId{contentId}")]
+    public async Task<IActionResult> GetListByContentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid contentId)
+    {
+        GetListByContentIdContentLikeQuery getListByContentIdLikeQuery = new() { PageRequest = pageRequest, ContentId = contentId };
+        GetListResponse<GetListContentLikeListItemDto> response = await Mediator.Send(getListByContentIdLikeQuery);
+        return Ok(response);
+    }
     [HttpGet("getByContentId{contentId}")]
     public async Task<IActionResult> GetByContentId([FromRoute] Guid contentId)
     {

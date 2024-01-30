@@ -9,6 +9,7 @@ using Domain.Entities;
 using Core.Persistence.Paging;
 using Application.Features.ContentLikes.Queries.GetListForLoggedStudent;
 using Application.Features.ContentLikes.Queries.GetByContentId;
+using Application.Features.LectureLikes.Queries.GetList;
 
 namespace Application.Features.ContentLikes.Profiles;
 
@@ -28,5 +29,10 @@ public class MappingProfiles : Profile
         CreateMap<ContentLike, GetListContentLikeListItemDto>().ReverseMap();
         CreateMap<IPaginate<ContentLike>, GetListResponse<GetListContentLikeListItemDto>>().ReverseMap();
         CreateMap<IPaginate<ContentLike>, GetListResponse<GetListContentLikeForLoggedStudentListItemDto>>().ReverseMap();
+
+        CreateMap<ContentLike, GetListContentLikeListItemDto>()
+          .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
+          .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+          .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
     }
 }

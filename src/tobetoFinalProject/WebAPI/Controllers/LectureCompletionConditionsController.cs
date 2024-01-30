@@ -4,6 +4,7 @@ using Application.Features.LectureCompletionConditions.Commands.Update;
 using Application.Features.LectureCompletionConditions.Queries.GetById;
 using Application.Features.LectureCompletionConditions.Queries.GetForLoggedStudent;
 using Application.Features.LectureCompletionConditions.Queries.GetList;
+using Application.Features.LectureCompletionConditions.Queries.GetListByLectureId;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,14 @@ public class LectureCompletionConditionsController : BaseController
         GetListResponse<GetListLectureCompletionConditionListItemDto> response = await Mediator.Send(getListLectureCompletionConditionQuery);
         return Ok(response);
     }
+    [HttpGet("getListWithLectureId{lectureId}")]
+    public async Task<IActionResult> GetListByLectureId([FromQuery] PageRequest pageRequest, [FromRoute] Guid lectureId)
+    {
+        GetListByLectureIdLectureCompletionConditionQuery getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest,LectureId=lectureId };
+        GetListResponse<GetListLectureCompletionConditionListItemDto> response = await Mediator.Send(getListByLectureIdLectureCompletionConditionQuery);
+        return Ok(response);
+    }
+
     [HttpGet("getByLectureId{lectureId}")]
     public async Task<IActionResult> GetByLectureId([FromRoute] Guid lectureId)
     {

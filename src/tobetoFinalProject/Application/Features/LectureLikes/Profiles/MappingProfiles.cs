@@ -11,6 +11,7 @@ using Application.Features.LectureLikes.Queries.GetByLectureId;
 using Application.Features.LectureLikes.Queries.GetListForLoggedStudent;
 using Application.Features.Lectures.Queries.GetById;
 using Application.Features.Lectures.Queries.GetList;
+using Application.Features.LectureCompletionConditions.Queries.GetList;
 
 namespace Application.Features.LectureLikes.Profiles;
 
@@ -31,6 +32,10 @@ public class MappingProfiles : Profile
         CreateMap<IPaginate<LectureLike>, GetListResponse<GetListLectureLikeListItemDto>>().ReverseMap();
         CreateMap<IPaginate<LectureLike>, GetListResponse<GetListLectureLikeForLoggedStudentListItemDto>>().ReverseMap();
 
+        CreateMap<LectureLike, GetListLectureLikeListItemDto>()
+           .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
+           .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+           .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
 
     }
     

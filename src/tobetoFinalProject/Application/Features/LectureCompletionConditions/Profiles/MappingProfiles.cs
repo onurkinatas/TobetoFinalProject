@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Application.Responses;
 using Domain.Entities;
 using Core.Persistence.Paging;
+using Application.Features.Students.Queries.GetList;
 
 namespace Application.Features.LectureCompletionConditions.Profiles;
 
@@ -23,5 +24,10 @@ public class MappingProfiles : Profile
         CreateMap<LectureCompletionCondition, GetByIdLectureCompletionConditionResponse>().ReverseMap();
         CreateMap<LectureCompletionCondition, GetListLectureCompletionConditionListItemDto>().ReverseMap();
         CreateMap<IPaginate<LectureCompletionCondition>, GetListResponse<GetListLectureCompletionConditionListItemDto>>().ReverseMap();
+
+        CreateMap<LectureCompletionCondition, GetListLectureCompletionConditionListItemDto>()
+            .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
+            .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+            .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
     }
 }

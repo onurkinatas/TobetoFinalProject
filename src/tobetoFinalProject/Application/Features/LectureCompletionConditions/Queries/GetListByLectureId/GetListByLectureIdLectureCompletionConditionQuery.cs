@@ -1,48 +1,53 @@
-using Application.Features.LectureCompletionConditions.Constants;
+﻿using Application.Features.LectureCompletionConditions.Queries.GetList;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.LectureCompletionConditions.Constants.LectureCompletionConditionsOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Features.LectureCompletionConditions.Queries.GetList;
-
-public class GetListLectureCompletionConditionQuery : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest
+namespace Application.Features.LectureCompletionConditions.Queries.GetListByLectureId;
+public class GetListByLectureIdLectureCompletionConditionQuery : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
+    public Guid LectureId { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { "Admin" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureCompletionConditions({PageRequest.PageIndex},{PageRequest.PageSize})";
     public string CacheGroupKey => "GetLectureCompletionConditions";
     public TimeSpan? SlidingExpiration { get; }
 
-    public class GetListLectureCompletionConditionQueryHandler : IRequestHandler<GetListLectureCompletionConditionQuery, GetListResponse<GetListLectureCompletionConditionListItemDto>>
+    public class GetListByLectureIdLectureCompletionConditionQueryHandler : IRequestHandler<GetListByLectureIdLectureCompletionConditionQuery, GetListResponse<GetListLectureCompletionConditionListItemDto>>
     {
         private readonly ILectureCompletionConditionRepository _lectureCompletionConditionRepository;
         private readonly IMapper _mapper;
 
-        public GetListLectureCompletionConditionQueryHandler(ILectureCompletionConditionRepository lectureCompletionConditionRepository, IMapper mapper)
+        public GetListByLectureIdLectureCompletionConditionQueryHandler(ILectureCompletionConditionRepository lectureCompletionConditionRepository, IMapper mapper)
         {
             _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
             _mapper = mapper;
         }
 
-        public async Task<GetListResponse<GetListLectureCompletionConditionListItemDto>> Handle(GetListLectureCompletionConditionQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListLectureCompletionConditionListItemDto>> Handle(GetListByLectureIdLectureCompletionConditionQuery request, CancellationToken cancellationToken)
         {
             IPaginate<LectureCompletionCondition> lectureCompletionConditions = await _lectureCompletionConditionRepository.GetListAsync(
-                include:lcc=>lcc.Include(lcc=>lcc.Student)
-                .ThenInclude(s=>s.User)
+                predicate:lcc=>lcc.LectureId==request.LectureId,
+                include: lcc => lcc.Include(lcc => lcc.Student)
+                .ThenInclude(s => s.User)
                 .Include(lcc => lcc.Lecture),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
 

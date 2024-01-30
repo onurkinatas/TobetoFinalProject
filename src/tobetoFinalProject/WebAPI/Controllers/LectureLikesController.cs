@@ -9,6 +9,9 @@ using Application.Features.LectureLikes.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.LectureCompletionConditions.Queries.GetList;
+using Application.Features.LectureCompletionConditions.Queries.GetListByLectureId;
+using Application.Features.LectureLikes.Queries.GetListByLectureId;
 
 namespace WebAPI.Controllers;
 
@@ -67,6 +70,14 @@ public class LectureLikesController : BaseController
         GetListResponse<GetListLectureLikeForLoggedStudentListItemDto> response = await Mediator.Send(getListLectureLikeForLoggedStudentQuery);
         return Ok(response);
     }
+    [HttpGet("getListWithLectureId{lectureId}")]
+    public async Task<IActionResult> GetListByLectureId([FromQuery] PageRequest pageRequest, [FromRoute] Guid lectureId)
+    {
+        GetListByLectureIdLectureLikeQuery getListByLectureIdLikeQuery = new() { PageRequest = pageRequest, LectureId = lectureId };
+        GetListResponse<GetListLectureLikeListItemDto> response = await Mediator.Send(getListByLectureIdLikeQuery);
+        return Ok(response);
+    }
+
     [HttpGet("GetCount{lectureId}")]
     public async Task<IActionResult> GetCount([FromRoute] Guid lectureId)
     {
