@@ -1,3 +1,6 @@
+using Application.Features.StudentSkills.Queries.GetList;
+using Application.Features.StudentSkills.Queries.GetListByStudentId;
+using Application.Features.StudentSkills.Queries.GetListForLoggedStudent;
 using Application.Features.StudentSkills.Commands.Create;
 using Application.Features.StudentSkills.Commands.Delete;
 using Application.Features.StudentSkills.Commands.Update;
@@ -48,6 +51,20 @@ public class StudentSkillsController : BaseController
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
         GetListStudentSkillQuery getListStudentSkillQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentSkillListItemDto> response = await Mediator.Send(getListStudentSkillQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListForLoggedStudentSkillQuery getListStudentSkillQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentSkillListItemDto> response = await Mediator.Send(getListStudentSkillQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListByStudentId{studentId}")]
+    public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
+    {
+        GetListByStudentIdStudentSkillQuery getListStudentSkillQuery = new() { PageRequest = pageRequest, StudentId = studentId };
         GetListResponse<GetListStudentSkillListItemDto> response = await Mediator.Send(getListStudentSkillQuery);
         return Ok(response);
     }

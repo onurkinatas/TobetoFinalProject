@@ -1,32 +1,36 @@
-using Application.Features.StudentSkills.Constants;
+﻿using Application.Features.StudentSkills.Queries.GetList;
+using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.StudentSkills.Constants.StudentSkillsOperationClaims;
 using Microsoft.EntityFrameworkCore;
-using Application.Services.CacheForMemory;
-using Application.Services.ContextOperations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Features.StudentSkills.Queries.GetList;
-
-public class GetListStudentSkillQuery : IRequest<GetListResponse<GetListStudentSkillListItemDto>>, ISecuredRequest
+namespace Application.Features.StudentSkills.Queries.GetListForLoggedStudent;
+public class GetListForLoggedStudentSkillQuery : IRequest<GetListResponse<GetListStudentSkillListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] {Admin };
-    public class GetListStudentSkillQueryHandler : IRequestHandler<GetListStudentSkillQuery, GetListResponse<GetListStudentSkillListItemDto>>
+    public string[] Roles => new[] { "Student" };
+
+    public class GetListForLoggedStudentSkillQueryHandler : IRequestHandler<GetListForLoggedStudentSkillQuery, GetListResponse<GetListStudentSkillListItemDto>>
     {
         private readonly IStudentSkillRepository _studentSkillRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
         private readonly IContextOperationService _contextOperationService;
-        public GetListStudentSkillQueryHandler(IStudentSkillRepository studentSkillRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
+        public GetListForLoggedStudentSkillQueryHandler(IStudentSkillRepository studentSkillRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _studentSkillRepository = studentSkillRepository;
             _mapper = mapper;
@@ -34,15 +38,17 @@ public class GetListStudentSkillQuery : IRequest<GetListResponse<GetListStudentS
             _contextOperationService = contextOperationService;
         }
 
-        public async Task<GetListResponse<GetListStudentSkillListItemDto>> Handle(GetListStudentSkillQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListStudentSkillListItemDto>> Handle(GetListForLoggedStudentSkillQuery request, CancellationToken cancellationToken)
         {
+            Student student = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentSkill> studentSkills = await _studentSkillRepository.GetListAsync(
+                predicate: ss => ss.StudentId == student.Id,
                 include: ss => ss.Include(ss => ss.Skill)
                     .Include(ss => ss.Student)
-                    .ThenInclude(s=>s.User),
+                    .ThenInclude(s => s.User),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
 
