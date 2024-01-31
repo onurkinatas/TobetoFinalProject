@@ -1,8 +1,11 @@
+using Application.Features.StudentAnnouncements.Queries.GetListForLoggedStudent;
 using Application.Features.StudentEducations.Commands.Create;
 using Application.Features.StudentEducations.Commands.Delete;
 using Application.Features.StudentEducations.Commands.Update;
 using Application.Features.StudentEducations.Queries.GetById;
 using Application.Features.StudentEducations.Queries.GetList;
+using Application.Features.StudentEducations.Queries.GetListByStudentId;
+using Application.Features.StudentEducations.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +52,20 @@ public class StudentEducationsController : BaseController
     {
         GetListStudentEducationQuery getListStudentEducationQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentEducationQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListForLoggedStudentEducationQuery getListStudentAnnouncementQuery = new() {PageRequest=pageRequest };
+        GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListByStudentId{studentId}")]
+    public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
+    {
+        GetListByStudentIdStudentEducationQuery getListStudentAnnouncementQuery = new() { PageRequest = pageRequest,StudentId=studentId };
+        GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
         return Ok(response);
     }
 }
