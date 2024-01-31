@@ -27,7 +27,10 @@ public class MappingProfiles : Profile
 
         CreateMap<StudentLanguageLevel, GetListStudentLanguageLevelListItemDto>()
             .ForMember(dest => dest.LanguageId, opt => opt.MapFrom(src => src.LanguageLevel.LanguageId))
-            .ForMember(dest => dest.LanguageName, opt => opt.MapFrom(src => src.LanguageLevel.Language.Name));
+            .ForMember(dest => dest.LanguageName, opt => opt.MapFrom(src => src.LanguageLevel.Language.Name))
+            .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
+            .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+            .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
 
 
         CreateMap<StudentLanguageLevel, GetByIdStudentLanguageLevelResponse>()

@@ -10,4 +10,7 @@ public class GetListStudentLanguageLevelListItemDto : IDto
     public Guid StudentId { get; set; } 
     public string LanguageLevelName { get; set; }
     public string LanguageName { get; set; }
+    public string StudentFirstName { get; set; }
+    public string StudentLastName { get; set; }
+    public string StudentEmail { get; set; }
 }

@@ -66,8 +66,8 @@ public class StudentExperiencesController : BaseController
     [HttpGet("getListByStudentId{studentId}")]
     public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
     {
-        GetListByStudentIdStudentExperienceQuery getListStudentAnnouncementQuery = new() { PageRequest = pageRequest, StudentId = studentId };
-        GetListResponse<GetListStudentExperienceListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        GetListByStudentIdStudentExperienceQuery getListStudentExperienceQuery = new() { PageRequest = pageRequest, StudentId = studentId };
+        GetListResponse<GetListStudentExperienceListItemDto> response = await Mediator.Send(getListStudentExperienceQuery);
         return Ok(response);
     }
 

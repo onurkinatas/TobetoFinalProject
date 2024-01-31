@@ -1,32 +1,36 @@
-using Application.Features.StudentLanguageLevels.Constants;
+﻿using Application.Features.StudentLanguageLevels.Queries.GetList;
+using Application.Features.StudentLanguageLevels.Queries.GetListByStudentId;
+using Application.Services.CacheForMemory;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
-using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.StudentLanguageLevels.Constants.StudentLanguageLevelsOperationClaims;
-using Application.Services.CacheForMemory;
 using Microsoft.EntityFrameworkCore;
-using Application.Services.ContextOperations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Features.StudentLanguageLevels.Queries.GetList;
-
-public class GetListStudentLanguageLevelQuery : IRequest<GetListResponse<GetListStudentLanguageLevelListItemDto>> ,ISecuredRequest
+namespace Application.Features.StudentLanguageLevels.Queries.GetListByStudentId;
+public class GetListByStudentIdStudentLanguageLevelQuery : IRequest<GetListResponse<GetListStudentLanguageLevelListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
+    public Guid StudentId { get; set; }
+    public string[] Roles => new[] { "Admin" };
 
-    public string[] Roles => new[] { Admin };
-    public class GetListStudentLanguageLevelQueryHandler : IRequestHandler<GetListStudentLanguageLevelQuery, GetListResponse<GetListStudentLanguageLevelListItemDto>>
+    public class GetListByStudentIdStudentLanguageLevelQueryHandler : IRequestHandler<GetListByStudentIdStudentLanguageLevelQuery, GetListResponse<GetListStudentLanguageLevelListItemDto>>
     {
         private readonly IStudentLanguageLevelRepository _studentLanguageLevelRepository;
         private readonly IMapper _mapper;
         private readonly ICacheMemoryService _cacheMemoryService;
         private readonly IContextOperationService _contextOperationService;
-        public GetListStudentLanguageLevelQueryHandler(IStudentLanguageLevelRepository studentLanguageLevelRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
+        public GetListByStudentIdStudentLanguageLevelQueryHandler(IStudentLanguageLevelRepository studentLanguageLevelRepository, IMapper mapper, ICacheMemoryService cacheMemoryService, IContextOperationService contextOperationService)
         {
             _studentLanguageLevelRepository = studentLanguageLevelRepository;
             _mapper = mapper;
@@ -34,17 +38,17 @@ public class GetListStudentLanguageLevelQuery : IRequest<GetListResponse<GetList
             _contextOperationService = contextOperationService;
         }
 
-        public async Task<GetListResponse<GetListStudentLanguageLevelListItemDto>> Handle(GetListStudentLanguageLevelQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListStudentLanguageLevelListItemDto>> Handle(GetListByStudentIdStudentLanguageLevelQuery request, CancellationToken cancellationToken)
         {
-          
 
             IPaginate<StudentLanguageLevel> studentLanguageLevels = await _studentLanguageLevelRepository.GetListAsync(
+                predicate: se => se.StudentId == request.StudentId,
                 include: sll => sll.Include(sll => sll.Student)
-                    .ThenInclude(s=>s.User)
+                    .ThenInclude(s => s.User)
                     .Include(sll => sll.LanguageLevel)
                     .ThenInclude(ll => ll.Language),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
 
@@ -53,3 +57,4 @@ public class GetListStudentLanguageLevelQuery : IRequest<GetListResponse<GetList
         }
     }
 }
+

@@ -1,8 +1,13 @@
+using Application.Features.StudentExperiences.Queries.GetList;
+using Application.Features.StudentExperiences.Queries.GetListByStudentId;
+using Application.Features.StudentExperiences.Queries.GetListForLoggedStudent;
 using Application.Features.StudentLanguageLevels.Commands.Create;
 using Application.Features.StudentLanguageLevels.Commands.Delete;
 using Application.Features.StudentLanguageLevels.Commands.Update;
 using Application.Features.StudentLanguageLevels.Queries.GetById;
 using Application.Features.StudentLanguageLevels.Queries.GetList;
+using Application.Features.StudentLanguageLevels.Queries.GetListByStudentId;
+using Application.Features.StudentLanguageLevels.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +53,20 @@ public class StudentLanguageLevelsController : BaseController
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
         GetListStudentLanguageLevelQuery getListStudentLanguageLevelQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentLanguageLevelListItemDto> response = await Mediator.Send(getListStudentLanguageLevelQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListForLoggedStudentLanguageLevelQuery getListStudentLanguageLevelQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentLanguageLevelListItemDto> response = await Mediator.Send(getListStudentLanguageLevelQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListByStudentId{studentId}")]
+    public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
+    {
+        GetListByStudentIdStudentLanguageLevelQuery getListStudentLanguageLevelQuery = new() { PageRequest = pageRequest, StudentId = studentId };
         GetListResponse<GetListStudentLanguageLevelListItemDto> response = await Mediator.Send(getListStudentLanguageLevelQuery);
         return Ok(response);
     }

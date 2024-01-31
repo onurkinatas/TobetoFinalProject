@@ -57,15 +57,15 @@ public class StudentEducationsController : BaseController
     [HttpGet("getListForLoggedStudent")]
     public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
     {
-        GetListForLoggedStudentEducationQuery getListStudentAnnouncementQuery = new() {PageRequest=pageRequest };
-        GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        GetListForLoggedStudentEducationQuery getListStudentEducationQuery = new() {PageRequest=pageRequest };
+        GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentEducationQuery);
         return Ok(response);
     }
     [HttpGet("getListByStudentId{studentId}")]
     public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
     {
-        GetListByStudentIdStudentEducationQuery getListStudentAnnouncementQuery = new() { PageRequest = pageRequest,StudentId=studentId };
-        GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        GetListByStudentIdStudentEducationQuery getListStudentEducationQuery = new() { PageRequest = pageRequest,StudentId=studentId };
+        GetListResponse<GetListStudentEducationListItemDto> response = await Mediator.Send(getListStudentEducationQuery);
         return Ok(response);
     }
 }
