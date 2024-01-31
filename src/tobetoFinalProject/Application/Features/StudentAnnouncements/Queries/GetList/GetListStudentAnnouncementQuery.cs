@@ -12,17 +12,19 @@ using static Application.Features.StudentAnnouncements.Constants.StudentAnnounce
 using Microsoft.EntityFrameworkCore;
 using Application.Services.CacheForMemory;
 using Application.Services.ContextOperations;
+using Application.Features.StudentAnnouncements.Queries.GetList;
 
 namespace Application.Features.StudentAnnouncements.Queries.GetList;
 
-public class GetListStudentAnnouncementQuery : IRequest<ICollection<StudentAnnouncement>>, ISecuredRequest
+public class GetListStudentAnnouncementQuery : IRequest<GetListResponse<GetListStudentAnnouncementListItemDto>>, ISecuredRequest
 {
-    public string[] Roles => new[] { Admin, Read, "Student" };
+    public PageRequest PageRequest { get; set; }
+    public string[] Roles => new[] { Admin};
 
     public bool BypassCache { get; }
     public TimeSpan? SlidingExpiration { get; }
 
-    public class GetListStudentAnnouncementQueryHandler : IRequestHandler<GetListStudentAnnouncementQuery, ICollection<StudentAnnouncement>>
+    public class GetListStudentAnnouncementQueryHandler : IRequestHandler<GetListStudentAnnouncementQuery, GetListResponse<GetListStudentAnnouncementListItemDto>>
     {
         private readonly IStudentAnnouncementRepository _studentAnnouncementRepository;
         private readonly IMapper _mapper;
@@ -36,14 +38,19 @@ public class GetListStudentAnnouncementQuery : IRequest<ICollection<StudentAnnou
             _contextOperationService = contextOperationService;
         }
 
-        public async Task<ICollection<StudentAnnouncement>> Handle(GetListStudentAnnouncementQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListStudentAnnouncementListItemDto>> Handle(GetListStudentAnnouncementQuery request, CancellationToken cancellationToken)
         {
-
-            Student getStudent = await _contextOperationService.GetStudentFromContext();
-          
-            var studentAnnouncements = _studentAnnouncementRepository.GetAllWithoutPaginate(sa => sa.StudentId == getStudent.Id);
-
-            return studentAnnouncements;
+            IPaginate<StudentAnnouncement> studentAnnouncements = await _studentAnnouncementRepository.GetListAsync(
+                include: sa => sa.Include(sa => sa.Student)
+                .ThenInclude(s => s.User)
+                .Include(ll => ll.Announcement),
+                index: request.PageRequest.PageIndex,
+                size: request.PageRequest.PageSize,
+                cancellationToken: cancellationToken
+            );
+             
+            GetListResponse<GetListStudentAnnouncementListItemDto> response = _mapper.Map<GetListResponse<GetListStudentAnnouncementListItemDto>>(studentAnnouncements);
+            return response;
         }
     }
 }

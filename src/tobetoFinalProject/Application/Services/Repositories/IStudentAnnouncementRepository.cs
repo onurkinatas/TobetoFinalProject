@@ -6,5 +6,5 @@ namespace Application.Services.Repositories;
 
 public interface IStudentAnnouncementRepository : IAsyncRepository<StudentAnnouncement, Guid>, IRepository<StudentAnnouncement, Guid>
 {
-    public ICollection<StudentAnnouncement> GetAllWithoutPaginate(Expression<Func<StudentAnnouncement, bool>> filter = null);
+    public List<StudentAnnouncement> GetAllWithoutPaginate(Expression<Func<StudentAnnouncement, bool>> filter = null);
 }

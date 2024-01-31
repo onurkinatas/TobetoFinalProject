@@ -8,7 +8,7 @@ using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.LectureLikes.Queries.GetByLectureId;
-public class GetByLectureIdLectureLikeQuery : IRequest<GetByLectureIdLectureLikeResponse>, ISecuredRequest
+public class GetByLectureIdLectureLikeQuery :  IRequest<GetByLectureIdLectureLikeResponse>, ISecuredRequest
 {
     public Guid LectureId { get; set; }
 

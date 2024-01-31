@@ -11,7 +11,7 @@ public class StudentAnnouncementRepository : EfRepositoryBase<StudentAnnouncemen
     public StudentAnnouncementRepository(BaseDbContext context) : base(context)
     {
     }
-    public ICollection<StudentAnnouncement> GetAllWithoutPaginate(Expression<Func<StudentAnnouncement, bool>> filter = null)
+    public List<StudentAnnouncement> GetAllWithoutPaginate(Expression<Func<StudentAnnouncement, bool>> filter = null)
     {
         return filter == null ? Context.Set<StudentAnnouncement>().ToList()
             : Context.Set<StudentAnnouncement>().Where(e => e.DeletedDate == null).Where(filter).ToList();

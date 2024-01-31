@@ -3,6 +3,8 @@ using Application.Features.StudentAnnouncements.Commands.Delete;
 using Application.Features.StudentAnnouncements.Commands.Update;
 using Application.Features.StudentAnnouncements.Queries.GetById;
 using Application.Features.StudentAnnouncements.Queries.GetList;
+using Application.Features.StudentAnnouncements.Queries.GetListByAnnouncementId;
+using Application.Features.StudentAnnouncements.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Domain.Entities;
@@ -46,10 +48,24 @@ public class StudentAnnouncementsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetList()
+    public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
-        GetListStudentAnnouncementQuery getListStudentAnnouncementQuery = new() {};
-        ICollection<StudentAnnouncement> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        GetListStudentAnnouncementQuery getListStudentAnnouncementQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentAnnouncementListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent()
+    {
+        GetListForLoggedStudentAnnouncementQuery getListStudentAnnouncementQuery = new() { };
+        List<GetListForLoggedStudentAnnouncementResponse> response = await Mediator.Send(getListStudentAnnouncementQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListByAnnouncementId{announcementId}")]
+    public async Task<IActionResult> GetListByAnnouncementId([FromQuery]PageRequest pageRequest,[FromRoute]Guid announcementId)
+    {
+        GetListByAnnouncementIdStudentAnnouncementQuery getListStudentAnnouncementQuery = new() {PageRequest=pageRequest,AnnouncementId=announcementId };
+        GetListResponse<GetListByAnnouncementIdStudentAnnouncementResponse> response = await Mediator.Send(getListStudentAnnouncementQuery);
         return Ok(response);
     }
 }
