@@ -19,7 +19,7 @@ public class GetListStudentSocialMediaQuery : IRequest<GetListResponse<GetListSt
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read, "Student" };
+    public string[] Roles => new[] { Admin };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentSocialMedias({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -42,10 +42,8 @@ public class GetListStudentSocialMediaQuery : IRequest<GetListResponse<GetListSt
 
         public async Task<GetListResponse<GetListStudentSocialMediaListItemDto>> Handle(GetListStudentSocialMediaQuery request, CancellationToken cancellationToken)
         {
-            Student student = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentSocialMedia> studentSocialMedias = await _studentSocialMediaRepository.GetListAsync(
-                predicate: ssm => ssm.StudentId == student.Id,
                 include: se => se.Include(se => se.SocialMedia)
                     .Include(se => se.Student)
                     .ThenInclude(s => s.User),

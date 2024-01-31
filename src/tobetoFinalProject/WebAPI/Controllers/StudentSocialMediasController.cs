@@ -1,3 +1,6 @@
+using Application.Features.StudentSocialMedias.Queries.GetList;
+using Application.Features.StudentSocialMedias.Queries.GetListByStudentId;
+using Application.Features.StudentSocialMedias.Queries.GetListForLoggedStudent;
 using Application.Features.StudentSocialMedias.Commands.Create;
 using Application.Features.StudentSocialMedias.Commands.Delete;
 using Application.Features.StudentSocialMedias.Commands.Update;
@@ -48,6 +51,20 @@ public class StudentSocialMediasController : BaseController
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
         GetListStudentSocialMediaQuery getListStudentSocialMediaQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentSocialMediaListItemDto> response = await Mediator.Send(getListStudentSocialMediaQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListForLoggedStudentSocialMediaQuery getListStudentSocialMediaQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentSocialMediaListItemDto> response = await Mediator.Send(getListStudentSocialMediaQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListByStudentId{studentId}")]
+    public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
+    {
+        GetListByStudentIdStudentSocialMediaQuery getListStudentSocialMediaQuery = new() { PageRequest = pageRequest, StudentId = studentId };
         GetListResponse<GetListStudentSocialMediaListItemDto> response = await Mediator.Send(getListStudentSocialMediaQuery);
         return Ok(response);
     }
