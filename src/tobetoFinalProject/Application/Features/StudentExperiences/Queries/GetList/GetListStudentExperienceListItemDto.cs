@@ -9,6 +9,9 @@ public class GetListStudentExperienceListItemDto : IDto
     public string CompanyName { get; set; }
     public string Sector { get; set; }
     public string Position { get; set; }
+    public string StudentFirstName { get; set; }
+    public string StudentLastName { get; set; }
+    public string StudentEmail { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string Description { get; set; }

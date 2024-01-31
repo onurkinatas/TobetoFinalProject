@@ -13,7 +13,6 @@ public class GetListStudentEducationListItemDto : IDto
     public string StudentFirstName { get; set; }
     public string StudentLastName { get; set; }
     public string StudentEmail { get; set; }
-    public string MyProperty { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime GraduationDate { get; set; }
 }

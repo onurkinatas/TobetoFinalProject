@@ -1,8 +1,13 @@
+using Application.Features.StudentEducations.Queries.GetList;
+using Application.Features.StudentEducations.Queries.GetListByStudentId;
+using Application.Features.StudentEducations.Queries.GetListForLoggedStudent;
 using Application.Features.StudentExperiences.Commands.Create;
 using Application.Features.StudentExperiences.Commands.Delete;
 using Application.Features.StudentExperiences.Commands.Update;
 using Application.Features.StudentExperiences.Queries.GetById;
 using Application.Features.StudentExperiences.Queries.GetList;
+using Application.Features.StudentExperiences.Queries.GetListByStudentId;
+using Application.Features.StudentExperiences.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +54,20 @@ public class StudentExperiencesController : BaseController
     {
         GetListStudentExperienceQuery getListStudentExperienceQuery = new() { PageRequest = pageRequest};
         GetListResponse<GetListStudentExperienceListItemDto> response = await Mediator.Send(getListStudentExperienceQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListForLoggedStudentExperienceQuery getListStudentExperienceQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentExperienceListItemDto> response = await Mediator.Send(getListStudentExperienceQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListByStudentId{studentId}")]
+    public async Task<IActionResult> GetListByStudentId([FromQuery] PageRequest pageRequest, [FromRoute] Guid studentId)
+    {
+        GetListByStudentIdStudentExperienceQuery getListStudentAnnouncementQuery = new() { PageRequest = pageRequest, StudentId = studentId };
+        GetListResponse<GetListStudentExperienceListItemDto> response = await Mediator.Send(getListStudentAnnouncementQuery);
         return Ok(response);
     }
 
