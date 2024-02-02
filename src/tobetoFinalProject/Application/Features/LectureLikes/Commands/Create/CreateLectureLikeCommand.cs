@@ -10,8 +10,6 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.LectureLikes.Constants.LectureLikesOperationClaims;
 using Application.Services.ContextOperations;
-using Application.Features.Lectures.Commands.Update;
-using Application.Features.LectureLikes.Commands.Update;
 
 namespace Application.Features.LectureLikes.Commands.Create;
 

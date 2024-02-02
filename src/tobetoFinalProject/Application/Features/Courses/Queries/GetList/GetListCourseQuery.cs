@@ -42,7 +42,7 @@ public class GetListCourseQuery : IRequest<GetListResponse<GetListCourseListItem
                 include: c => c.Include(c => c.CourseContents)
                     .ThenInclude(cc => cc.Content)
                     .ThenInclude(c => c.ContentInstructors)
-                    .ThenInclude(cý => cý.Instructor)
+                    .ThenInclude(c => c.Instructor)
                     .Include(c => c.CourseContents)
                     .ThenInclude(cc => cc.Content)
                     .ThenInclude(c => c.Manufacturer)

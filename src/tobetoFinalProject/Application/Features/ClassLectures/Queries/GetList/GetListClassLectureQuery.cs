@@ -49,13 +49,13 @@ public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLec
                     .Include(ca => ca.Lecture)
                     .ThenInclude(m => m.Category)
                     .Include(ca => ca.StudentClass),
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
             );
-
+            
             GetListResponse<GetListClassLectureListItemDto> response = _mapper.Map<GetListResponse<GetListClassLectureListItemDto>>(classLectures);
-            response.Items.Reverse();
             return response;
         }
     }

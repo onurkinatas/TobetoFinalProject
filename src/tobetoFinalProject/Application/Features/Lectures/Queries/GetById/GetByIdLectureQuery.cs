@@ -55,13 +55,12 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
                    .ThenInclude(c => c. Language)
                    .Include(m => m.Manufacturer)
                    .Include(m => m.Category)
-
                    .Include(m => m.LectureCourses)
                    .ThenInclude(mc => mc.Course)
-                    .ThenInclude(c => c.CourseContents)
-                    .ThenInclude(cc => cc.Content)
-                    .ThenInclude(cc => cc.ContentInstructors)
-                    .ThenInclude(cc => cc.Instructor),
+                   .ThenInclude(c => c.CourseContents)
+                   .ThenInclude(cc => cc.Content)
+                   .ThenInclude(cc => cc.ContentInstructors)
+                   .ThenInclude(cc => cc.Instructor),
 
 
 
