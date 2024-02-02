@@ -55,6 +55,7 @@ public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLec
             );
 
             GetListResponse<GetListClassLectureListItemDto> response = _mapper.Map<GetListResponse<GetListClassLectureListItemDto>>(classLectures);
+            response.Items.Reverse();
             return response;
         }
     }
