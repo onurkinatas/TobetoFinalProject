@@ -16,7 +16,7 @@ public class GetListCityQuery : IRequest<GetListResponse<GetListCityListItemDto>
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListCities({PageRequest.PageIndex},{PageRequest.PageSize})";

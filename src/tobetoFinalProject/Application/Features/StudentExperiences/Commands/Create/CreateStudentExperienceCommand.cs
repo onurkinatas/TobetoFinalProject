@@ -20,8 +20,8 @@ public class CreateStudentExperienceCommand : IRequest<CreatedStudentExperienceR
     public string Sector { get; set; }
     public string Position { get; set; }
     public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
-    public string Description { get; set; }
+    public DateTime? EndDate { get; set; }
+    public string? Description { get; set; }
     public Guid CityId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Create, "Student" };
