@@ -47,6 +47,7 @@ public class GetListByContentIdContentLikeQuery : IRequest<GetListResponse<GetLi
                 predicate: cl => cl.IsLiked == true &&cl.ContentId==request.ContentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

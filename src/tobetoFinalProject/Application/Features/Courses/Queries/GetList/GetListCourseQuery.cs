@@ -55,7 +55,8 @@ public class GetListCourseQuery : IRequest<GetListResponse<GetListCourseListItem
                     .Include(c => c.CourseContents)
                     .ThenInclude(cc => cc.Content)
                     .ThenInclude(c => c.SubType),
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

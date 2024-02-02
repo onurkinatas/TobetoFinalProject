@@ -48,6 +48,7 @@ public class GetListByLectureIdLectureLikeQuery : IRequest<GetListResponse<GetLi
                 predicate: lcc => lcc.IsLiked == true&&lcc.LectureId==request.LectureId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

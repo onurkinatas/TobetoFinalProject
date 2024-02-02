@@ -38,7 +38,8 @@ public class GetListManufacturerQuery : IRequest<GetListResponse<GetListManufact
         {
             IPaginate<Manufacturer> manufacturers = await _manufacturerRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

@@ -47,7 +47,8 @@ public class GetListClassAnnouncementQuery : IRequest<GetListResponse<GetListCla
                 include: ca => ca.Include(ca => ca.Announcement)
                     .Include(ca => ca.StudentClass),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
             

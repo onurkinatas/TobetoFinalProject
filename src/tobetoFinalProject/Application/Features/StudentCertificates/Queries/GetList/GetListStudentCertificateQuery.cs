@@ -48,7 +48,8 @@ public class GetListStudentCertificateQuery : IRequest<GetListResponse<GetListSt
                 predicate: s => s.StudentId == getStudentFromContext.Id,
                 include: sc => sc.Include(sc => sc.Certificate),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

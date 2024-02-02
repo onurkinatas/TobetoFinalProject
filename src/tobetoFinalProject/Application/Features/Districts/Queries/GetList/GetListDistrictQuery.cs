@@ -38,7 +38,8 @@ public class GetListDistrictQuery : IRequest<GetListResponse<GetListDistrictList
         {
             IPaginate<District> districts = await _districtRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

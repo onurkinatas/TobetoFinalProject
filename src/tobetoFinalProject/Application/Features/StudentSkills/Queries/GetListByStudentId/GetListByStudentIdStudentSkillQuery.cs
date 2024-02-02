@@ -48,6 +48,7 @@ public class GetListByStudentIdStudentSkillQuery : IRequest<GetListResponse<GetL
                     .Include(sll => sll.Skill),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

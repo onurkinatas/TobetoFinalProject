@@ -38,7 +38,8 @@ public class GetListInstructorQuery : IRequest<GetListResponse<GetListInstructor
         {
             IPaginate<Instructor> instructors = await _instructorRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

@@ -39,7 +39,8 @@ public class GetListAnnouncementQuery : IRequest<GetListResponse<GetListAnnounce
             IPaginate<Announcement> announcements = await _announcementRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
-                cancellationToken: cancellationToken
+                cancellationToken: cancellationToken,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate)
             );
 
             GetListResponse<GetListAnnouncementListItemDto> response = _mapper.Map<GetListResponse<GetListAnnouncementListItemDto>>(announcements);

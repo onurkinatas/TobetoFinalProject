@@ -45,6 +45,7 @@ public class GetListByAnnouncementIdStudentAnnouncementQuery : IRequest<GetListR
                 predicate:sa=>sa.AnnouncementId==request.AnnouncementId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

@@ -38,7 +38,8 @@ public class GetListLanguageQuery : IRequest<GetListResponse<GetListLanguageList
         {
             IPaginate<Language> languages = await _languageRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

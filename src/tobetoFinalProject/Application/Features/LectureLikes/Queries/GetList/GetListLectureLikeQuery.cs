@@ -43,7 +43,8 @@ public class GetListLectureLikeQuery : IRequest<GetListResponse<GetListLectureLi
                 .Include(ll => ll.Lecture),
                 predicate: ll => ll.IsLiked==true,
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

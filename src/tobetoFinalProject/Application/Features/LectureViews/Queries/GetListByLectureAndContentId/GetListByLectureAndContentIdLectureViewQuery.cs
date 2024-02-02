@@ -50,6 +50,7 @@ public class GetListByLectureAndContentIdLectureViewQuery : IRequest<GetListResp
                 predicate:lv=>lv.LectureId==request.LectureId&&lv.ContentId==request.ContentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

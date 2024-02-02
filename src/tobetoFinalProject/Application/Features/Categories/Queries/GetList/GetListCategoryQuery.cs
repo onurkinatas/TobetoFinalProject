@@ -38,7 +38,8 @@ public class GetListCategoryQuery : IRequest<GetListResponse<GetListCategoryList
         {
             IPaginate<Category> categories = await _categoryRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

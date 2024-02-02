@@ -42,7 +42,8 @@ public class GetListStudentSkillQuery : IRequest<GetListResponse<GetListStudentS
                     .Include(ss => ss.Student)
                     .ThenInclude(s=>s.User),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

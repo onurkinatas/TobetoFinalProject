@@ -48,6 +48,7 @@ public class GetListByStudentIdStudentSocialMediaQuery : IRequest<GetListRespons
                     .Include(sll => sll.SocialMedia),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

@@ -38,7 +38,8 @@ public class GetListCityQuery : IRequest<GetListResponse<GetListCityListItemDto>
         {
             IPaginate<City> cities = await _cityRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

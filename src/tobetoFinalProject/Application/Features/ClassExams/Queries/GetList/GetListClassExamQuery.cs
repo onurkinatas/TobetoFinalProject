@@ -48,7 +48,8 @@ public class GetListClassExamQuery : IRequest<GetListResponse<GetListClassExamLi
                 include: ce => ce.Include(ce => ce.Exam)
                     .Include(ce => ce.StudentClass),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

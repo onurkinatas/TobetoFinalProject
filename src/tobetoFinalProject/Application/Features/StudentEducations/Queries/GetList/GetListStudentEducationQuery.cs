@@ -19,7 +19,7 @@ public class GetListStudentEducationQuery : IRequest<GetListResponse<GetListStud
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read, "Student" };
+    public string[] Roles => new[] { Admin};
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentEducations({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -46,7 +46,8 @@ public class GetListStudentEducationQuery : IRequest<GetListResponse<GetListStud
             IPaginate<StudentEducation> studentEducations = await _studentEducationRepository.GetListAsync(
                 include: s => s.Include(s => s.Student).ThenInclude(s => s.User),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

@@ -38,7 +38,8 @@ public class GetListSocialMediaQuery : IRequest<GetListResponse<GetListSocialMed
         {
             IPaginate<SocialMedia> socialMedias = await _socialMediaRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

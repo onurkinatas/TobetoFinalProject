@@ -54,6 +54,7 @@ public class GetListForLoggedStudentExperienceQuery : IRequest<GetListResponse<G
                                .ThenInclude(se=>se.User),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

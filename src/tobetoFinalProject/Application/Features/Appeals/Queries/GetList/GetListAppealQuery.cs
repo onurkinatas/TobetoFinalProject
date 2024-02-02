@@ -38,7 +38,8 @@ public class GetListAppealQuery : IRequest<GetListResponse<GetListAppealListItem
         {
             IPaginate<Appeal> appeals = await _appealRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

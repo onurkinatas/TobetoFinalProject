@@ -46,6 +46,7 @@ public class GetListContentQuery : IRequest<GetListResponse<GetListContentListIt
                     .ThenInclude(c => c.Instructor),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

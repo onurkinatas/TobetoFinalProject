@@ -38,7 +38,8 @@ public class GetListContentTagQuery : IRequest<GetListResponse<GetListContentTag
         {
             IPaginate<ContentTag> contentTags = await _contentTagRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

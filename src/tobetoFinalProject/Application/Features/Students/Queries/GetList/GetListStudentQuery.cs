@@ -54,7 +54,8 @@ public class GetListStudentQuery : IRequest<GetListResponse<GetListStudentListIt
                     .Include(s => s.StudentClassStudentes)
                     .ThenInclude(s => s.StudentClass)
                      .Include(s => s.User),
-                    size: request.PageRequest.PageSize, 
+                    size: request.PageRequest.PageSize,
+                    orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

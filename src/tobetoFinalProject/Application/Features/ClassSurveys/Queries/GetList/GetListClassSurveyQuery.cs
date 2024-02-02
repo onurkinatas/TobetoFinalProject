@@ -47,7 +47,8 @@ public class GetListClassSurveyQuery : IRequest<GetListResponse<GetListClassSurv
                 include: c => c.Include(c => c.StudentClass)
                     .Include(c => c.Survey),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

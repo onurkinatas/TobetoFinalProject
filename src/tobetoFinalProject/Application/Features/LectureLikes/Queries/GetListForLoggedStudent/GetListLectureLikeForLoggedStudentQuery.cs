@@ -46,7 +46,8 @@ public class GetListLectureLikeForLoggedStudentQuery : IRequest<GetListResponse<
                 predicate:ll=>ll.StudentId == student.Id,
                 include:ll=>ll.Include(ll=>ll.Lecture),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

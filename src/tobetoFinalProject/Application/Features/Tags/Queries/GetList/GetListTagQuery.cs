@@ -38,7 +38,8 @@ public class GetListTagQuery : IRequest<GetListResponse<GetListTagListItemDto>>,
         {
             IPaginate<Tag> tags = await _tagRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

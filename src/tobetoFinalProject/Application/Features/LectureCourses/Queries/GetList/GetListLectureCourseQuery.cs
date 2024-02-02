@@ -38,7 +38,8 @@ public class GetListLectureCourseQuery : IRequest<GetListResponse<GetListLecture
         {
             IPaginate<LectureCourse> lectureCourses = await _lectureCourseRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 

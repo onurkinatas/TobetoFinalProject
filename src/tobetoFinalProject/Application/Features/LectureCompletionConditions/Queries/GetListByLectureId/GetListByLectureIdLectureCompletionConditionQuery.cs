@@ -48,6 +48,7 @@ public class GetListByLectureIdLectureCompletionConditionQuery : IRequest<GetLis
                 .Include(lcc => lcc.Lecture),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 
