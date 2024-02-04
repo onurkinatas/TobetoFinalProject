@@ -76,13 +76,13 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
 
                 if (doesExistLectureCompletionCondition is null)
                 {
-                    await _lectureCompletionConditionRepository.AddAsync(new LectureCompletionCondition {StudentId=getStudent.Id,LectureId=lectureView.LectureId,CompletionPercentage=completionPercentage });
+                    await _lectureCompletionConditionsService.AddAsync(new LectureCompletionCondition {StudentId=getStudent.Id,LectureId=lectureView.LectureId,CompletionPercentage=completionPercentage });
                 }
                     
                 else if(doesExistLectureCompletionCondition is not null)
                 {
                     doesExistLectureCompletionCondition.CompletionPercentage = completionPercentage;
-                    await _lectureCompletionConditionRepository.UpdateAsync(doesExistLectureCompletionCondition);
+                    await _lectureCompletionConditionsService.UpdateAsync(doesExistLectureCompletionCondition);
                 }
                     
 

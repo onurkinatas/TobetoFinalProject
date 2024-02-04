@@ -6,8 +6,7 @@ public class UpdateStudentCommandValidator : AbstractValidator<UpdateStudentComm
 {
     public UpdateStudentCommandValidator()
     {
-        RuleFor(c => c.Id).NotEmpty();
-        RuleFor(c => c.UserId).NotEmpty();
+
 
         RuleFor(c => c.Phone)
             .Matches(@"^\d{11}$").WithMessage("Telefon numarasý tam olarak11 rakamdan oluþmalýdýr.");

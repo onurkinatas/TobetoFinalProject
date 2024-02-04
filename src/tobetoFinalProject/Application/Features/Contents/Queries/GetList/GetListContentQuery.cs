@@ -42,8 +42,10 @@ public class GetListContentQuery : IRequest<GetListResponse<GetListContentListIt
                     .Include(c => c.ContentCategory)
                     .Include(c => c.Language)
                     .Include(c => c.SubType)
+
                     .Include(c => c.ContentInstructors)
                     .ThenInclude(c => c.Instructor),
+
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),

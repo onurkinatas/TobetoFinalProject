@@ -66,6 +66,8 @@ using Application.Services.StudentSurveys;
 using Application.Services.CacheForMemory;
 using Application.Services.ContextOperations;
 using Application.Services.LectureViews;
+using Application.Services.OperationClaims;
+using Application.Services.UserOperationClaims;
 
 namespace Application;
 
@@ -143,6 +145,8 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ISubTypesService, SubTypesManager>();
         services.AddScoped<ISurveysService, SurveysManager>();
         services.AddScoped<ITagsService, TagsManager>();
+        services.AddScoped<IUserOperationClaimService, UserUserOperationClaimManager>();
+        services.AddScoped<IOperationClaimService, OperationClaimManager>();
         services.AddScoped<IStudentSurveysService, StudentSurveysManager>();
         services.AddScoped<ICacheMemoryService, CacheService>();
         services.AddMemoryCache();
