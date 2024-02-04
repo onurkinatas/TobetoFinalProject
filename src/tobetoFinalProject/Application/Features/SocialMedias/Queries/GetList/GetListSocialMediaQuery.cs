@@ -16,7 +16,7 @@ public class GetListSocialMediaQuery : IRequest<GetListResponse<GetListSocialMed
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListSocialMedias({PageRequest.PageIndex},{PageRequest.PageSize})";

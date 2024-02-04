@@ -12,14 +12,16 @@ public class CreateStudentExperienceCommandValidator : AbstractValidator<CreateS
             .Length(5, 50).WithMessage("Position en az 5, en fazla 50 karakter olmalýdýr.");
         ;
         RuleFor(c => c.StartDate).NotEmpty();
-        RuleFor(c => c.EndDate).NotEmpty();
-        RuleFor(c => c.Description).NotEmpty();
         RuleFor(c => c.CityId).NotEmpty();
 
         RuleFor(x => x.StartDate)
-            .LessThan(x => x.EndDate).WithMessage("Baþlangýç tarihi bitiþ tarihinden önce olmalýdýr.");
+             .Must((command, startDate) => command.EndDate != null && startDate > command.EndDate)
+             .WithMessage("Baþlangýç tarihi bitiþ tarihinden önce olmalýdýr.")
+             .When(x => x.EndDate != null);
 
         RuleFor(x => x.EndDate)
-            .GreaterThan(x => x.StartDate).WithMessage("Bitiþ tarihi baþlangýç tarihinden sonra olmalýdýr.");
+            .Must((command, endDate) => command.StartDate != null && endDate < command.StartDate)
+            .WithMessage("Bitiþ tarihi baþlangýç tarihinden sonra olmalýdýr.")
+            .When(x => x.EndDate != null);
     }
 }

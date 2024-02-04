@@ -14,8 +14,10 @@ public class CreateStudentEducationCommandValidator : AbstractValidator<CreateSt
 
         RuleFor(c => c.StartDate).NotEmpty();
 
-        RuleFor(x => x.GraduationDate)
-            .GreaterThan(x => x.StartDate).WithMessage("Mezuniyet Tarihi alaný baþlangýç tarihinden sonra olmalýdýr.");
+        RuleFor(x => x.StartDate)
+             .LessThan(x => x.GraduationDate)
+             .WithMessage("Mezuniyet Tarihi alaný baþlangýç tarihinden sonra olmalýdýr.")
+             .When(x => x.GraduationDate != null);
 
         RuleFor(c => c.GraduationDate)
             .NotEmpty()
@@ -26,7 +28,7 @@ public class CreateStudentEducationCommandValidator : AbstractValidator<CreateSt
             .WithMessage("Eðer devam ediyorsa mezuniyet tarihi girilemez.");
 
         RuleFor(c => c.IsContinued)
-            .Must(isContinued => isContinued).When(c => c.GraduationDate == null)
+            .Must(isContinued => isContinued ?? false).When(c => c.GraduationDate == null)
             .WithMessage("Eðer mezuniyet tarihi belirtilmediyse, devam edip etmediði belirtilmelidir.");
     }
 }
