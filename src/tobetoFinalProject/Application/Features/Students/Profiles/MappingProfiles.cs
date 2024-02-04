@@ -7,6 +7,8 @@ using AutoMapper;
 using Core.Application.Responses;
 using Domain.Entities;
 using Core.Persistence.Paging;
+using Core.Security.Entities;
+using Application.Features.Students.Commands.UpdateForPassword;
 
 namespace Application.Features.Students.Profiles;
 
@@ -25,6 +27,7 @@ public class MappingProfiles : Profile
         CreateMap<Student, GetListStudentListItemDto>().ReverseMap();
         CreateMap<StudentClass, GetStudentClassesDto>();
         CreateMap<IPaginate<Student>, GetListResponse<GetListStudentListItemDto>>().ReverseMap();
+        CreateMap<User, UpdateStudentForPasswordCommand>().ReverseMap();
 
 
         CreateMap<Student, GetListStudentListItemDto>()

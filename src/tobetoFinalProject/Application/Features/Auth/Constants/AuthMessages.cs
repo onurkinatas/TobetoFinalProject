@@ -17,4 +17,5 @@ public static class AuthMessages
     public const string UserIsNotAAdmin = "Yetkili deðilsiniz buraya giriþ yetkiniz bulunmuyor";
     public const string OperationClaimShouldBeExist = "Herhangi bir yetkiniz bulunmuyor lütfen yetkililere danýþýn";
     public const string UserOperationClaimShouldBeExist = "Herhangi bir yetkiniz bulunmuyor lütfen yetkililere danýþýn";
+    public const string? PasswordHaveToEqualToCheckPassword = "Yeni þifre ile ikinci þifre eþleþmiyor";
 }

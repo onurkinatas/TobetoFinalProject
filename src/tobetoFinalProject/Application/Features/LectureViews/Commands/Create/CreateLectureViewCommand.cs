@@ -62,13 +62,15 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
             LectureView lectureView = _mapper.Map<LectureView>(request);
             lectureView.StudentId = getStudent.Id;
 
-            LectureView? existLectureView = await _lectureViewRepository.GetAsync(predicate: lw => lw.StudentId == getStudent.Id && lw.ContentId == lectureView.ContentId &&lw.LectureId==lectureView.LectureId ,cancellationToken: cancellationToken);
+            LectureView? existLectureView = await _lectureViewRepository.GetAsync(predicate: lw => lw.StudentId == getStudent.Id && lw.ContentId == lectureView.ContentId &&
+                                                                                         lw.LectureId==lectureView.LectureId ,cancellationToken: cancellationToken);
             
             if (existLectureView is null)
             {
                 await _lectureViewRepository.AddAsync(lectureView);
 
-                LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureView.LectureId && lcc.StudentId == getStudent.Id);
+                LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureView.LectureId 
+                                                                                                                                                             && lcc.StudentId == getStudent.Id);
 
                 int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
                 int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);

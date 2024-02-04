@@ -1,8 +1,10 @@
 using Application.Features.Students.Commands.Create;
 using Application.Features.Students.Commands.Delete;
 using Application.Features.Students.Commands.Update;
+using Application.Features.Students.Commands.UpdateForPassword;
 using Application.Features.Students.Queries.GetById;
 using Application.Features.Students.Queries.GetList;
+using Application.Features.Users.Commands.UpdateFromAuth;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +27,13 @@ public class StudentsController : BaseController
     public async Task<IActionResult> Update([FromBody] UpdateStudentCommand updateStudentCommand)
     {
         UpdatedStudentResponse response = await Mediator.Send(updateStudentCommand);
+
+        return Ok(response);
+    }
+    [HttpPut("forPassword")]
+    public async Task<IActionResult> UpdateForPassword([FromBody] UpdateStudentForPasswordCommand updateStudentCommand)
+    {
+        UpdatedUserFromAuthResponse response = await Mediator.Send(updateStudentCommand);
 
         return Ok(response);
     }

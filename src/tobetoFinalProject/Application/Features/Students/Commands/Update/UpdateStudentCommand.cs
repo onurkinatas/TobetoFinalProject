@@ -29,7 +29,6 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
     public string? Country { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
-    public string? Email { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentsOperationClaims.Update ,"Student"};
 
@@ -59,18 +58,17 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
             User? user = await _userService.GetAsync(predicate: u => u.Id ==getStudent.UserId, cancellationToken: cancellationToken);
-            User updatedUser = new()
-            {
-                FirstName=request.FirstName,
-                LastName=request.LastName
-            };
-            user = _mapper.Map(updatedUser, user);
-            
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+
             Student? student = await _studentRepository.GetAsync(
                 predicate: s => s.Id == getStudent.Id,
                 cancellationToken: cancellationToken);
             await _studentBusinessRules.StudentShouldExistWhenSelected(student);
             student = _mapper.Map(request, student);
+
+
+
             await _userService.UpdateAsync(user);
             await _studentRepository.UpdateAsync(student!);
 

@@ -57,4 +57,11 @@ public class UserBusinessRules : BaseBusinessRules
             throw new BusinessException(AuthMessages.NewPasswordShouldBeDifferent);
         return Task.CompletedTask;
     }
+
+    public Task UserPasswordAndCheckPassword(string newPassword, string checkNewPassword)
+    {
+        if (newPassword == checkNewPassword)
+            throw new BusinessException(AuthMessages.PasswordHaveToEqualToCheckPassword);
+        return Task.CompletedTask;
+    }
 }
