@@ -67,8 +67,6 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
             await _studentBusinessRules.StudentShouldExistWhenSelected(student);
             student = _mapper.Map(request, student);
 
-
-
             await _userService.UpdateAsync(user);
             await _studentRepository.UpdateAsync(student!);
 
