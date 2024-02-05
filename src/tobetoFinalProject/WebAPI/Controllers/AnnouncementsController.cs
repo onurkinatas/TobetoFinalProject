@@ -3,9 +3,15 @@ using Application.Features.Announcements.Commands.Delete;
 using Application.Features.Announcements.Commands.Update;
 using Application.Features.Announcements.Queries.GetById;
 using Application.Features.Announcements.Queries.GetList;
+using Application.Services.ImageService;
+using CloudinaryDotNet;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Domain.Dtos;
+using Domain.Entities;
+using Infrastructure.Adapters.ImageService;
 using Microsoft.AspNetCore.Mvc;
+using System.Configuration;
 
 namespace WebAPI.Controllers;
 
@@ -14,8 +20,9 @@ namespace WebAPI.Controllers;
 public class AnnouncementsController : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] CreateAnnouncementCommand createAnnouncementCommand)
+    public async Task<IActionResult> Add( [FromBody] CreateAnnouncementCommand createAnnouncementCommand)
     {
+       
         CreatedAnnouncementResponse response = await Mediator.Send(createAnnouncementCommand);
 
         return Created(uri: "", response);

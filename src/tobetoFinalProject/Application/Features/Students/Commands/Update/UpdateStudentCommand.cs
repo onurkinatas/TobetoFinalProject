@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using Application.Services.UsersService;
 using Core.Security.Entities;
 using Application.Services.ContextOperations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using Application.Services.ImageService;
 
 namespace Application.Features.Students.Commands.Update;
 
@@ -25,6 +28,7 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
     public DateTime? BirthDate { get; set; }
     public string? AddressDetail { get; set; }
     public string? Description { get; set; }
+    public IFormFile? ProfilePhotoPathTemp { get; set; }
     public string? ProfilePhotoPath { get; set; }
     public string? Country { get; set; }
     public string? FirstName { get; set; }
@@ -43,23 +47,26 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
         private readonly IUserService _userService;
         private readonly IContextOperationService _contextOperationService;
         private readonly StudentBusinessRules _studentBusinessRules;
-
+        private ImageServiceBase _imageBaseService;
         public UpdateStudentCommandHandler(IMapper mapper, IStudentRepository studentRepository,
-                                         StudentBusinessRules studentBusinessRules, IUserService userService, IContextOperationService contextOperationService)
+                                         StudentBusinessRules studentBusinessRules, IUserService userService, IContextOperationService contextOperationService, ImageServiceBase imageBaseService)
         {
             _mapper = mapper;
             _studentRepository = studentRepository;
             _studentBusinessRules = studentBusinessRules;
             _userService = userService;
             _contextOperationService = contextOperationService;
+            _imageBaseService = imageBaseService;
         }
 
         public async Task<UpdatedStudentResponse> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
             User? user = await _userService.GetAsync(predicate: u => u.Id ==getStudent.UserId, cancellationToken: cancellationToken);
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
+            user.FirstName = request.FirstName==null?"":request.FirstName;
+            user.LastName = request.LastName == null ? "" : request.LastName;
+
+            request.ProfilePhotoPath=request.ProfilePhotoPathTemp == null ? "" : await _imageBaseService.UploadAsync(request.ProfilePhotoPathTemp);
 
             Student? student = await _studentRepository.GetAsync(
                 predicate: s => s.Id == getStudent.Id,
