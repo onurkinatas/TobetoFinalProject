@@ -24,7 +24,7 @@ public class StudentsController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateStudentCommand updateStudentCommand)
+    public async Task<IActionResult> Update([FromForm] UpdateStudentCommand updateStudentCommand)
     {
         UpdatedStudentResponse response = await Mediator.Send(updateStudentCommand);
 
