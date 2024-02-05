@@ -7,7 +7,6 @@ using Application.Services.ImageService;
 using CloudinaryDotNet;
 using Core.Application.Requests;
 using Core.Application.Responses;
-using Domain.Dtos;
 using Domain.Entities;
 using Infrastructure.Adapters.ImageService;
 using Microsoft.AspNetCore.Mvc;

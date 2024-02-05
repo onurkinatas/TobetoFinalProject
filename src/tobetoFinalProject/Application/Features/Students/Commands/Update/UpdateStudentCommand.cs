@@ -33,6 +33,7 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
     public string? Country { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
+    public string? Email {  get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentsOperationClaims.Update ,"Student"};
 

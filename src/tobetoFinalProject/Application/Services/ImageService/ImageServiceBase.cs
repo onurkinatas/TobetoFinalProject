@@ -19,7 +19,7 @@ public abstract class ImageServiceBase
 
     protected async Task FileMustBeInImageFormat(IFormFile formFile)
     {
-        List<string> extensions = new() { ".jpg", ".png", ".jpeg", ".webp" };
+        List<string> extensions = new() { ".jpg", ".png", ".jpeg", ".webp", ".jfif", ".gif" };
 
         string extension = Path.GetExtension(formFile.FileName).ToLower();
         if (!extensions.Contains(extension))
