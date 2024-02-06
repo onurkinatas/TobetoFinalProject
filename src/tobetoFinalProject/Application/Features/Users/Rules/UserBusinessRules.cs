@@ -60,7 +60,7 @@ public class UserBusinessRules : BaseBusinessRules
 
     public Task UserPasswordAndCheckPassword(string newPassword, string checkNewPassword)
     {
-        if (newPassword == checkNewPassword)
+        if (newPassword != checkNewPassword)
             throw new BusinessException(AuthMessages.PasswordHaveToEqualToCheckPassword);
         return Task.CompletedTask;
     }

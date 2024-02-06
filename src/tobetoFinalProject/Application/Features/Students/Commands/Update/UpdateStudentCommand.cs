@@ -16,6 +16,7 @@ using Application.Services.ContextOperations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Application.Services.ImageService;
+using System.Runtime.InteropServices;
 
 namespace Application.Features.Students.Commands.Update;
 
@@ -63,11 +64,12 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
         public async Task<UpdatedStudentResponse> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
-            User? user = await _userService.GetAsync(predicate: u => u.Id ==getStudent.UserId, cancellationToken: cancellationToken);
-            user.FirstName = request.FirstName==null?"":request.FirstName;
+            User? user = await _userService.GetAsync(predicate: u => u.Id == getStudent.UserId, cancellationToken: cancellationToken);
+            user.FirstName = request.FirstName == null ? "": request.FirstName;
             user.LastName = request.LastName == null ? "" : request.LastName;
 
-            request.ProfilePhotoPath=request.ProfilePhotoPathTemp == null ? "" : await _imageBaseService.UploadAsync(request.ProfilePhotoPathTemp);
+            if (request.ProfilePhotoPath == "unused") 
+                request.ProfilePhotoPath = request.ProfilePhotoPathTemp == null ? null : await _imageBaseService.UploadAsync(request.ProfilePhotoPathTemp);
 
             Student? student = await _studentRepository.GetAsync(
                 predicate: s => s.Id == getStudent.Id,

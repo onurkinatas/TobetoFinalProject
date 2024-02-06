@@ -16,7 +16,7 @@ public class GetListDistrictQuery : IRequest<GetListResponse<GetListDistrictList
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListDistricts({PageRequest.PageIndex},{PageRequest.PageSize})";

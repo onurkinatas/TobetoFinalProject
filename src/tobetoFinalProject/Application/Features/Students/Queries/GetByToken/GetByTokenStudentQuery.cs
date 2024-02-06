@@ -11,9 +11,9 @@ using Application.Services.ContextOperations;
 
 namespace Application.Features.Students.Queries.GetById;
 
-public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse> /*ISecuredRequest*/
+public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecuredRequest
 {
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read, "Student" };
 
     public class GetByTokenStudentQueryHandler : IRequestHandler<GetByTokenStudentQuery, GetByTokenStudentResponse>
     {

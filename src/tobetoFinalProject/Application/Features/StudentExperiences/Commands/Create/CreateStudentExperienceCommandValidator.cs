@@ -15,13 +15,9 @@ public class CreateStudentExperienceCommandValidator : AbstractValidator<CreateS
         RuleFor(c => c.CityId).NotEmpty();
 
         RuleFor(x => x.StartDate)
-             .Must((command, startDate) => command.EndDate != null && startDate > command.EndDate)
+             .LessThan(x => x.EndDate)
              .WithMessage("Baþlangýç tarihi bitiþ tarihinden önce olmalýdýr.")
              .When(x => x.EndDate != null);
 
-        RuleFor(x => x.EndDate)
-            .Must((command, endDate) => command.StartDate != null && endDate < command.StartDate)
-            .WithMessage("Bitiþ tarihi baþlangýç tarihinden sonra olmalýdýr.")
-            .When(x => x.EndDate != null);
     }
 }

@@ -24,9 +24,11 @@ public class GetByTokenStudentResponse : IResponse
     public string Phone { get; set; }
     public string ProfilePhotoPath { get; set; }
     public DateTime BirthDate { get; set; }
-    public string AdrressDetail { get; set; }
+    public string AddressDetail { get; set; }
     public string Description { get; set; }
     public string Country { get; set; }
+    public string CityId { get; set; }
+    public string DistrictId { get; set; }
     public ICollection<GetListSocialMediaListItemDto>? SocialMedias { get; set; }
     public ICollection<GetListCertificateListItemDto>? Certificates { get; set; }
     public ICollection<GetListLanguageLevelListItemDto>? LanguageLevels { get; set; }
