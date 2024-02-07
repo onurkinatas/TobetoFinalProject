@@ -48,8 +48,7 @@ public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLec
                     .ThenInclude(m => m.Manufacturer)
                     .Include(ca => ca.Lecture)
                     .ThenInclude(m => m.Category)
-                    .Include(ca => ca.StudentClass)
-                    .Include(cl=>cl.LectureCompletionCondition),
+                    .Include(ca => ca.StudentClass),
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 

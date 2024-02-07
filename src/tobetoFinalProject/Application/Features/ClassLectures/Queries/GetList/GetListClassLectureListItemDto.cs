@@ -13,7 +13,6 @@ public class GetListClassLectureListItemDto : IDto
     public string LectureImageUrl { get; set; }
     public double EstimatedVideoDuration { get; set; }
     public string LectureManufacturerName { get; set; }
-    public int CompletionPercentage { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
 }

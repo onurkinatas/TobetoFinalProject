@@ -25,9 +25,7 @@ public class MappingProfiles : Profile
         CreateMap<ClassLecture, GetListClassLectureListItemDto>().ReverseMap();
         CreateMap<IPaginate<ClassLecture>, GetListResponse<GetListClassLectureListItemDto>>().ReverseMap();
 
-        CreateMap<ClassLecture, GetListClassLectureListItemDto>()
-       .ForMember(dest => dest.CompletionPercentage, opt => opt.MapFrom(src => src.LectureCompletionCondition.CompletionPercentage))
-       ;
+      
 
     }
 }
