@@ -28,6 +28,9 @@ public class MappingProfiles : Profile
         CreateMap<LectureCompletionCondition, GetListLectureCompletionConditionListItemDto>()
             .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
             .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
-            .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
+            .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email))
+            .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
+            .ForMember(dest => dest.LectureImageUrl, opt => opt.MapFrom(src => src.Lecture.ImageUrl))
+            ;
     }
 }
