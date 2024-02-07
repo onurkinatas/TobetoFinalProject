@@ -1,44 +1,45 @@
-using Application.Features.ClassLectures.Constants;
+﻿using Application.Features.ClassLectures.Queries.GetList;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
-using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.ClassLectures.Constants.ClassLecturesOperationClaims;
 using Microsoft.EntityFrameworkCore;
-using Application.Services.CacheForMemory;
-using Application.Services.ContextOperations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Application.Features.ClassLectures.Queries.GetList;
-
-public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLectureListItemDto>>, ISecuredRequest
+namespace Application.Features.ClassLectures.Queries.GetListForCompleted;
+public class GetListClassLectureForCompletedQuery : IRequest<GetListResponse<GetListClassLectureListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new[] { Admin, Read, "Student" };
+    public string[] Roles => new[] { "Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListClassLectures({PageRequest.PageIndex},{PageRequest.PageSize})";
     public string CacheGroupKey => "GetClassLectures";
     public TimeSpan? SlidingExpiration { get; }
 
-    public class GetListClassLectureQueryHandler : IRequestHandler<GetListClassLectureQuery, GetListResponse<GetListClassLectureListItemDto>>
+    public class GetListClassLectureForCompletedQueryHandler : IRequestHandler<GetListClassLectureForCompletedQuery, GetListResponse<GetListClassLectureListItemDto>>
     {
         private readonly IClassLectureRepository _classLectureRepository;
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
-        public GetListClassLectureQueryHandler(IClassLectureRepository classLectureRepository, IMapper mapper, IContextOperationService contextOperationService)
+        public GetListClassLectureForCompletedQueryHandler(IClassLectureRepository classLectureRepository, IMapper mapper, IContextOperationService contextOperationService)
         {
             _classLectureRepository = classLectureRepository;
             _mapper = mapper;
             _contextOperationService = contextOperationService;
         }
 
-        public async Task<GetListResponse<GetListClassLectureListItemDto>> Handle(GetListClassLectureQuery request, CancellationToken cancellationToken)
+        public async Task<GetListResponse<GetListClassLectureListItemDto>> Handle(GetListClassLectureForCompletedQuery request, CancellationToken cancellationToken)
         {
             ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();
 
@@ -48,14 +49,13 @@ public class GetListClassLectureQuery : IRequest<GetListResponse<GetListClassLec
                     .ThenInclude(m => m.Manufacturer)
                     .Include(ca => ca.Lecture)
                     .ThenInclude(m => m.Category)
-                    .Include(ca => ca.StudentClass)
-                    .Include(cl=>cl.LectureCompletionCondition),
+                    .Include(ca => ca.StudentClass),
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 index: request.PageRequest.PageIndex,
-                size: request.PageRequest.PageSize, 
+                size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
-            
+
             GetListResponse<GetListClassLectureListItemDto> response = _mapper.Map<GetListResponse<GetListClassLectureListItemDto>>(classLectures);
             return response;
         }

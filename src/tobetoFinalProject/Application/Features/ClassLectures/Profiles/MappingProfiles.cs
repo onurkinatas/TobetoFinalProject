@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Application.Responses;
 using Domain.Entities;
 using Core.Persistence.Paging;
+using Application.Features.StudentAnnouncements.Queries.GetList;
 
 namespace Application.Features.ClassLectures.Profiles;
 
@@ -23,5 +24,10 @@ public class MappingProfiles : Profile
         CreateMap<ClassLecture, GetByIdClassLectureResponse>().ReverseMap();
         CreateMap<ClassLecture, GetListClassLectureListItemDto>().ReverseMap();
         CreateMap<IPaginate<ClassLecture>, GetListResponse<GetListClassLectureListItemDto>>().ReverseMap();
+
+        CreateMap<ClassLecture, GetListClassLectureListItemDto>()
+       .ForMember(dest => dest.CompletionPercentage, opt => opt.MapFrom(src => src.LectureCompletionCondition.CompletionPercentage))
+       ;
+
     }
 }
