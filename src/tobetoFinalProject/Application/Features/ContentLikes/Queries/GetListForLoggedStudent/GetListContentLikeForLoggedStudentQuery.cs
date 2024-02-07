@@ -21,11 +21,6 @@ public class GetListContentLikeForLoggedStudentQuery : IRequest<GetListResponse<
 
     public string[] Roles => new[] { Admin, Read,"Student" };
 
-    public bool BypassCache { get; }
-    public string CacheKey => $"GetListContentLikes({PageRequest.PageIndex},{PageRequest.PageSize})";
-    public string CacheGroupKey => "GetContentLikes";
-    public TimeSpan? SlidingExpiration { get; }
-
     public class GetListContentLikeQueryHandler : IRequestHandler<GetListContentLikeForLoggedStudentQuery, GetListResponse<GetListContentLikeForLoggedStudentListItemDto>>
     {
         private readonly IContentLikeRepository _contentLikeRepository;
