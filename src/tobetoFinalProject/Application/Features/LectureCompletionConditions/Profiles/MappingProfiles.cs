@@ -31,6 +31,8 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email))
             .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
             .ForMember(dest => dest.LectureImageUrl, opt => opt.MapFrom(src => src.Lecture.ImageUrl))
+            .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Lecture.StartDate))
+            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.Lecture.EndDate))
             ;
     }
 }

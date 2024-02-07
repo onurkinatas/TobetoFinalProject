@@ -15,4 +15,6 @@ public class GetListLectureCompletionConditionListItemDto : IDto
     public string StudentEmail { get; set; }
     public string LectureName { get; set; }
     public string LectureImageUrl { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
 }
