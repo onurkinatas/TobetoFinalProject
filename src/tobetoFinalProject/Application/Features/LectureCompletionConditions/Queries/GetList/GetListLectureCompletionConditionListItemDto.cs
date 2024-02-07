@@ -13,5 +13,6 @@ public class GetListLectureCompletionConditionListItemDto : IDto
     public string StudentFirstName { get; set; }
     public string StudentLastName { get; set; }
     public string StudentEmail { get; set; }
-    public Lecture Lecture { get; set; }
+    public string LectureName { get; set; }
+    public string LectureImageUrl { get; set; }
 }

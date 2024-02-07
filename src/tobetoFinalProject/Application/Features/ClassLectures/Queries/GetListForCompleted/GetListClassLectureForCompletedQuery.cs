@@ -1,5 +1,6 @@
 ﻿using Application.Features.ClassLectures.Queries.GetList;
 using Application.Services.ContextOperations;
+using Application.Services.LectureCompletionConditions;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
@@ -32,16 +33,21 @@ public class GetListClassLectureForCompletedQuery : IRequest<GetListResponse<Get
         private readonly IClassLectureRepository _classLectureRepository;
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
-        public GetListClassLectureForCompletedQueryHandler(IClassLectureRepository classLectureRepository, IMapper mapper, IContextOperationService contextOperationService)
+        private readonly ILectureCompletionConditionsService _lectureCompletionConditionsService;
+        public GetListClassLectureForCompletedQueryHandler(IClassLectureRepository classLectureRepository, IMapper mapper, IContextOperationService contextOperationService, ILectureCompletionConditionsService lectureCompletionConditionsService)
         {
             _classLectureRepository = classLectureRepository;
             _mapper = mapper;
             _contextOperationService = contextOperationService;
+            _lectureCompletionConditionsService = lectureCompletionConditionsService;
         }
 
         public async Task<GetListResponse<GetListClassLectureListItemDto>> Handle(GetListClassLectureForCompletedQuery request, CancellationToken cancellationToken)
         {
             ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();
+
+
+
 
             IPaginate<ClassLecture> classLectures = await _classLectureRepository.GetListAsync(
                 predicate: ce => getClassIds.Contains(ce.StudentClassId),
