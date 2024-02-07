@@ -5,8 +5,11 @@ using Application.Features.LectureCompletionConditions.Queries.GetById;
 using Application.Features.LectureCompletionConditions.Queries.GetForLoggedStudent;
 using Application.Features.LectureCompletionConditions.Queries.GetList;
 using Application.Features.LectureCompletionConditions.Queries.GetListByLectureId;
+using Application.Features.LectureCompletionConditions.Queries.GetListForContiuned;
+using Application.Features.LectureCompletionConditions.Queries.GetListLecturesForCompleted;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -65,6 +68,20 @@ public class LectureCompletionConditionsController : BaseController
     public async Task<IActionResult> GetByLectureId([FromRoute] Guid lectureId)
     {
         GetByLoggedStudentCompletionConditionResponse response = await Mediator.Send(new GetByLoggedStudentCompletionConditionQuery { LectureId=lectureId });
+        return Ok(response);
+    }
+    [HttpGet("getListForCompleted")]
+    public async Task<IActionResult> GetListForCompleted([FromQuery] PageRequest pageRequest)
+    {
+        GetListLectureCompletionConditionForCompletedQuery getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest};
+        GetListResponse<GetListLectureCompletionConditionListItemDto> response = await Mediator.Send(getListByLectureIdLectureCompletionConditionQuery);
+        return Ok(response);
+    }
+    [HttpGet("getListForContinued")]
+    public async Task<IActionResult> GetListForContinued([FromQuery] PageRequest pageRequest)
+    {
+        GetListLectureCompletionConditionForContiuned getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListLectureCompletionConditionListItemDto> response = await Mediator.Send(getListByLectureIdLectureCompletionConditionQuery);
         return Ok(response);
     }
 }
