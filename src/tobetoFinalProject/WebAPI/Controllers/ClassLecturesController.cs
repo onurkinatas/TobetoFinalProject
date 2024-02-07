@@ -51,4 +51,11 @@ public class ClassLecturesController : BaseController
         GetListResponse<GetListClassLectureListItemDto> response = await Mediator.Send(getListClassLectureQuery);
         return Ok(response);
     }
+    [HttpGet("GetListForSearch{searchedValue}")]
+    public async Task<IActionResult> GetListForSearch([FromQuery] PageRequest pageRequest,string searchedValue)
+    {
+        GetListForSearch getListClassLectureQuery = new() { PageRequest = pageRequest,SearchedValue=searchedValue };
+        GetListResponse<GetListClassLectureListItemDto> response = await Mediator.Send(getListClassLectureQuery);
+        return Ok(response);
+    }
 }
