@@ -1,6 +1,7 @@
 using Application.Features.StudentExams.Commands.Create;
 using Application.Features.StudentExams.Commands.Delete;
 using Application.Features.StudentExams.Commands.Update;
+using Application.Features.StudentExams.Queries.GetByExamIdForLoggedStudent;
 using Application.Features.StudentExams.Queries.GetById;
 using Application.Features.StudentExams.Queries.GetList;
 using Core.Application.Requests;
@@ -49,6 +50,12 @@ public class StudentExamsController : BaseController
     {
         GetListStudentExamQuery getListStudentExamQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListStudentExamListItemDto> response = await Mediator.Send(getListStudentExamQuery);
+        return Ok(response);
+    }
+    [HttpGet("{examId}")]
+    public async Task<IActionResult> GetByExamId([FromRoute] Guid examId)
+    {
+        GetByExamIdForLoggedStudentQueryResponse response = await Mediator.Send(new GetByExamIdForLoggedStudentQuery { ExamId = examId });
         return Ok(response);
     }
 }

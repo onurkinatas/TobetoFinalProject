@@ -42,7 +42,6 @@ public class GetListStudentExamQuery : IRequest<GetListResponse<GetListStudentEx
             var cacheMemoryStudentId = _cacheMemoryService.GetStudentIdFromCache();
 
             IPaginate<StudentExam> studentExams = await _studentExamRepository.GetListAsync(
-                predicate: se => se.StudentId == cacheMemoryStudentId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize, 
                 cancellationToken: cancellationToken
