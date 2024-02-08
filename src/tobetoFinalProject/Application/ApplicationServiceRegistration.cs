@@ -68,6 +68,7 @@ using Application.Services.ContextOperations;
 using Application.Services.LectureViews;
 using Application.Services.OperationClaims;
 using Application.Services.UserOperationClaims;
+using Application.Services.StudentPrivateCertificates;
 
 namespace Application;
 
@@ -151,6 +152,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<ICacheMemoryService, CacheService>();
         services.AddMemoryCache();
         services.AddScoped<ILectureViewsService, LectureViewsManager>();
+        services.AddScoped<IStudentPrivateCertificatesService, StudentPrivateCertificatesManager>();
         return services;
     }
 

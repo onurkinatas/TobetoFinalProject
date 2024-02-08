@@ -473,6 +473,14 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentSurveys.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentSurveys.Delete" });
         #endregion
+        #region StudentPrivateCertificates
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Delete" });
+        #endregion
         return seeds;
     }
 }

@@ -64,6 +64,7 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
         public async Task<UpdatedStudentResponse> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
+
             User? user = await _userService.GetAsync(predicate: u => u.Id == getStudent.UserId, cancellationToken: cancellationToken);
             user.FirstName = request.FirstName == null ? "": request.FirstName;
             user.LastName = request.LastName == null ? "" : request.LastName;
@@ -74,7 +75,9 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
             Student? student = await _studentRepository.GetAsync(
                 predicate: s => s.Id == getStudent.Id,
                 cancellationToken: cancellationToken);
+
             await _studentBusinessRules.StudentShouldExistWhenSelected(student);
+
             student = _mapper.Map(request, student);
 
             await _userService.UpdateAsync(user);

@@ -64,6 +64,7 @@ public class BaseDbContext : DbContext
     public DbSet<Survey> Surveys { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<StudentSurvey> StudentSurveys { get; set; }
+    public DbSet<StudentPrivateCertificate> StudentPrivateCertificates { get; set; }
 
     public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
         : base(dbContextOptions)
