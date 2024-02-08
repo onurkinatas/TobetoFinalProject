@@ -4,6 +4,7 @@ using Application.Features.StudentExams.Commands.Update;
 using Application.Features.StudentExams.Queries.GetByExamIdForLoggedStudent;
 using Application.Features.StudentExams.Queries.GetById;
 using Application.Features.StudentExams.Queries.GetList;
+using Application.Features.StudentExams.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,14 @@ public class StudentExamsController : BaseController
     {
         GetListStudentExamQuery getListStudentExamQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListStudentExamListItemDto> response = await Mediator.Send(getListStudentExamQuery);
+        return Ok(response);
+    }
+
+    [HttpGet("GetForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListStudentExamForLoggedStudentQuery getListStudentExamQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentExamForLoggedStudentListItemDto> response = await Mediator.Send(getListStudentExamQuery);
         return Ok(response);
     }
     [HttpGet("{examId}")]
