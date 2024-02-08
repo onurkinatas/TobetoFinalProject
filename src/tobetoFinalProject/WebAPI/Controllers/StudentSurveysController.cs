@@ -3,6 +3,7 @@ using Application.Features.StudentSurveys.Commands.Delete;
 using Application.Features.StudentSurveys.Commands.Update;
 using Application.Features.StudentSurveys.Queries.GetById;
 using Application.Features.StudentSurveys.Queries.GetList;
+using Application.Features.StudentSurveys.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,13 @@ public class StudentSurveysController : BaseController
     {
         GetListStudentSurveyQuery getListStudentSurveyQuery = new() { PageRequest = pageRequest };
         GetListResponse<GetListStudentSurveyListItemDto> response = await Mediator.Send(getListStudentSurveyQuery);
+        return Ok(response);
+    }
+    [HttpGet("ForLoggedStudent")]
+    public async Task<IActionResult> GetForLoggedStudentList([FromQuery] PageRequest pageRequest)
+    {
+        GetListStudentSurveyForLoggedStudentQuery getListStudentSurveyQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListStudentSurveyForLoggedStudentListItemDto> response = await Mediator.Send(getListStudentSurveyQuery);
         return Ok(response);
     }
 }

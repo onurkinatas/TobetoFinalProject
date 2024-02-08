@@ -7,6 +7,5 @@ public class CreateStudentExamCommandValidator : AbstractValidator<CreateStudent
     public CreateStudentExamCommandValidator()
     {
         RuleFor(c => c.ExamId).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
     }
 }

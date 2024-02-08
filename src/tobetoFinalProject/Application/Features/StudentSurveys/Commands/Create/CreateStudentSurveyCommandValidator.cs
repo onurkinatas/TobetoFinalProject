@@ -7,6 +7,5 @@ public class CreateStudentSurveyCommandValidator : AbstractValidator<CreateStude
     public CreateStudentSurveyCommandValidator()
     {
         RuleFor(c => c.SurveyId).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
     }
 }
