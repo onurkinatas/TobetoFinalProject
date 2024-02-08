@@ -29,14 +29,13 @@ public class MappingProfiles : Profile
         CreateMap<StudentAnnouncement, GetListByAnnouncementIdStudentAnnouncementResponse>().ReverseMap();
         CreateMap<IPaginate<StudentAnnouncement>, GetListResponse<GetListStudentAnnouncementListItemDto>>().ReverseMap();
         CreateMap<IPaginate<StudentAnnouncement>, GetListResponse<GetListByAnnouncementIdStudentAnnouncementResponse>>().ReverseMap();
-
+        CreateMap<IPaginate<StudentAnnouncement>, GetListResponse<GetListForLoggedStudentAnnouncementResponse>>().ReverseMap();
 
         CreateMap<StudentAnnouncement, GetListStudentAnnouncementListItemDto>()
           .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
           .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
           .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email))
           ;
-
 
         CreateMap<StudentAnnouncement, GetListByAnnouncementIdStudentAnnouncementResponse>()
           .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
