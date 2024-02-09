@@ -8,6 +8,8 @@ public class GetListLectureViewListItemDto : IDto
     public Guid StudentId { get; set; }
     public Guid LectureId { get; set; }
     public Guid ContentId { get; set; }
+    public DateTime LectureViewCreatedDate { get; set; }
+
     public string StudentFirstName { get; set; }
     public string StudentLastName { get; set; }
     public string StudentEmail { get; set; }

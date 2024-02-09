@@ -28,6 +28,7 @@ public class MappingProfiles : Profile
         CreateMap<LectureView, GetListLectureViewListItemDto>()
           .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
           .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
-          .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email));
+          .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email))
+          .ForMember(dest => dest.LectureViewCreatedDate, opt => opt.MapFrom(src => src.CreatedDate));
     }
 }
