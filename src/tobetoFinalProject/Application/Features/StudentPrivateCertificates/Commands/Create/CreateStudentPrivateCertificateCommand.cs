@@ -52,7 +52,7 @@ public class CreateStudentPrivateCertificateCommand : IRequest<CreatedStudentPri
             request.CertificateUrl = await _imageServiceBase.UploadAsync(request.CertificateUrlTemp);
 
             StudentPrivateCertificate studentPrivateCertificate = _mapper.Map<StudentPrivateCertificate>(request);
-
+            studentPrivateCertificate.CertificateName = request.CertificateUrlTemp.FileName;
             await _studentPrivateCertificateRepository.AddAsync(studentPrivateCertificate);
 
             CreatedStudentPrivateCertificateResponse response = _mapper.Map<CreatedStudentPrivateCertificateResponse>(studentPrivateCertificate);
