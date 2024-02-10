@@ -18,7 +18,7 @@ public class CreateStudentSurveyCommand : IRequest<CreatedStudentSurveyResponse>
     public Guid SurveyId { get; set; }
     public Guid? StudentId { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentSurveysOperationClaims.Create };
+    public string[] Roles => new[] { Admin, Write, StudentSurveysOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
