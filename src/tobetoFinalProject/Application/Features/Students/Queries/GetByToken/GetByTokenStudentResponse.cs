@@ -38,5 +38,5 @@ public class GetByTokenStudentResponse : IResponse
     public ICollection<GetListStudentEducationListItemDto>? StudentEducations { get; set; }
     public ICollection<GetListStudentExperienceListItemDto>? StudentExperiences { get; set; }
     public ICollection<GetStudentClassesDto>? StudentClasses { get; set; }
-    public ICollection<GetListStudentPrivateCertificateListItemDto>? StudentCertificates { get; set; }
+    public ICollection<GetListStudentPrivateCertificateListItemDto>? StudentPrivateCertificates { get; set; }
 }

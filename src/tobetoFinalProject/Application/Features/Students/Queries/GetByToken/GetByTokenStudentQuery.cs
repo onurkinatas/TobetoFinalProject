@@ -1,13 +1,12 @@
-﻿using Application.Features.Students.Constants;
-using Application.Features.Students.Rules;
+﻿using Application.Features.Students.Rules;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
-using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
+using Domain.Entities;
 using MediatR;
-using static Application.Features.Students.Constants.StudentsOperationClaims;
 using Microsoft.EntityFrameworkCore;
-using Application.Services.ContextOperations;
+using static Application.Features.Students.Constants.StudentsOperationClaims;
 
 namespace Application.Features.Students.Queries.GetById;
 
@@ -49,7 +48,7 @@ public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecu
                 .ThenInclude(s => s.Appeal)
                 .Include(s => s.StudentEducations)
                 .Include(s => s.StudentExperiences)
-                .Include(s=>s.StudentPrivateCertificates)
+                .Include(s => s.StudentPrivateCertificates)
                 .Include(s => s.StudentClassStudentes)
                 .ThenInclude(s => s.StudentClass)
                  .Include(s => s.User),
