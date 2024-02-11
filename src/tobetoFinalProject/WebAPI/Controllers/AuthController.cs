@@ -34,7 +34,7 @@ public class AuthController : BaseController
     {
         LoginCommand loginCommand = new() { UserForLoginDto = userForLoginDto, IpAddress = getIpAddress() };
         LoggedResponse result = await Mediator.Send(loginCommand);
-
+        
         if (result.RefreshToken is not null)
             setRefreshTokenToCookie(result.RefreshToken);
        
@@ -70,6 +70,14 @@ public class AuthController : BaseController
         RefreshTokenCommand refreshTokenCommand = new() { RefreshToken = getRefreshTokenFromCookies(), IpAddress = getIpAddress() };
         RefreshedTokensResponse result = await Mediator.Send(refreshTokenCommand);
         setRefreshTokenToCookie(result.RefreshToken);
+        return Created(uri: "", result.AccessToken);
+    }
+    [HttpGet("RefreshTokenForValue{refreshToken}")]
+    public async Task<IActionResult> RefreshTokenForValue([FromQuery]string refreshToken)
+    {
+        RefreshTokenCommand refreshTokenCommand = new() { RefreshToken = refreshToken, IpAddress = getIpAddress() };
+        RefreshedTokensResponse result = await Mediator.Send(refreshTokenCommand);
+
         return Created(uri: "", result.AccessToken);
     }
 

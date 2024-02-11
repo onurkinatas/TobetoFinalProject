@@ -15,12 +15,13 @@ public class StudentLoggedResponse:IResponse
     public AuthenticatorType? RequiredAuthenticatorType { get; set; }
 
     public LoggedHttpResponse ToHttpResponse() =>
-        new() { AccessToken = AccessToken, RequiredAuthenticatorType = RequiredAuthenticatorType };
+        new() { AccessToken = AccessToken, RequiredAuthenticatorType = RequiredAuthenticatorType,RefreshToken=RefreshToken.Token };
 
     public class LoggedHttpResponse
     {
         public AccessToken? AccessToken { get; set; }
         public AuthenticatorType? RequiredAuthenticatorType { get; set; }
+        public string? RefreshToken { get; set; }
     }
 }
 
