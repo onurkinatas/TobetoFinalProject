@@ -1,4 +1,5 @@
 ﻿using Application.Features.LectureViews.Queries.GetList;
+using Application.Services.ClassLectures;
 using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
@@ -27,11 +28,13 @@ public class GetListLectureViewForLoggedStudentQuery : IRequest<ICollection<Lect
         private readonly ILectureViewRepository _lectureViewRepository;
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
-        public GetListLectureViewForLoggedStudentQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper, IContextOperationService contextOperationService)
+        private readonly IClassLecturesService _classLecturesService;
+        public GetListLectureViewForLoggedStudentQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper, IContextOperationService contextOperationService, IClassLecturesService classLecturesService)
         {
             _lectureViewRepository = lectureViewRepository;
             _mapper = mapper;
             _contextOperationService = contextOperationService;
+            _classLecturesService = classLecturesService;
         }
 
         public async Task<ICollection<LectureView>> Handle(GetListLectureViewForLoggedStudentQuery request, CancellationToken cancellationToken)

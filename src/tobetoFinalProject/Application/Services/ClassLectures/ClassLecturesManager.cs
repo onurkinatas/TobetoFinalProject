@@ -1,7 +1,9 @@
 using Application.Features.ClassLectures.Rules;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -11,11 +13,13 @@ public class ClassLecturesManager : IClassLecturesService
 {
     private readonly IClassLectureRepository _classLectureRepository;
     private readonly ClassLectureBusinessRules _classLectureBusinessRules;
+    private readonly IContextOperationService _contextOperationService;
 
-    public ClassLecturesManager(IClassLectureRepository classLectureRepository, ClassLectureBusinessRules classLectureBusinessRules)
+    public ClassLecturesManager(IClassLectureRepository classLectureRepository, ClassLectureBusinessRules classLectureBusinessRules, IContextOperationService contextOperationService)
     {
         _classLectureRepository = classLectureRepository;
         _classLectureBusinessRules = classLectureBusinessRules;
+        _contextOperationService = contextOperationService;
     }
 
     public async Task<ClassLecture?> GetAsync(
@@ -74,4 +78,25 @@ public class ClassLecturesManager : IClassLecturesService
 
         return deletedClassLecture;
     }
+
+    public async Task<int> GetAllContentCountForActiveStudent()
+    {
+        ICollection<Guid> activeStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
+
+        ClassLecture lecture = await _classLectureRepository.GetAsync(
+                predicate: l => activeStudentClasses.Contains(l.StudentClassId),
+                include: l => l.Include(l=>l.Lecture)
+                    .ThenInclude(l => l.LectureCourses)
+                   .ThenInclude(lc => lc.Course)
+                   .ThenInclude(c => c.CourseContents)
+                   .ThenInclude(cc => cc.Content));
+
+        var contentCount = lecture.Lecture
+            .LectureCourses
+            .SelectMany(lc => lc.Course.CourseContents)
+            .Count();
+
+        return contentCount;
+    }
 }
+

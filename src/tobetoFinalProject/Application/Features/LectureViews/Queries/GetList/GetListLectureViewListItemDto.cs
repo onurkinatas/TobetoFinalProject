@@ -9,7 +9,7 @@ public class GetListLectureViewListItemDto : IDto
     public Guid LectureId { get; set; }
     public Guid ContentId { get; set; }
     public DateTime LectureViewCreatedDate { get; set; }
-
+    public int? AllContentCountForStudent { get; set; }
     public string StudentFirstName { get; set; }
     public string StudentLastName { get; set; }
     public string StudentEmail { get; set; }

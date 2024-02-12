@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.LectureViews.Constants.LectureViewsOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ClassLectures;
 
 namespace Application.Features.LectureViews.Queries.GetList;
 
@@ -28,11 +29,13 @@ public class GetListLectureViewQuery : IRequest<GetListResponse<GetListLectureVi
     {
         private readonly ILectureViewRepository _lectureViewRepository;
         private readonly IMapper _mapper;
+        private readonly IClassLecturesService _classLecturesService;
 
-        public GetListLectureViewQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper)
+        public GetListLectureViewQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper, IClassLecturesService classLecturesService)
         {
             _lectureViewRepository = lectureViewRepository;
             _mapper = mapper;
+            _classLecturesService = classLecturesService;
         }
 
         public async Task<GetListResponse<GetListLectureViewListItemDto>> Handle(GetListLectureViewQuery request, CancellationToken cancellationToken)
@@ -48,6 +51,7 @@ public class GetListLectureViewQuery : IRequest<GetListResponse<GetListLectureVi
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
+            int allcontentCount = await _classLecturesService.GetAllContentCountForActiveStudent();
 
             GetListResponse<GetListLectureViewListItemDto> response = _mapper.Map<GetListResponse<GetListLectureViewListItemDto>>(lectureViews);
             return response;

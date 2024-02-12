@@ -27,4 +27,5 @@ public interface IClassLecturesService
     Task<ClassLecture> AddAsync(ClassLecture classLecture);
     Task<ClassLecture> UpdateAsync(ClassLecture classLecture);
     Task<ClassLecture> DeleteAsync(ClassLecture classLecture, bool permanent = false);
+    Task<int> GetAllContentCountForActiveStudent();
 }
