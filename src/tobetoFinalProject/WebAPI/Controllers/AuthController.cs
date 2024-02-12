@@ -13,6 +13,7 @@ using Core.Security.JWT;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Text;
+using WebAPI.Controllers.Dtos;
 
 namespace WebAPI.Controllers;
 
@@ -80,8 +81,10 @@ public class AuthController : BaseController
         string decodedRefreshToken = Encoding.UTF8.GetString(Convert.FromBase64String(refreshToken));
         RefreshTokenCommand refreshTokenCommand = new() { RefreshToken = decodedRefreshToken, IpAddress = getIpAddress() };
         RefreshedTokensResponse result = await Mediator.Send(refreshTokenCommand);
-
-        return Created(uri: "", result.AccessToken);
+        string encodedRefreshToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(result.RefreshToken.Token));
+        
+        GetRefreshTokenWithValueItemDto refreshTokenWithValueItemDto = new() { AccessToken = result.AccessToken, RefreshTokenValue = encodedRefreshToken };
+        return Created(uri: "", refreshTokenWithValueItemDto);
     }
 
     [HttpPut("RevokeToken")]

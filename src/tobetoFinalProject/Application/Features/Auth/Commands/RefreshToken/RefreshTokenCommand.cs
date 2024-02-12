@@ -63,7 +63,7 @@ public class RefreshTokenCommand : IRequest<RefreshedTokensResponse>
 
             AccessToken createdAccessToken = await _authService.CreateAccessToken(user!);
 
-            RefreshedTokensResponse refreshedTokensResponse = new() { AccessToken = createdAccessToken, RefreshToken = addedRefreshToken };
+            RefreshedTokensResponse refreshedTokensResponse = new() { AccessToken = createdAccessToken, RefreshToken = addedRefreshToken,RefreshTokenValue="" };
             return refreshedTokensResponse;
         }
     }

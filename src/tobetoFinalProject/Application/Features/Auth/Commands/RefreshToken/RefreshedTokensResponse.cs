@@ -7,16 +7,19 @@ public class RefreshedTokensResponse : IResponse
 {
     public AccessToken AccessToken { get; set; }
     public Core.Security.Entities.RefreshToken RefreshToken { get; set; }
+    public string RefreshTokenValue { get; set; }
 
     public RefreshedTokensResponse()
     {
         AccessToken = null!;
         RefreshToken = null!;
+        RefreshTokenValue = null!;
     }
 
-    public RefreshedTokensResponse(AccessToken accessToken, Core.Security.Entities.RefreshToken refreshToken)
+    public RefreshedTokensResponse(AccessToken accessToken, Core.Security.Entities.RefreshToken refreshToken,string refreshTokenValue)
     {
         AccessToken = accessToken;
         RefreshToken = refreshToken;
+        RefreshTokenValue = refreshTokenValue;
     }
 }
