@@ -12,6 +12,7 @@ using Core.Security.Entities;
 using Core.Security.JWT;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text;
 
 namespace WebAPI.Controllers;
 
@@ -47,12 +48,13 @@ public class AuthController : BaseController
     {
         StudentLoginCommand loginCommand = new() { UserForLoginDto = userForLoginDto, IpAddress = getIpAddress() };
         StudentLoggedResponse result = await Mediator.Send(loginCommand);
-
         if (result.RefreshToken is not null)
             setRefreshTokenToCookie(result.RefreshToken);
 
 
 
+        string encodedRefreshToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(result.RefreshToken.Token));
+        result.RefreshToken.Token = encodedRefreshToken;
         return Ok(result.ToHttpResponse());
     }
     [HttpPost("Register")]
@@ -72,10 +74,11 @@ public class AuthController : BaseController
         setRefreshTokenToCookie(result.RefreshToken);
         return Created(uri: "", result.AccessToken);
     }
-    [HttpGet("RefreshTokenForValue{refreshToken}")]
-    public async Task<IActionResult> RefreshTokenForValue([FromQuery]string refreshToken)
+    [HttpGet("RefreshForValue")]
+    public async Task<IActionResult> RefreshTokenForValue(string refreshToken)
     {
-        RefreshTokenCommand refreshTokenCommand = new() { RefreshToken = refreshToken, IpAddress = getIpAddress() };
+        string decodedRefreshToken = Encoding.UTF8.GetString(Convert.FromBase64String(refreshToken));
+        RefreshTokenCommand refreshTokenCommand = new() { RefreshToken = decodedRefreshToken, IpAddress = getIpAddress() };
         RefreshedTokensResponse result = await Mediator.Send(refreshTokenCommand);
 
         return Created(uri: "", result.AccessToken);
