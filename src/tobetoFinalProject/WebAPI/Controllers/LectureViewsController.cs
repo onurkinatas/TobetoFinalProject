@@ -3,6 +3,7 @@ using Application.Features.LectureLikes.Queries.GetListByLectureId;
 using Application.Features.LectureViews.Commands.Create;
 using Application.Features.LectureViews.Commands.Delete;
 using Application.Features.LectureViews.Commands.Update;
+using Application.Features.LectureViews.Queries.GelAllForLoggedStudent;
 using Application.Features.LectureViews.Queries.GetById;
 using Application.Features.LectureViews.Queries.GetLectureViewCount;
 using Application.Features.LectureViews.Queries.GetList;
@@ -77,6 +78,13 @@ public class LectureViewsController : BaseController
     {
         GetLectureViewCountQuery getListByLectureLikeQuery = new() {  LectureId = lectureId, ContentId = contentId };
         GetLectureViewCountQueryResponse response = await Mediator.Send(getListByLectureLikeQuery);
+        return Ok(response);
+    }
+    [HttpGet("getAllForLoggedStudent")]
+    public async Task<IActionResult> GetAllForLoggedStudent()
+    {
+        GetAllLectureViewForLoggedStudentQuery getListByLectureIdLikeQuery = new() { };
+        ICollection<LectureView> response = await Mediator.Send(getListByLectureIdLikeQuery);
         return Ok(response);
     }
 }
