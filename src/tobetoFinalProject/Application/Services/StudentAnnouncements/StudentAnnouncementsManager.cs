@@ -74,4 +74,8 @@ public class StudentAnnouncementsManager : IStudentAnnouncementsService
 
         return deletedStudentAnnouncement;
     }
+    public async Task<List<StudentAnnouncement>> GetAllAsync(Expression<Func<StudentAnnouncement, bool>> filter = null)
+    {
+        return await _studentAnnouncementRepository.GetAll(filter);
+    }
 }

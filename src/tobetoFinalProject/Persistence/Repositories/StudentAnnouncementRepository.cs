@@ -24,4 +24,9 @@ public class StudentAnnouncementRepository : EfRepositoryBase<StudentAnnouncemen
 
         return queryable.ToList();
     }
+    public async Task<List<StudentAnnouncement>> GetAll(Expression<Func<StudentAnnouncement, bool>> filter = null)
+    {
+        return filter == null ? Context.Set<StudentAnnouncement>().ToList()
+            : Context.Set<StudentAnnouncement>().Where(e => e.DeletedDate == null).Where(filter).ToList();
+    }
 }

@@ -3,6 +3,7 @@ using Application.Features.ClassAnnouncements.Commands.Delete;
 using Application.Features.ClassAnnouncements.Commands.Update;
 using Application.Features.ClassAnnouncements.Queries.GetById;
 using Application.Features.ClassAnnouncements.Queries.GetList;
+using Application.Features.ClassAnnouncements.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -51,5 +52,11 @@ public class ClassAnnouncementsController : BaseController
         GetListResponse<GetListClassAnnouncementListItemDto> response = await Mediator.Send(getListClassAnnouncementQuery);
         return Ok(response);
     }
-   
+    [HttpGet("getListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent([FromQuery] PageRequest pageRequest)
+    {
+        GetListForLoggedStudentClassAnnouncementQuery getListClassAnnouncementQuery = new() { PageRequest = pageRequest };
+        GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto> response = await Mediator.Send(getListClassAnnouncementQuery);
+        return Ok(response);
+    }
 }

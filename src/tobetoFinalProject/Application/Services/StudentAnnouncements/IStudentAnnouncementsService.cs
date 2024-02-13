@@ -27,4 +27,5 @@ public interface IStudentAnnouncementsService
     Task<StudentAnnouncement> AddAsync(StudentAnnouncement studentAnnouncement);
     Task<StudentAnnouncement> UpdateAsync(StudentAnnouncement studentAnnouncement);
     Task<StudentAnnouncement> DeleteAsync(StudentAnnouncement studentAnnouncement, bool permanent = false);
+    Task<List<StudentAnnouncement>> GetAllAsync(Expression<Func<StudentAnnouncement, bool>> filter = null);
 }
