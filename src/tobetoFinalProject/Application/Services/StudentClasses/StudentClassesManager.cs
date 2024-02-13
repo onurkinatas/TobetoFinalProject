@@ -1,7 +1,9 @@
 using Application.Features.StudentClasses.Rules;
+using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -11,11 +13,13 @@ public class StudentClassesManager : IStudentClassesService
 {
     private readonly IStudentClassRepository _studentClassRepository;
     private readonly StudentClassBusinessRules _studentClassBusinessRules;
+    private readonly IContextOperationService _contextOperationService;
 
-    public StudentClassesManager(IStudentClassRepository studentClassRepository, StudentClassBusinessRules studentClassBusinessRules)
+    public StudentClassesManager(IStudentClassRepository studentClassRepository, StudentClassBusinessRules studentClassBusinessRules, IContextOperationService contextOperationService)
     {
         _studentClassRepository = studentClassRepository;
         _studentClassBusinessRules = studentClassBusinessRules;
+        _contextOperationService = contextOperationService;
     }
 
     public async Task<StudentClass?> GetAsync(
@@ -73,5 +77,25 @@ public class StudentClassesManager : IStudentClassesService
         StudentClass deletedStudentClass = await _studentClassRepository.DeleteAsync(studentClass);
 
         return deletedStudentClass;
+    }
+
+    public async Task<int> GetAllContentCountForActiveStudent()
+    {
+        ICollection<Guid> activeStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
+
+        StudentClass lecture = await _studentClassRepository.GetAsync(
+                predicate: l => activeStudentClasses.Contains(l.Id),
+                include: l => l.
+                    Include(l=>l.ClassLectures).
+                    ThenInclude(l => l.Lecture)
+                    .ThenInclude(l => l.LectureCourses)
+                   .ThenInclude(lc => lc.Course)
+                   .ThenInclude(c => c.CourseContents)
+                   .ThenInclude(cc => cc.Content));
+
+        var contentCount = lecture.ClassLectures.Select(l => l.Lecture.LectureCourses.Select(lc => lc.Course.CourseContents)).ToList().Count;
+            
+
+        return contentCount;
     }
 }
