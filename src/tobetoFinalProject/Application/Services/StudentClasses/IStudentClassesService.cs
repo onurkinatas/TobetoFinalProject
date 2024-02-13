@@ -27,4 +27,5 @@ public interface IStudentClassesService
     Task<StudentClass> AddAsync(StudentClass studentClass);
     Task<StudentClass> UpdateAsync(StudentClass studentClass);
     Task<StudentClass> DeleteAsync(StudentClass studentClass, bool permanent = false);
+    Task<int> GetAllContentCountForActiveStudent();
 }

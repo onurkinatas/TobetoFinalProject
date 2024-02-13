@@ -1,7 +1,9 @@
 ﻿using Application.Features.LectureViews.Queries.GetList;
 using Application.Services.ClassLectures;
 using Application.Services.ContextOperations;
+using Application.Services.Lectures;
 using Application.Services.Repositories;
+using Application.Services.StudentClasses;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
@@ -26,8 +28,8 @@ public class GetAllLectureViewForLoggedStudentQuery : IRequest<GetAllLectureView
         private readonly ILectureViewRepository _lectureViewRepository;
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
-        private readonly IClassLecturesService _classLecturesService;
-        public GetAllLectureViewForLoggedStudentQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper, IContextOperationService contextOperationService, IClassLecturesService classLecturesService)
+        private readonly IStudentClassesService _classLecturesService;
+        public GetAllLectureViewForLoggedStudentQueryHandler(ILectureViewRepository lectureViewRepository, IMapper mapper, IContextOperationService contextOperationService, IStudentClassesService classLecturesService)
         {
             _lectureViewRepository = lectureViewRepository;
             _mapper = mapper;

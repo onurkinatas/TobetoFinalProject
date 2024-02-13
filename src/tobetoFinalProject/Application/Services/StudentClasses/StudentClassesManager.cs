@@ -83,7 +83,7 @@ public class StudentClassesManager : IStudentClassesService
     {
         ICollection<Guid> activeStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
 
-        StudentClass lecture = await _studentClassRepository.GetAsync(
+        var studentClass = await _studentClassRepository.GetListAsync(
                 predicate: l => activeStudentClasses.Contains(l.Id),
                 include: l => l.
                     Include(l=>l.ClassLectures).
@@ -93,8 +93,9 @@ public class StudentClassesManager : IStudentClassesService
                    .ThenInclude(c => c.CourseContents)
                    .ThenInclude(cc => cc.Content));
 
-        var contentCount = lecture.ClassLectures.Select(l => l.Lecture.LectureCourses.Select(lc => lc.Course.CourseContents)).ToList().Count;
-            
+        var contentCount = studentClass.Items.Sum(l => l.ClassLectures.Sum(cl => cl.Lecture.LectureCourses.Sum(lc => lc.Course.CourseContents.Count)));
+        ;
+
 
         return contentCount;
     }
