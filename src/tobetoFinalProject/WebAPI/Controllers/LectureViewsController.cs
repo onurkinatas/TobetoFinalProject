@@ -84,7 +84,7 @@ public class LectureViewsController : BaseController
     public async Task<IActionResult> GetAllForLoggedStudent()
     {
         GetAllLectureViewForLoggedStudentQuery getListByLectureIdLikeQuery = new() { };
-        ICollection<LectureView> response = await Mediator.Send(getListByLectureIdLikeQuery);
+        GetAllLectureViewForLoggedStudentItemDto response = await Mediator.Send(getListByLectureIdLikeQuery);
         return Ok(response);
     }
 }

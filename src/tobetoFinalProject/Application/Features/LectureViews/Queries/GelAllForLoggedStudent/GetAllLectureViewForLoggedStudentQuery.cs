@@ -17,11 +17,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Features.LectureViews.Queries.GelAllForLoggedStudent;
-public class GetAllLectureViewForLoggedStudentQuery : IRequest<ICollection<LectureView>>, ISecuredRequest/*, ICachableRequest*/
+public class GetAllLectureViewForLoggedStudentQuery : IRequest<GetAllLectureViewForLoggedStudentItemDto>, ISecuredRequest/*, ICachableRequest*/
 {
     public string[] Roles => new[] { "Admin", "Student" };
 
-    public class GetAllLectureViewForLoggedStudentQueryHandler : IRequestHandler<GetAllLectureViewForLoggedStudentQuery, ICollection<LectureView>>
+    public class GetAllLectureViewForLoggedStudentQueryHandler : IRequestHandler<GetAllLectureViewForLoggedStudentQuery, GetAllLectureViewForLoggedStudentItemDto>
     {
         private readonly ILectureViewRepository _lectureViewRepository;
         private readonly IMapper _mapper;
@@ -35,15 +35,20 @@ public class GetAllLectureViewForLoggedStudentQuery : IRequest<ICollection<Lectu
             _classLecturesService = classLecturesService;
         }
 
-        public async Task<ICollection<LectureView>> Handle(GetAllLectureViewForLoggedStudentQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllLectureViewForLoggedStudentItemDto> Handle(GetAllLectureViewForLoggedStudentQuery request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
+
+            var totalContentCountForClass =await _classLecturesService.GetAllContentCountForActiveStudent();
+
             ICollection<LectureView> lectureViews = await _lectureViewRepository.GetAll(
                 lv =>
                 lv.StudentId == getStudent.Id);
 
-
-            return lectureViews;
+            GetAllLectureViewForLoggedStudentItemDto response = new();
+            response.LectureViewCreatedDates=lectureViews.Select(x=>x.CreatedDate).ToList();
+            response.TotalContentCountForClass = totalContentCountForClass;
+            return response;
         }
     }
 }
