@@ -64,7 +64,7 @@ public class GetListForLoggedStudentClassAnnouncementQuery : IRequest<GetListRes
             GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto> response = _mapper.Map<GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto>>(classAnnouncements);
             var updatedItems = response.Items.Select(item =>
             {
-                // Öðrenci bildirimi varsa IsRead özelliðini true yap
+                
                 var isRead = studentAnnouncements.Any(sa => sa.AnnouncementId == item.AnnouncementId);
                 item.IsRead = isRead;
                 return item;

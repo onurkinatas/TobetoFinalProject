@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Application.Responses;
 using Domain.Entities;
 using Core.Persistence.Paging;
+using Application.Features.ClassAnnouncements.Queries.GetListForLoggedStudent;
 
 namespace Application.Features.ClassAnnouncements.Profiles;
 
@@ -23,5 +24,7 @@ public class MappingProfiles : Profile
         CreateMap<ClassAnnouncement, GetByIdClassAnnouncementResponse>().ReverseMap();
         CreateMap<ClassAnnouncement, GetListClassAnnouncementListItemDto>().ReverseMap();
         CreateMap<IPaginate<ClassAnnouncement>, GetListResponse<GetListClassAnnouncementListItemDto>>().ReverseMap();
+        CreateMap<ClassAnnouncement, GetListForLoggedStudentClassAnnouncementListItemDto>().ReverseMap();
+        CreateMap<IPaginate<ClassAnnouncement>, GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto>>().ReverseMap();
     }
 }
