@@ -473,6 +473,7 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentSurveys.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentSurveys.Delete" });
         #endregion
+
         #region StudentPrivateCertificates
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Admin" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Read" });
@@ -481,6 +482,49 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentPrivateCertificates.Delete" });
         #endregion
+
+
+        #region Options
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Options.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Options.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Options.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Options.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Options.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Options.Delete" });
+        #endregion
+        #region Questions
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Questions.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Questions.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Questions.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Questions.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Questions.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Questions.Delete" });
+        #endregion
+        #region QuestionOptions
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuestionOptions.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuestionOptions.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuestionOptions.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuestionOptions.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuestionOptions.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuestionOptions.Delete" });
+        #endregion
+        #region Quizs
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Quizs.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Quizs.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Quizs.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Quizs.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Quizs.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "Quizs.Delete" });
+        #endregion
+        #region QuizQuestions
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuizQuestions.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuizQuestions.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuizQuestions.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuizQuestions.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuizQuestions.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "QuizQuestions.Delete" });
+        #endregion
+
         return seeds;
     }
 }

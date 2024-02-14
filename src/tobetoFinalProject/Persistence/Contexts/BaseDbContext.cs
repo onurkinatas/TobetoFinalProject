@@ -65,6 +65,11 @@ public class BaseDbContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<StudentSurvey> StudentSurveys { get; set; }
     public DbSet<StudentPrivateCertificate> StudentPrivateCertificates { get; set; }
+    public DbSet<Option> Options { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<QuestionOption> QuestionOptions { get; set; }
+    public DbSet<Quiz> Quizs { get; set; }
+    public DbSet<QuizQuestion> QuizQuestions { get; set; }
 
     public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
         : base(dbContextOptions)

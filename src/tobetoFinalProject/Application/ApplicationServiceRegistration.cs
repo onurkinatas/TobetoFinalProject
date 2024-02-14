@@ -69,6 +69,11 @@ using Application.Services.LectureViews;
 using Application.Services.OperationClaims;
 using Application.Services.UserOperationClaims;
 using Application.Services.StudentPrivateCertificates;
+using Application.Services.Options;
+using Application.Services.Questions;
+using Application.Services.QuestionOptions;
+using Application.Services.Quizs;
+using Application.Services.QuizQuestions;
 
 namespace Application;
 
@@ -153,6 +158,11 @@ public static class ApplicationServiceRegistration
         services.AddMemoryCache();
         services.AddScoped<ILectureViewsService, LectureViewsManager>();
         services.AddScoped<IStudentPrivateCertificatesService, StudentPrivateCertificatesManager>();
+        services.AddScoped<IOptionsService, OptionsManager>();
+        services.AddScoped<IQuestionsService, QuestionsManager>();
+        services.AddScoped<IQuestionOptionsService, QuestionOptionsManager>();
+        services.AddScoped<IQuizsService, QuizsManager>();
+        services.AddScoped<IQuizQuestionsService, QuizQuestionsManager>();
         return services;
     }
 
