@@ -76,6 +76,7 @@ using Application.Services.Quizs;
 using Application.Services.QuizQuestions;
 using Application.Services.Pools;
 using Application.Services.PoolQuestions;
+using Application.Services.StudentQuizOptions;
 
 namespace Application;
 
@@ -167,6 +168,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IQuizQuestionsService, QuizQuestionsManager>();
         services.AddScoped<IPoolsService, PoolsManager>();
         services.AddScoped<IPoolQuestionsService, PoolQuestionsManager>();
+        services.AddScoped<IStudentQuizOptionsService, StudentQuizOptionsManager>();
         return services;
     }
 

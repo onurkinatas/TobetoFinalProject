@@ -541,6 +541,17 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "PoolQuestions.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "PoolQuestions.Delete" });
         #endregion
+
+        #region StudentQuizOptions
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizOptions.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizOptions.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizOptions.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizOptions.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizOptions.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizOptions.Delete" });
+        #endregion
+
+
         return seeds;
     }
 }

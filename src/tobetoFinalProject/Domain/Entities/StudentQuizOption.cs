@@ -12,7 +12,7 @@ public class StudentQuizOption:Entity<int>
     public int QuizId { get; set; }
     public int QuestionId { get; set; }
     public int OptionId { get; set; }
-    public Guid StudentId { get; set; }
+    public Guid? StudentId { get; set; }
     public virtual Quiz? Quiz { get; set; }
     public virtual Question? Question { get; set;}
     public virtual Exam? Exam { get; set; }

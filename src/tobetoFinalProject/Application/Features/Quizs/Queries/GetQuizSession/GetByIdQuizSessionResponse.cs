@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace Application.Features.Quizs.Queries.GetQuizSession;
 public class GetByIdQuizSessionResponse
 {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public Guid ExamId { get; set; }
     public ICollection<GetListQuestionListItemDto> Questions { get; set; }
 }
 
