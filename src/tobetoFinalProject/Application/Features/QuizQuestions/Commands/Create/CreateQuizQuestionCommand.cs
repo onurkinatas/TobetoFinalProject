@@ -11,7 +11,7 @@ using static Application.Features.QuizQuestions.Constants.QuizQuestionsOperation
 
 namespace Application.Features.QuizQuestions.Commands.Create;
 
-public class CreateQuizQuestionCommand : IRequest<CreatedQuizQuestionResponse>,/* ISecuredRequest, */ILoggableRequest, ITransactionalRequest
+public class CreateQuizQuestionCommand : IRequest<CreatedQuizQuestionResponse>, ISecuredRequest,ILoggableRequest, ITransactionalRequest
 {
     public int QuizId { get; set; }
     public int QuestionId { get; set; }

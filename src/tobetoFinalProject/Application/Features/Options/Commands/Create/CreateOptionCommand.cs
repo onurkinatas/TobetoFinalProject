@@ -11,7 +11,7 @@ using static Application.Features.Options.Constants.OptionsOperationClaims;
 
 namespace Application.Features.Options.Commands.Create;
 
-public class CreateOptionCommand : IRequest<CreatedOptionResponse>,/*ISecuredRequest,*/ ILoggableRequest, ITransactionalRequest
+public class CreateOptionCommand : IRequest<CreatedOptionResponse>,ISecuredRequest, ILoggableRequest, ITransactionalRequest
 {
     public string Text { get; set; }
 

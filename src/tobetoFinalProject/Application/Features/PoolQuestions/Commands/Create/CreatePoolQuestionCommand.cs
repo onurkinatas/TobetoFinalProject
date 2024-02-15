@@ -11,7 +11,7 @@ using static Application.Features.PoolQuestions.Constants.PoolQuestionsOperation
 
 namespace Application.Features.PoolQuestions.Commands.Create;
 
-public class CreatePoolQuestionCommand : IRequest<CreatedPoolQuestionResponse>, /*ISecuredRequest,*/ ILoggableRequest, ITransactionalRequest
+public class CreatePoolQuestionCommand : IRequest<CreatedPoolQuestionResponse>,ISecuredRequest,ILoggableRequest, ITransactionalRequest
 {
     public int PoolId { get; set; }
     public int QuestionId { get; set; }

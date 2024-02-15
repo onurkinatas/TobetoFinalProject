@@ -11,7 +11,7 @@ using static Application.Features.Pools.Constants.PoolsOperationClaims;
 
 namespace Application.Features.Pools.Commands.Create;
 
-public class CreatePoolCommand : IRequest<CreatedPoolResponse>,/* ISecuredRequest,*/ ILoggableRequest, ITransactionalRequest
+public class CreatePoolCommand : IRequest<CreatedPoolResponse>, ISecuredRequest,ILoggableRequest, ITransactionalRequest
 {
     public string Name { get; set; }
 

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Questions.Commands.Create;
 
-public class CreateQuestionCommand : IRequest<CreatedQuestionResponse>,/* ISecuredRequest,*/ ILoggableRequest, ITransactionalRequest
+public class CreateQuestionCommand : IRequest<CreatedQuestionResponse>, ISecuredRequest,ILoggableRequest, ITransactionalRequest
 {
     public string? ImageUrl { get; set; }
     public string Sentence { get; set; }

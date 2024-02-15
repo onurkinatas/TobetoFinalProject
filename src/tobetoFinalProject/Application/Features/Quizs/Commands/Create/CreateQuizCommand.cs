@@ -12,7 +12,7 @@ using Application.Services.PoolQuestions;
 
 namespace Application.Features.Quizs.Commands.Create;
 
-public class CreateQuizCommand : IRequest<CreatedQuizResponse>,/* ISecuredRequest, */ILoggableRequest, ITransactionalRequest
+public class CreateQuizCommand : IRequest<CreatedQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
 {
     public string Name { get; set; }
     public string Description { get; set; }

@@ -11,7 +11,7 @@ using static Application.Features.QuestionOptions.Constants.QuestionOptionsOpera
 
 namespace Application.Features.QuestionOptions.Commands.Create;
 
-public class CreateQuestionOptionCommand : IRequest<CreatedQuestionOptionResponse>, /*ISecuredRequest, */ILoggableRequest, ITransactionalRequest
+public class CreateQuestionOptionCommand : IRequest<CreatedQuestionOptionResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
 {
     public int OptionId { get; set; }
     public int QuestionId { get; set; }
