@@ -56,7 +56,7 @@ public class MappingProfiles : Profile
         CreateMap<Student, GetByTokenStudentResponse>()
             .ForMember(dest => dest.Certificates, opt => opt.MapFrom(src => src.StudentCertificates.Select(si => si.Certificate).ToList()))
             .ForMember(dest => dest.Appeals, opt => opt.MapFrom(src => src.StudentAppeal.Select(si => si.Appeal).ToList()))
-            .ForMember(dest => dest.LanguageLevels, opt => opt.MapFrom(src => src.StudentLanguageLevels.Select(si => si.LanguageLevel).ToList()))
+            .ForMember(dest => dest.LanguageLevels, opt => opt.MapFrom(src => src.StudentLanguageLevels.ToList()))
             .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.StudentSkills.ToList()))
             .ForMember(dest => dest.StudentExperiences, opt => opt.MapFrom(src => src.StudentExperiences.ToList()))
             .ForMember(dest => dest.SocialMedias, opt => opt.MapFrom(src => src.StudentSocialMedias.Select(si => si.SocialMedia).ToList()))
