@@ -10,6 +10,7 @@ using Application.Features.StudentLanguageLevels.Queries.GetList;
 using Application.Features.StudentPrivateCertificates.Queries.GetList;
 using Application.Features.Students.Queries.GetList;
 using Application.Features.StudentSkills.Queries.GetList;
+using Application.Features.StudentSocialMedias.Queries.GetList;
 using Core.Application.Responses;
 
 namespace Application.Features.Students.Queries.GetById;
@@ -32,7 +33,7 @@ public class GetByTokenStudentResponse : IResponse
     public string Country { get; set; }
     public string CityId { get; set; }
     public string DistrictId { get; set; }
-    public ICollection<GetListSocialMediaListItemDto>? SocialMedias { get; set; }
+    public ICollection<GetListStudentSocialMediaListItemDto>? SocialMedias { get; set; }
     public ICollection<GetListCertificateListItemDto>? Certificates { get; set; }
     public ICollection<GetListStudentLanguageLevelListItemDto>? LanguageLevels { get; set; }
     public ICollection<GetListStudentSkillListItemDto>? Skills { get; set; }
