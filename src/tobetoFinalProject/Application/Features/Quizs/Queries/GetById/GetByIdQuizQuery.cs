@@ -6,6 +6,7 @@ using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.Quizs.Constants.QuizsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Quizs.Queries.GetById;
 
@@ -30,10 +31,14 @@ public class GetByIdQuizQuery : IRequest<GetByIdQuizResponse>, ISecuredRequest
 
         public async Task<GetByIdQuizResponse> Handle(GetByIdQuizQuery request, CancellationToken cancellationToken)
         {
-            Quiz? quiz = await _quizRepository.GetAsync(predicate: q => q.Id == request.Id, cancellationToken: cancellationToken);
+            Quiz? quiz = await _quizRepository.GetAsync(
+                include:q=>q.Include(q=>q.QuizQuestions),
+                predicate: q => q.Id == request.Id, 
+                cancellationToken: cancellationToken);
             await _quizBusinessRules.QuizShouldExistWhenSelected(quiz);
 
             GetByIdQuizResponse response = _mapper.Map<GetByIdQuizResponse>(quiz);
+            response.QuizQuestionCount=quiz.QuizQuestions.Count;
             return response;
         }
     }

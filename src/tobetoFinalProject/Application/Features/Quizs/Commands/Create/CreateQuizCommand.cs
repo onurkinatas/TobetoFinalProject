@@ -45,11 +45,13 @@ public class CreateQuizCommand : IRequest<CreatedQuizResponse>, ISecuredRequest,
             Quiz quiz = _mapper.Map<Quiz>(request);
             
             List<int> quizQuestions=await _poolQuestionService.RandomQuestionGenerator(request.QuizQuestionCount, request.PoolId);
+
             quiz.QuizQuestions = quizQuestions.Select(questionId => new QuizQuestion
             {
                 QuizId = quiz.Id,
                 QuestionId = questionId
             }).ToList();
+
             await _quizRepository.AddAsync(quiz);
 
             CreatedQuizResponse response = _mapper.Map<CreatedQuizResponse>(quiz);
