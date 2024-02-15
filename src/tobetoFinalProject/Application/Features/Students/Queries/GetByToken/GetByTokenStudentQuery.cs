@@ -48,6 +48,7 @@ public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecu
                 .ThenInclude(s => s.Appeal)
                 .Include(s => s.StudentEducations)
                 .Include(s => s.StudentExperiences)
+                .ThenInclude(se=>se.City)
                 .Include(s => s.StudentPrivateCertificates)
                 .Include(s => s.StudentClassStudentes)
                 .ThenInclude(s => s.StudentClass)
