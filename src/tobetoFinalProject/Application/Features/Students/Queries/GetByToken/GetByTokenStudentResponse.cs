@@ -6,6 +6,7 @@ using Application.Features.SocialMedias.Queries.GetList;
 using Application.Features.StudentClasses.Queries.GetList;
 using Application.Features.StudentEducations.Queries.GetList;
 using Application.Features.StudentExperiences.Queries.GetList;
+using Application.Features.StudentLanguageLevels.Queries.GetList;
 using Application.Features.StudentPrivateCertificates.Queries.GetList;
 using Application.Features.Students.Queries.GetList;
 using Application.Features.StudentSkills.Queries.GetList;
@@ -33,7 +34,7 @@ public class GetByTokenStudentResponse : IResponse
     public string DistrictId { get; set; }
     public ICollection<GetListSocialMediaListItemDto>? SocialMedias { get; set; }
     public ICollection<GetListCertificateListItemDto>? Certificates { get; set; }
-    public ICollection<GetListLanguageLevelListItemDto>? LanguageLevels { get; set; }
+    public ICollection<GetListStudentLanguageLevelListItemDto>? LanguageLevels { get; set; }
     public ICollection<GetListStudentSkillListItemDto>? Skills { get; set; }
     public ICollection<GetListAppealListItemDto>? Appeals { get; set; }
     public ICollection<GetListStudentEducationListItemDto>? StudentEducations { get; set; }
