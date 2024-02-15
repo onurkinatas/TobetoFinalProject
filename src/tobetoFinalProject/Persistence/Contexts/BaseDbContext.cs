@@ -70,6 +70,8 @@ public class BaseDbContext : DbContext
     public DbSet<QuestionOption> QuestionOptions { get; set; }
     public DbSet<Quiz> Quizs { get; set; }
     public DbSet<QuizQuestion> QuizQuestions { get; set; }
+    public DbSet<Pool> Pools { get; set; }
+    public DbSet<PoolQuestion> PoolQuestions { get; set; }
 
     public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
         : base(dbContextOptions)

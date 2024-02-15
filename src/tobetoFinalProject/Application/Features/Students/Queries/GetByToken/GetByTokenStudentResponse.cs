@@ -8,6 +8,7 @@ using Application.Features.StudentEducations.Queries.GetList;
 using Application.Features.StudentExperiences.Queries.GetList;
 using Application.Features.StudentPrivateCertificates.Queries.GetList;
 using Application.Features.Students.Queries.GetList;
+using Application.Features.StudentSkills.Queries.GetList;
 using Core.Application.Responses;
 
 namespace Application.Features.Students.Queries.GetById;
@@ -33,7 +34,7 @@ public class GetByTokenStudentResponse : IResponse
     public ICollection<GetListSocialMediaListItemDto>? SocialMedias { get; set; }
     public ICollection<GetListCertificateListItemDto>? Certificates { get; set; }
     public ICollection<GetListLanguageLevelListItemDto>? LanguageLevels { get; set; }
-    public ICollection<GetListSkillListItemDto>? Skills { get; set; }
+    public ICollection<GetListStudentSkillListItemDto>? Skills { get; set; }
     public ICollection<GetListAppealListItemDto>? Appeals { get; set; }
     public ICollection<GetListStudentEducationListItemDto>? StudentEducations { get; set; }
     public ICollection<GetListStudentExperienceListItemDto>? StudentExperiences { get; set; }

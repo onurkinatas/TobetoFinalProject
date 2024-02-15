@@ -57,7 +57,7 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.Certificates, opt => opt.MapFrom(src => src.StudentCertificates.Select(si => si.Certificate).ToList()))
             .ForMember(dest => dest.Appeals, opt => opt.MapFrom(src => src.StudentAppeal.Select(si => si.Appeal).ToList()))
             .ForMember(dest => dest.LanguageLevels, opt => opt.MapFrom(src => src.StudentLanguageLevels.Select(si => si.LanguageLevel).ToList()))
-            .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.StudentSkills.Select(si => si.Skill).ToList()))
+            .ForMember(dest => dest.Skills, opt => opt.MapFrom(src => src.StudentSkills.ToList()))
             .ForMember(dest => dest.SocialMedias, opt => opt.MapFrom(src => src.StudentSocialMedias.Select(si => si.SocialMedia).ToList()))
             .ForMember(dest => dest.StudentClasses, opt => opt.MapFrom(src => src.StudentClassStudentes.Select(si => si.StudentClass).ToList()))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))

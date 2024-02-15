@@ -14,7 +14,7 @@ public class Quiz:Entity<int>
     public bool IsActive { get; set; }
     public Guid ExamId { get; set; }
     public virtual Exam Exam { get; set; }
-    public virtual ICollection<QuizQuestion> QuizQuestions { get; set; }
+    public virtual List<QuizQuestion> QuizQuestions { get; set; }
 
 }
 

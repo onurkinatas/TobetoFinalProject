@@ -13,12 +13,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Questions.Commands.Create;
 
-public class CreateQuestionCommand : IRequest<CreatedQuestionResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+public class CreateQuestionCommand : IRequest<CreatedQuestionResponse>,/* ISecuredRequest,*/ ILoggableRequest, ITransactionalRequest
 {
-    public IFormFile? ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
     public string Sentence { get; set; }
     public int CorrectOptionId { get; set; }
-    public ICollection<QuestionOption> QuestionOptions { get; set; }
+    public ICollection<QuestionOption>? QuestionOptions { get; set; }
+    public ICollection<PoolQuestion>? PoolQuestions { get; set; }
     public string[] Roles => new[] { Admin, Write, QuestionsOperationClaims.Create };
 
     public class CreateQuestionCommandHandler : IRequestHandler<CreateQuestionCommand, CreatedQuestionResponse>
@@ -41,10 +42,11 @@ public class CreateQuestionCommand : IRequest<CreatedQuestionResponse>, ISecured
         public async Task<CreatedQuestionResponse> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)
         {
             Question question = _mapper.Map<Question>(request);
+
             await _questionBusinessRules.QuestionOptionsCountMustBeLessThanSevenWhenInsert(question.QuestionOptions.Count);
-            await _questionBusinessRules.QuestionOptionsMustBeDifferent(question.QuestionOptions);
-            if (request.ImageUrl is not null)
-                question.ImageUrl = await _ýmageServiceBase.UploadAsync(request.ImageUrl);
+            await _questionBusinessRules.QuestionOptionsMustBeDifferentWhenInsert(question.QuestionOptions);
+            await _questionBusinessRules.PoolQuestionsMustBeDifferentWhenInsert(question.PoolQuestions);
+            await _questionBusinessRules.QuestionOptionsHaveToContainCorrectOptionId(question.QuestionOptions,question.CorrectOptionId);
 
             await _questionRepository.AddAsync(question);
 

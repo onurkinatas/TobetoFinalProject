@@ -84,6 +84,8 @@ public static class PersistenceServiceRegistration
        services.AddScoped<IQuestionOptionRepository, QuestionOptionRepository>();
        services.AddScoped<IQuizRepository, QuizRepository>();
        services.AddScoped<IQuizQuestionRepository, QuizQuestionRepository>();
+       services.AddScoped<IPoolRepository, PoolRepository>();
+       services.AddScoped<IPoolQuestionRepository, PoolQuestionRepository>();
         return services;
     }
 }

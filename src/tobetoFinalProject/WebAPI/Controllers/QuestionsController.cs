@@ -14,7 +14,7 @@ namespace WebAPI.Controllers;
 public class QuestionsController : BaseController
 {
     [HttpPost]
-    public async Task<IActionResult> Add([FromForm] CreateQuestionCommand createQuestionCommand)
+    public async Task<IActionResult> Add([FromBody] CreateQuestionCommand createQuestionCommand)
     {
         CreatedQuestionResponse response = await Mediator.Send(createQuestionCommand);
 

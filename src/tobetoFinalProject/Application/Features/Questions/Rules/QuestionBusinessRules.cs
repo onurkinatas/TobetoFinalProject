@@ -40,7 +40,27 @@ public class QuestionBusinessRules : BaseBusinessRules
             return Task.CompletedTask;
         throw new BusinessException(QuestionsBusinessMessages.QuestionOptionsLessThanSeven);
     }
-    public  Task QuestionOptionsMustBeDifferent(ICollection<QuestionOption> questionOptions)
+    
+    public Task PoolQuestionsMustBeDifferentWhenInsert(ICollection<PoolQuestion> poolQuestions)
+    {
+        var poolIds = poolQuestions.Select(qo => qo.PoolId);
+
+        if (poolIds.Distinct().Count() != poolIds.Count())
+            throw new BusinessException(QuestionsBusinessMessages.PoolQuestionsMustBeDifferent);
+
+        return Task.CompletedTask;
+    }
+    public Task QuestionOptionsHaveToContainCorrectOptionId(ICollection<QuestionOption> questionOptions,int correctOptionId)
+    {
+        bool doesExist = questionOptions.Any(qo => qo.OptionId==correctOptionId);
+
+        if (doesExist is false)
+            throw new BusinessException(QuestionsBusinessMessages.QuestionOptionsHaveToContainCorrectOption);
+
+        return Task.CompletedTask;
+    }
+    
+    public  Task QuestionOptionsMustBeDifferentWhenInsert(ICollection<QuestionOption> questionOptions)
     {
         var optionIds = questionOptions.Select(qo => qo.OptionId);
 
