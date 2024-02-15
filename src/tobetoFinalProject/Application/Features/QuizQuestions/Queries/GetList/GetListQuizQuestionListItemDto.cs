@@ -1,4 +1,5 @@
 using Core.Application.Dtos;
+using Domain.Entities;
 
 namespace Application.Features.QuizQuestions.Queries.GetList;
 

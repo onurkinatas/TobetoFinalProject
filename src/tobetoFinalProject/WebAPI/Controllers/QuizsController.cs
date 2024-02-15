@@ -3,6 +3,7 @@ using Application.Features.Quizs.Commands.Delete;
 using Application.Features.Quizs.Commands.Update;
 using Application.Features.Quizs.Queries.GetById;
 using Application.Features.Quizs.Queries.GetList;
+using Application.Features.Quizs.Queries.GetQuizSession;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,13 @@ public class QuizsController : BaseController
         GetByIdQuizResponse response = await Mediator.Send(new GetByIdQuizQuery { Id = id });
         return Ok(response);
     }
-
+    [HttpGet("quizSession/{id}")]
+    public async Task<IActionResult> GetByIdQuizSession([FromRoute] int id)
+    {
+        GetByIdQuizSessionResponse response = await Mediator.Send(new GetByIdQuizSessionQuery { Id = id });
+        return Ok(response);
+    }
+    
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {
