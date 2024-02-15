@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Quizs\Queries\GetExamSession\" />
+    <Folder Include="Features\Quizs\Queries\GetQuizSession\" />
     <Folder Include="Services\Repositories" />
   </ItemGroup>
 
