@@ -14,7 +14,11 @@ namespace Application.Features.StudentQuizOptions.Commands.Create;
 
 public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
 {
-    public List<StudentQuizOption> StudentQuizOptions { get; set; }
+    public Guid ExamId { get; set; }
+    public int QuizId { get; set; }
+    public int QuestionId { get; set; }
+    public int OptionId { get; set; }
+    public Guid? StudentId { get; set; }
 
 
     public string[] Roles => new[] { "Student" };
@@ -39,12 +43,14 @@ public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionR
         public async Task<CreatedStudentQuizOptionResponse> Handle(CreateStudentQuizOptionCommand request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
+            request.StudentId = getStudent.Id;
 
-            request.StudentQuizOptions =  request.StudentQuizOptions.Select(sqo => { sqo.StudentId = getStudent.Id;return sqo; }).ToList();
+            StudentQuizOption studentQuizOption = _mapper.Map<StudentQuizOption>(request);
+           
 
-            await _studentQuizOptionRepository.AddRangeAsync(request.StudentQuizOptions);
+            await _studentQuizOptionRepository.AddAsync(studentQuizOption);
 
-            CreatedStudentQuizOptionResponse response = _mapper.Map<CreatedStudentQuizOptionResponse>(request.StudentQuizOptions);
+            CreatedStudentQuizOptionResponse response = _mapper.Map<CreatedStudentQuizOptionResponse>(studentQuizOption);
             return response;
         }
     }

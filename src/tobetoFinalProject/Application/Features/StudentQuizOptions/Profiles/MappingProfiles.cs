@@ -14,8 +14,8 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        CreateMap<List<StudentQuizOption>, CreateStudentQuizOptionCommand>().ReverseMap();
-        CreateMap<List<StudentQuizOption>, CreatedStudentQuizOptionResponse>().ReverseMap();
+        CreateMap<StudentQuizOption, CreateStudentQuizOptionCommand>().ReverseMap();
+        CreateMap<StudentQuizOption, CreatedStudentQuizOptionResponse>().ReverseMap();
         CreateMap<StudentQuizOption, UpdateStudentQuizOptionCommand>().ReverseMap();
         CreateMap<StudentQuizOption, UpdatedStudentQuizOptionResponse>().ReverseMap();
         CreateMap<StudentQuizOption, DeleteStudentQuizOptionCommand>().ReverseMap();

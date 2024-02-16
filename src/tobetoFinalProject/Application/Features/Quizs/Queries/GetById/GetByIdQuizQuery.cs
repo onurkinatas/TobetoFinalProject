@@ -14,7 +14,7 @@ public class GetByIdQuizQuery : IRequest<GetByIdQuizResponse>, ISecuredRequest
 {
     public int Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read ,"Student"};
 
     public class GetByIdQuizQueryHandler : IRequestHandler<GetByIdQuizQuery, GetByIdQuizResponse>
     {

@@ -2,6 +2,7 @@ using Application.Features.Quizs.Commands.Create;
 using Application.Features.Quizs.Commands.Delete;
 using Application.Features.Quizs.Commands.Update;
 using Application.Features.Quizs.Queries.GetById;
+using Application.Features.Quizs.Queries.GetForAllStudent;
 using Application.Features.Quizs.Queries.GetList;
 using Application.Features.Quizs.Queries.GetQuizSession;
 using Core.Application.Requests;
@@ -51,6 +52,13 @@ public class QuizsController : BaseController
         return Ok(response);
     }
     
+    [HttpGet("GetListForAllStudent")]
+    public async Task<IActionResult> GetListForAllStudent()
+    {
+        GetListForAllStudentQuery getListQuizQuery = new() {  };
+        GetListResponse<GetListQuizListItemDto> response = await Mediator.Send(getListQuizQuery);
+        return Ok(response);
+    }
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] PageRequest pageRequest)
     {

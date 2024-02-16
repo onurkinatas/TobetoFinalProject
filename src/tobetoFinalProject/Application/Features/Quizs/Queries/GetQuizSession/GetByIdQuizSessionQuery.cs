@@ -17,7 +17,7 @@ public class GetByIdQuizSessionQuery : IRequest<GetByIdQuizSessionResponse>, ISe
 {
     public int Id { get; set; }
 
-    public string[] Roles => new[] { "Admin","" };
+    public string[] Roles => new[] { "Admin","Student" };
 
     public class GetByIdQuizSessionQueryHandler : IRequestHandler<GetByIdQuizSessionQuery, GetByIdQuizSessionResponse>
     {

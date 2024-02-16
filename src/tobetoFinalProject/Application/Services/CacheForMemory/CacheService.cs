@@ -1,18 +1,20 @@
-﻿using Application.Services.Repositories;
+﻿using Application.Services.ContextOperations;
+using Application.Services.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Services.CacheForMemory;
 
-public class CacheService : ICacheMemoryService
+public class CacheService:ICacheMemoryService
 {
     private readonly IMemoryCache _cache;
-    private readonly IStudentClassStudentRepository _studentStudentClassRepository;
-
-    public CacheService(IMemoryCache cache, IStudentClassStudentRepository studentStudentClassRepository)
+    private readonly IContextOperationService _contextOperationService;
+    public CacheService(IMemoryCache cache, IContextOperationService contextOperationService)
     {
         _cache = cache;
-        _studentStudentClassRepository = studentStudentClassRepository;
+        _contextOperationService = contextOperationService;
     }
+
+    public void AddStudentClassIdFromCache(Guid studentId) => throw new NotImplementedException();
 
     public void AddStudentIdToCache(Guid studentId)
     {
@@ -23,16 +25,16 @@ public class CacheService : ICacheMemoryService
             {
                 _cache.Remove($"studentId");
                 _cache.Set($"studentId", studentId, TimeSpan.FromMinutes(30));
-                AddStudentClassIdFromCache(studentId);
             }
 
         }
         else
         {
             _cache.Set($"studentId", studentId, TimeSpan.FromMinutes(30));
-            AddStudentClassIdFromCache(studentId);
         }
     }
+
+    public List<Guid> GetStudentClassIdFromCache() => throw new NotImplementedException();
 
     public Guid? GetStudentIdFromCache()
     {
@@ -43,32 +45,5 @@ public class CacheService : ICacheMemoryService
         return null;
     }
 
-    public void AddStudentClassIdFromCache(Guid studentId)
-    {
-        var classIds = _studentStudentClassRepository
-            .GetAllWithoutPaginate(sc => sc.StudentId == studentId)
-            .Select(sc => sc.StudentClassId)
-            .ToList();
-        if (_cache.TryGetValue($"studentClassIds", out List<Guid> cachedStudentClassId))
-        {
-            if (cachedStudentClassId != null)
-            {
-                _cache.Remove($"studentClassId");
-                _cache.Set($"studentClassId", classIds, TimeSpan.FromMinutes(30));
-            }
-        }
-        else
-        {
-            _cache.Set($"studentClassId", classIds, TimeSpan.FromMinutes(30));
-        }
-    }
-
-    public List<Guid>? GetStudentClassIdFromCache()
-    {
-        if (_cache.TryGetValue($"studentClassId", out List<Guid> cachedStudentClassId))
-        {
-            return cachedStudentClassId;
-        }
-        return null;
-    }
+  
 }
