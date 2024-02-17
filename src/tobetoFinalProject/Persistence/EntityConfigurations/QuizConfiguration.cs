@@ -14,7 +14,6 @@ public class QuizConfiguration : IEntityTypeConfiguration<Quiz>
         builder.Property(q => q.Name).HasColumnName("Name");
         builder.Property(q => q.Description).HasColumnName("Description");
         builder.Property(q => q.Duration).HasColumnName("Duration");
-        builder.Property(q => q.ExamId).HasColumnName("ExamId");
         builder.Property(q => q.CreatedDate).HasColumnName("CreatedDate").IsRequired();
         builder.Property(q => q.UpdatedDate).HasColumnName("UpdatedDate");
         builder.Property(q => q.DeletedDate).HasColumnName("DeletedDate");

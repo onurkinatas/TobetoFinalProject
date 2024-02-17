@@ -6,6 +6,7 @@ public class CreateStudentQuizOptionCommandValidator : AbstractValidator<CreateS
 {
     public CreateStudentQuizOptionCommandValidator()
     {
-        
+        RuleFor(c => c.QuizId).NotEmpty();
+        RuleFor(c => c.QuestionId).NotEmpty();
     }
 }

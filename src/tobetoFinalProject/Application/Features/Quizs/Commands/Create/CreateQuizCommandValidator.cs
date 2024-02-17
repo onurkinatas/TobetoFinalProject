@@ -9,6 +9,5 @@ public class CreateQuizCommandValidator : AbstractValidator<CreateQuizCommand>
         RuleFor(c => c.Name).NotEmpty();
         RuleFor(c => c.Description).NotEmpty();
         RuleFor(c => c.Duration).NotEmpty();
-        RuleFor(c => c.ExamId).NotEmpty();
     }
 }

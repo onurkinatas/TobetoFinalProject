@@ -17,7 +17,6 @@ public class CreateQuizCommand : IRequest<CreatedQuizResponse>, ISecuredRequest,
     public string Name { get; set; }
     public string Description { get; set; }
     public int Duration { get; set; }
-    public Guid ExamId { get; set; }
     public int QuizQuestionCount { get; set; }
     public int PoolId { get; set; }
 

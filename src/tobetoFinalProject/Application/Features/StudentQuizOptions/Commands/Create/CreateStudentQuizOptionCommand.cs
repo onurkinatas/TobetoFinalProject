@@ -14,10 +14,9 @@ namespace Application.Features.StudentQuizOptions.Commands.Create;
 
 public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
 {
-    public Guid ExamId { get; set; }
     public int QuizId { get; set; }
     public int QuestionId { get; set; }
-    public int OptionId { get; set; }
+    public int? OptionId { get; set; }
     public Guid? StudentId { get; set; }
 
 
@@ -46,9 +45,18 @@ public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionR
             request.StudentId = getStudent.Id;
 
             StudentQuizOption studentQuizOption = _mapper.Map<StudentQuizOption>(request);
-           
 
-            await _studentQuizOptionRepository.AddAsync(studentQuizOption);
+            StudentQuizOption? existStudentQuizOption = await _studentQuizOptionRepository.GetAsync(
+                predicate: sqo => sqo.QuestionId == request.QuestionId && sqo.StudentId == studentQuizOption.StudentId
+                );
+            
+            if ( existStudentQuizOption is not null)
+            {
+                existStudentQuizOption.OptionId = request.OptionId;
+                await _studentQuizOptionRepository.UpdateAsync(existStudentQuizOption);
+            }
+            else if(existStudentQuizOption is null)
+                await _studentQuizOptionRepository.AddAsync(studentQuizOption);
 
             CreatedStudentQuizOptionResponse response = _mapper.Map<CreatedStudentQuizOptionResponse>(studentQuizOption);
             return response;

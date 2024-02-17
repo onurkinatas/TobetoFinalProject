@@ -11,7 +11,6 @@ public class StudentQuizOptionConfiguration : IEntityTypeConfiguration<StudentQu
         builder.ToTable("StudentQuizOptions").HasKey(sqo => sqo.Id);
 
         builder.Property(sqo => sqo.Id).HasColumnName("Id").IsRequired();
-        builder.Property(sqo => sqo.ExamId).HasColumnName("ExamId");
         builder.Property(sqo => sqo.QuizId).HasColumnName("QuizId");
         builder.Property(sqo => sqo.QuestionId).HasColumnName("QuestionId");
         builder.Property(sqo => sqo.OptionId).HasColumnName("OptionId");
