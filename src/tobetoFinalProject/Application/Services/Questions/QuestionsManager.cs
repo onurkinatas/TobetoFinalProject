@@ -74,4 +74,14 @@ public class QuestionsManager : IQuestionsService
 
         return deletedQuestion;
     }
+
+    public async Task<bool> ControlCorrectOption(int questionId,int? optionId)
+    {
+        Question? question = await _questionRepository.GetAsync(
+            predicate:q=>q.Id==questionId&&q.CorrectOptionId==optionId
+            );
+        if (question is not null)
+            return true;
+        return false;
+    }
 }

@@ -9,6 +9,8 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentQuizOptions.Constants.StudentQuizOptionsOperationClaims;
 using Application.Services.ContextOperations;
+using Application.Services.Questions;
+using Application.Services.StudentQuizResults;
 
 namespace Application.Features.StudentQuizOptions.Commands.Create;
 
@@ -28,15 +30,18 @@ public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionR
         private readonly IStudentQuizOptionRepository _studentQuizOptionRepository;
         private readonly StudentQuizOptionBusinessRules _studentQuizOptionBusinessRules;
         private readonly IContextOperationService _contextOperationService;
-
+        private readonly IQuestionsService _questionsService;
+        private readonly IStudentQuizResultsService _studentQuizResultsService;
 
         public CreateStudentQuizOptionCommandHandler(IMapper mapper, IStudentQuizOptionRepository studentQuizOptionRepository,
-                                         StudentQuizOptionBusinessRules studentQuizOptionBusinessRules, IContextOperationService contextOperationService)
+                                         StudentQuizOptionBusinessRules studentQuizOptionBusinessRules, IContextOperationService contextOperationService, IQuestionsService questionsService, IStudentQuizResultsService studentQuizResultsService)
         {
             _mapper = mapper;
             _studentQuizOptionRepository = studentQuizOptionRepository;
             _studentQuizOptionBusinessRules = studentQuizOptionBusinessRules;
             _contextOperationService = contextOperationService;
+            _questionsService = questionsService;
+            _studentQuizResultsService = studentQuizResultsService;
         }
 
         public async Task<CreatedStudentQuizOptionResponse> Handle(CreateStudentQuizOptionCommand request, CancellationToken cancellationToken)
@@ -46,17 +51,10 @@ public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionR
 
             StudentQuizOption studentQuizOption = _mapper.Map<StudentQuizOption>(request);
 
-            StudentQuizOption? existStudentQuizOption = await _studentQuizOptionRepository.GetAsync(
-                predicate: sqo => sqo.QuestionId == request.QuestionId && sqo.StudentId == studentQuizOption.StudentId
-                );
-            
-            if ( existStudentQuizOption is not null)
-            {
-                existStudentQuizOption.OptionId = request.OptionId;
-                await _studentQuizOptionRepository.UpdateAsync(existStudentQuizOption);
-            }
-            else if(existStudentQuizOption is null)
-                await _studentQuizOptionRepository.AddAsync(studentQuizOption);
+            await _studentQuizOptionRepository.AddAsync(studentQuizOption);
+            await _studentQuizResultsService.UpdateQuizResultAsync(studentQuizOption.QuizId, studentQuizOption.StudentId, studentQuizOption.OptionId, studentQuizOption.QuestionId);
+
+                
 
             CreatedStudentQuizOptionResponse response = _mapper.Map<CreatedStudentQuizOptionResponse>(studentQuizOption);
             return response;

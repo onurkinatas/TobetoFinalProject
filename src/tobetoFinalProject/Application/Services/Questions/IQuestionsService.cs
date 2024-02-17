@@ -27,4 +27,5 @@ public interface IQuestionsService
     Task<Question> AddAsync(Question question);
     Task<Question> UpdateAsync(Question question);
     Task<Question> DeleteAsync(Question question, bool permanent = false);
+    Task<bool> ControlCorrectOption(int questionId, int? optionId);
 }

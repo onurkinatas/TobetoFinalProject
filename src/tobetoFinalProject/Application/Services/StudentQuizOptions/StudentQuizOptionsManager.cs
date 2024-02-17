@@ -1,4 +1,5 @@
 using Application.Features.StudentQuizOptions.Rules;
+using Application.Services.Quizs;
 using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
@@ -11,11 +12,13 @@ public class StudentQuizOptionsManager : IStudentQuizOptionsService
 {
     private readonly IStudentQuizOptionRepository _studentQuizOptionRepository;
     private readonly StudentQuizOptionBusinessRules _studentQuizOptionBusinessRules;
+    private readonly IQuizsService _quizsService;
 
-    public StudentQuizOptionsManager(IStudentQuizOptionRepository studentQuizOptionRepository, StudentQuizOptionBusinessRules studentQuizOptionBusinessRules)
+    public StudentQuizOptionsManager(IStudentQuizOptionRepository studentQuizOptionRepository, StudentQuizOptionBusinessRules studentQuizOptionBusinessRules, IQuizsService quizsService)
     {
         _studentQuizOptionRepository = studentQuizOptionRepository;
         _studentQuizOptionBusinessRules = studentQuizOptionBusinessRules;
+        _quizsService = quizsService;
     }
 
     public async Task<StudentQuizOption?> GetAsync(

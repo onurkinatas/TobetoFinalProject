@@ -32,10 +32,11 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
 
-        public GetListStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper)
+        public GetListStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper, IContextOperationService contextOperationService)
         {
             _studentClassRepository = studentClassRepository;
             _mapper = mapper;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetListResponse<GetListStudentClasses>> Handle(GetListStudentClassQuery request, CancellationToken cancellationToken)
