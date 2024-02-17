@@ -12,7 +12,6 @@ public class GetByIdStudentClassResponse : IResponse
     public Guid Id { get; set; }
     public string Name { get; set; }
     public ICollection<GetListExamListItemDto> Exams { get; set; }
-    public ICollection<GetListStudentListItemDto> Students { get; set; }
     public ICollection<GetListAnnouncementListItemDto> Announcements { get; set; }
     public ICollection<GetListSurveyListItemDto> Surveys { get; set; }
     public ICollection<GetListLectureListItemDto> Lectures { get; set; }

@@ -35,7 +35,6 @@ public class MappingProfiles : Profile
 
         CreateMap<StudentClass, GetByIdStudentClassResponse>()
             .ForMember(dest => dest.Exams, opt => opt.MapFrom(src => src.ClassExams.Select(si => si.Exam).ToList()))
-            .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.StudentClassStudentes.Select(si => si.Student).ToList()))
             .ForMember(dest => dest.Announcements, opt => opt.MapFrom(src => src.ClassAnnouncements.Select(si => si.Announcement).ToList()))
             .ForMember(dest => dest.Lectures, opt => opt.MapFrom(src => src.ClassLectures.Select(si => si.Lecture).ToList()))
             .ForMember(dest => dest.Surveys, opt => opt.MapFrom(src => src.ClassSurveys.Select(si => si.Survey).ToList()));

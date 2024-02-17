@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.StudentClasses.Constants.StudentClassesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.StudentClasses.Queries.GetList;
 
@@ -18,7 +19,7 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
     public PageRequest PageRequest { get; set; }
    
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read,"Student" };
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentClasses({PageRequest.PageIndex},{PageRequest.PageSize})";
@@ -29,6 +30,7 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
     {
         private readonly IStudentClassRepository _studentClassRepository;
         private readonly IMapper _mapper;
+        private readonly IContextOperationService _contextOperationService;
 
         public GetListStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper)
         {
@@ -38,7 +40,9 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
 
         public async Task<GetListResponse<GetListStudentClasses>> Handle(GetListStudentClassQuery request, CancellationToken cancellationToken)
         {
+            ICollection<Guid> getStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
             IPaginate<StudentClass> studentClasses = await _studentClassRepository.GetListAsync(
+                predicate:sc=>getStudentClasses.Contains(sc.Id),
                 index: request.PageRequest.PageIndex,
                 include: sc => sc.Include(sc => sc.ClassAnnouncements)
                .ThenInclude(ca => ca.Announcement)
