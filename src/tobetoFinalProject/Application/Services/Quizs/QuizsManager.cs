@@ -2,6 +2,7 @@ using Application.Features.Quizs.Rules;
 using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -73,5 +74,14 @@ public class QuizsManager : IQuizsService
         Quiz deletedQuiz = await _quizRepository.DeleteAsync(quiz);
 
         return deletedQuiz;
+    }
+    public async Task<int> GetQuizQuestionCount(int quizId)
+    {
+        Quiz getQuiz = await _quizRepository.GetAsync(
+            predicate: q => q.Id == quizId,
+            include:q=>q.Include(q=>q.QuizQuestions)
+            );
+
+        return getQuiz.QuizQuestions.Count;
     }
 }

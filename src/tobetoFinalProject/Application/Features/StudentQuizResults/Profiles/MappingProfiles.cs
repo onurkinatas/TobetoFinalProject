@@ -1,7 +1,7 @@
 using Application.Features.StudentQuizResults.Commands.Create;
 using Application.Features.StudentQuizResults.Commands.Delete;
 using Application.Features.StudentQuizResults.Commands.Update;
-using Application.Features.StudentQuizResults.Queries.GetById;
+using Application.Features.StudentQuizResults.Queries.GetByQuizId;
 using Application.Features.StudentQuizResults.Queries.GetList;
 using AutoMapper;
 using Core.Application.Responses;

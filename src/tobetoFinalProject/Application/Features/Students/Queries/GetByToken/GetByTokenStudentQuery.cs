@@ -53,7 +53,8 @@ public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecu
                 .Include(s => s.StudentPrivateCertificates)
                 .Include(s => s.StudentClassStudentes)
                 .ThenInclude(s => s.StudentClass)
-                 .Include(s => s.User),
+                 .Include(s => s.User)
+                 .Include(s => s.StudentQuizResults),
                 cancellationToken: cancellationToken);
             await _studentBusinessRules.StudentShouldExistWhenSelected(student);
 

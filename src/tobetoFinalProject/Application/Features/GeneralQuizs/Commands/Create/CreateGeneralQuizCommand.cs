@@ -8,14 +8,19 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.GeneralQuizs.Constants.GeneralQuizsOperationClaims;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.GeneralQuizs.Commands.Create;
 
-public class CreateGeneralQuizCommand : IRequest<CreatedGeneralQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+public class CreateGeneralQuizCommand : IRequest<CreatedGeneralQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest,ICacheRemoverRequest
 {
     public int QuizId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, GeneralQuizsOperationClaims.Create };
+
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => "GetGeneralQuizs";
 
     public class CreateGeneralQuizCommandHandler : IRequestHandler<CreateGeneralQuizCommand, CreatedGeneralQuizResponse>
     {

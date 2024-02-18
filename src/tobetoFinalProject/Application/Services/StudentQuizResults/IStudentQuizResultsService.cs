@@ -28,4 +28,6 @@ public interface IStudentQuizResultsService
     Task<StudentQuizResult> UpdateAsync(StudentQuizResult studentQuizResult);
     Task<StudentQuizResult> DeleteAsync(StudentQuizResult studentQuizResult, bool permanent = false);
     Task<Task> UpdateQuizResultAsync(int quizId, Guid? studentId, int? optionId, int questionId);
+    int QuizEmptyAnswerCalculator(int? correctAnswerCount, int? wrongAnswerCount, int allQuestionCount);
+    int QuizPointCalculator(int? correctAnswerCount, int allQuestionCount);
 }

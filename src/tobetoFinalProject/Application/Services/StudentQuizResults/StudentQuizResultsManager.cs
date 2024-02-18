@@ -88,20 +88,27 @@ public class StudentQuizResultsManager : IStudentQuizResultsService
 
         if(controlCorrect)
         {
-            if (studentQuizResult.CorrectAnswerCount is null)
-                studentQuizResult.CorrectAnswerCount = 1;
-            else if (studentQuizResult.CorrectAnswerCount is not null)
-                studentQuizResult.CorrectAnswerCount += 1;
+            studentQuizResult.CorrectAnswerCount = studentQuizResult.CorrectAnswerCount == null ? 1:studentQuizResult.CorrectAnswerCount += 1;
             await _studentQuizResultRepository.UpdateAsync(studentQuizResult);
         }else if (!controlCorrect)
         {
-            if (studentQuizResult.WrongAnswerCount is null)
-                studentQuizResult.WrongAnswerCount = 1;
-            else if (studentQuizResult.WrongAnswerCount is not null)
-                studentQuizResult.WrongAnswerCount += 1;
+            studentQuizResult.WrongAnswerCount = studentQuizResult.WrongAnswerCount == null ? 1 : studentQuizResult.WrongAnswerCount += 1;
             await _studentQuizResultRepository.UpdateAsync(studentQuizResult);
         }
 
         return Task.CompletedTask;
+    }
+
+    public int QuizPointCalculator(int? correctAnswerCount,int allQuestionCount)
+    {
+        int correct = (int)(correctAnswerCount == null ? 0 : correctAnswerCount);
+        return (100 * correct / allQuestionCount);
+    }
+    public int QuizEmptyAnswerCalculator(int? correctAnswerCount, int? wrongAnswerCount, int allQuestionCount)
+    {
+        int wrong = (int)(wrongAnswerCount == null ? 0 : wrongAnswerCount);
+        int correct = (int)(correctAnswerCount == null ? 0 : correctAnswerCount);
+
+        return allQuestionCount - (wrong + correct);
     }
 }

@@ -9,15 +9,19 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.GeneralQuizs.Constants.GeneralQuizsOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.GeneralQuizs.Queries.GetList;
 
-public class GetListGeneralQuizQuery : IRequest<GetListResponse<GetListGeneralQuizListItemDto>>, ISecuredRequest
+public class GetListGeneralQuizQuery : IRequest<GetListResponse<GetListGeneralQuizListItemDto>>, ISecuredRequest, ICachableRequest
 {
     public PageRequest PageRequest { get; set; }
 
     public string[] Roles => new[] { Admin, Read,"Student" };
-
+    public bool BypassCache { get; }
+    public string CacheKey => $"GetListGeneralQuizs({PageRequest.PageIndex},{PageRequest.PageSize})";
+    public string CacheGroupKey => "GetGeneralQuizs";
+    public TimeSpan? SlidingExpiration { get; }
     public class GetListGeneralQuizQueryHandler : IRequestHandler<GetListGeneralQuizQuery, GetListResponse<GetListGeneralQuizListItemDto>>
     {
         private readonly IGeneralQuizRepository _generalQuizRepository;

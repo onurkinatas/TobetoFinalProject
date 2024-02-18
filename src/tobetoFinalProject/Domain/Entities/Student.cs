@@ -18,6 +18,7 @@ public class Student : Entity<Guid>
     public virtual User? User { get; set; }
     public virtual City? City { get; set; }
     public virtual District? District { get; set; }
+    public virtual ICollection<StudentQuizResult>? StudentQuizResults { get; set; }
     public virtual ICollection<StudentEducation>? StudentEducations { get; set; }
     public virtual ICollection<StudentExperience>? StudentExperiences { get; set; }
     public virtual ICollection<StudentClassStudent>? StudentClassStudentes { get; set; }

@@ -27,4 +27,5 @@ public interface IQuizsService
     Task<Quiz> AddAsync(Quiz quiz);
     Task<Quiz> UpdateAsync(Quiz quiz);
     Task<Quiz> DeleteAsync(Quiz quiz, bool permanent = false);
+    Task<int> GetQuizQuestionCount(int quizId);
 }

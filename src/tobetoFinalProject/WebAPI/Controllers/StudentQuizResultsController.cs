@@ -1,7 +1,7 @@
 using Application.Features.StudentQuizResults.Commands.Create;
 using Application.Features.StudentQuizResults.Commands.Delete;
 using Application.Features.StudentQuizResults.Commands.Update;
-using Application.Features.StudentQuizResults.Queries.GetById;
+using Application.Features.StudentQuizResults.Queries.GetByQuizId;
 using Application.Features.StudentQuizResults.Queries.GetList;
 using Core.Application.Requests;
 using Core.Application.Responses;
@@ -40,7 +40,7 @@ public class StudentQuizResultsController : BaseController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        GetByIdStudentQuizResultResponse response = await Mediator.Send(new GetByIdStudentQuizResultQuery { Id = id });
+        GetByIdStudentQuizResultResponse response = await Mediator.Send(new GetByIdStudentQuizResultQuery { QuizId = id });
         return Ok(response);
     }
 
