@@ -19,10 +19,10 @@ using System.Threading.Tasks;
 namespace Application.Features.StudentClasses.Queries.GetListForLoggedStudent;
 public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStudentClassListItemDto>, ISecuredRequest, ICachableRequest
 {
-    public int ClassAnnouncementsCount { get; set; } = 3;
-    public int ClassSurveysCount { get; set; } = 4;
-    public int ClassQuizsCount { get; set; } = 10;
-    public int ClassLecturesCount { get; set; } =4;
+    public int ClassAnnouncementsCount { get; set; } = 12;
+    public int ClassSurveysCount { get; set; } =12;
+    public int ClassQuizsCount { get; set; } = 12;
+    public int ClassLecturesCount { get; set; } =12;
     public int? UserId { get; set; }
     public string CacheKey => $"GetAllClassDetails({UserId})";
     public string CacheGroupKey => "GetAllClassDetails";
@@ -60,7 +60,6 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
                       .ThenInclude(ca => ca.Survey),
                 index: 0,
                 size: 100,
-                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 
@@ -75,7 +74,6 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
             };
 
             GetListForLoggedStudentClassListItemDto response = _mapper.Map<GetListForLoggedStudentClassListItemDto>(studentClassGetData);
-            response.ClassNames = studentClasses.Items.SelectMany(sc => sc.Name).ToList();
             return response;
         }
     }

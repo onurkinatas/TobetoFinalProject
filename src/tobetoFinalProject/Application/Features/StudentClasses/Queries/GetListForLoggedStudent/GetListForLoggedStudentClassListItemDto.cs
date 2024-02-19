@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 namespace Application.Features.StudentClasses.Queries.GetListForLoggedStudent;
 public class GetListForLoggedStudentClassListItemDto:IDto
 {
-    public ICollection<char>? ClassNames { get; set; }
     public List<GetListClassAnnouncementListItemDto>? ClassAnnouncements { get; set; }
     public List<GetListClassQuizListItemDto>? ClassQuizs { get; set; }
     public List<GetListClassLectureListItemDto>? ClassLectures { get; set; }

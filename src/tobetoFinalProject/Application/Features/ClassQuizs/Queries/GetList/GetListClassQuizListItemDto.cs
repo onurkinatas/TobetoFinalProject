@@ -10,4 +10,5 @@ public class GetListClassQuizListItemDto : IDto
     public int QuizId { get; set; }
     public GetByIdQuizResponse Quiz { get; set; }
 
+
 }
