@@ -16,6 +16,7 @@ public class StudentQuizResultsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentQuizResultCommand createStudentQuizResultCommand)
     {
+        createStudentQuizResultCommand.UserId = getUserIdFromRequest();
         CreatedStudentQuizResultResponse response = await Mediator.Send(createStudentQuizResultCommand);
 
         return Created(uri: "", response);

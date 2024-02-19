@@ -9,15 +9,23 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentQuizResults.Constants.StudentQuizResultsOperationClaims;
 using Application.Services.ContextOperations;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.StudentQuizResults.Commands.Create;
 
 public class CreateStudentQuizResultCommand : IRequest<CreatedStudentQuizResultResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+, ICacheRemoverRequest
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public Guid? StudentId { get; set; }
     public int QuizId { get; set; }
 
     public string[] Roles => new[] { Admin,"Student" };
+
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
 
     public class CreateStudentQuizResultCommandHandler : IRequestHandler<CreateStudentQuizResultCommand, CreatedStudentQuizResultResponse>
     {
