@@ -21,11 +21,6 @@ public class GetListForLoggedStudentClassAnnouncementQuery : IRequest<GetListRes
     public PageRequest PageRequest { get; set; }
     public string[] Roles => new[] { Admin, Read, "Student" };
 
-    public bool BypassCache { get; }
-    public string CacheKey => $"GetListClassAnnouncements({PageRequest.PageIndex},{PageRequest.PageSize})";
-    public string CacheGroupKey => "GetClassAnnouncements";
-    public TimeSpan? SlidingExpiration { get; }
-
     public class GetListForLoggedStudentClassAnnouncementQueryHandler : IRequestHandler<GetListForLoggedStudentClassAnnouncementQuery, GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto>>
     {
         private readonly IClassAnnouncementRepository _classAnnouncementRepository;

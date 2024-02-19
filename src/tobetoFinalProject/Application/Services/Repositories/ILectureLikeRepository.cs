@@ -6,5 +6,5 @@ namespace Application.Services.Repositories;
 
 public interface ILectureLikeRepository : IAsyncRepository<LectureLike, Guid>, IRepository<LectureLike, Guid>
 {
-    public int GetLectureLikeCount(Expression<Func<LectureLike, bool>> filter);
+    public Task<int> GetLectureLikeCount(Expression<Func<LectureLike, bool>> filter);
 }

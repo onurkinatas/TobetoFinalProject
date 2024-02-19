@@ -3,6 +3,8 @@ using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.Pipelines.Caching;
+using Core.Application.Requests;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +12,14 @@ using static Application.Features.Students.Constants.StudentsOperationClaims;
 
 namespace Application.Features.Students.Queries.GetById;
 
-public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecuredRequest
+public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecuredRequest,ICachableRequest
 {
     public string[] Roles => new[] { Admin, Read, "Student" };
+
+    public bool BypassCache { get; }
+    public string CacheKey => $"GetListStudents({PageRequest.PageIndex},{PageRequest.PageSize})";
+    public string CacheGroupKey => "GetStudents";
+    public TimeSpan? SlidingExpiration { get; }
 
     public class GetByTokenStudentQueryHandler : IRequestHandler<GetByTokenStudentQuery, GetByTokenStudentResponse>
     {
