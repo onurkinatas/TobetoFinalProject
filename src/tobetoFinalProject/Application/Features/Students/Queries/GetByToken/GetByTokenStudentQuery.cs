@@ -15,10 +15,12 @@ namespace Application.Features.Students.Queries.GetById;
 public class GetByTokenStudentQuery : IRequest<GetByTokenStudentResponse>, ISecuredRequest,ICachableRequest
 {
     public string[] Roles => new[] { Admin, Read, "Student" };
-
+    public int? UserId { get; set; }
+  
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public string CacheKey => $"GetStudent({UserId})";
     public bool BypassCache { get; }
-    public string CacheKey => $"GetListStudents({PageRequest.PageIndex},{PageRequest.PageSize})";
-    public string CacheGroupKey => "GetStudents";
+    
     public TimeSpan? SlidingExpiration { get; }
 
     public class GetByTokenStudentQueryHandler : IRequestHandler<GetByTokenStudentQuery, GetByTokenStudentResponse>

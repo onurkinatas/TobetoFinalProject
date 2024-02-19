@@ -21,9 +21,11 @@ public class UpdateStudentSkillCommand : IRequest<UpdatedStudentSkillResponse>, 
 
     public string[] Roles => new[] { Admin, Write, StudentSkillsOperationClaims.Update, "Student" };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentSkills";
 
     public class UpdateStudentSkillCommandHandler : IRequestHandler<UpdateStudentSkillCommand, UpdatedStudentSkillResponse>
     {

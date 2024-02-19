@@ -21,9 +21,11 @@ public class UpdateStudentLanguageLevelCommand : IRequest<UpdatedStudentLanguage
 
     public string[] Roles => new[] { Admin, Write, StudentLanguageLevelsOperationClaims.Update, "Student" };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentLanguageLevels";
 
     public class UpdateStudentLanguageLevelCommandHandler : IRequestHandler<UpdateStudentLanguageLevelCommand, UpdatedStudentLanguageLevelResponse>
     {

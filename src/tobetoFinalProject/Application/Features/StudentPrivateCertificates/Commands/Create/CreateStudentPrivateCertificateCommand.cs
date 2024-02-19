@@ -23,9 +23,11 @@ public class CreateStudentPrivateCertificateCommand : IRequest<CreatedStudentPri
 
     public string[] Roles => new[] {"Student"};
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentPrivateCertificates";
 
     public class CreateStudentPrivateCertificateCommandHandler : IRequestHandler<CreateStudentPrivateCertificateCommand, CreatedStudentPrivateCertificateResponse>
     {

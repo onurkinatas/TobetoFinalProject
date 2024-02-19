@@ -14,7 +14,13 @@ using Application.Services.ContextOperations;
 namespace Application.Features.StudentExperiences.Commands.Create;
 
 public class CreateStudentExperienceCommand : IRequest<CreatedStudentExperienceResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
     public Guid? StudentId { get; set; }
     public string CompanyName { get; set; }
     public string Sector { get; set; }
@@ -25,10 +31,6 @@ public class CreateStudentExperienceCommand : IRequest<CreatedStudentExperienceR
     public Guid CityId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Create, "Student" };
-
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentExperiences";
 
     public class CreateStudentExperienceCommandHandler : IRequestHandler<CreateStudentExperienceCommand, CreatedStudentExperienceResponse>
     {

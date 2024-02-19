@@ -15,14 +15,16 @@ namespace Application.Features.StudentLanguageLevels.Commands.Create;
 
 public class CreateStudentLanguageLevelCommand : IRequest<CreatedStudentLanguageLevelResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
     public Guid? StudentId { get; set; }
     public Guid LanguageLevelId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentLanguageLevelsOperationClaims.Create, "Student" };
 
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentLanguageLevels";
 
     public class CreateStudentLanguageLevelCommandHandler : IRequestHandler<CreateStudentLanguageLevelCommand, CreatedStudentLanguageLevelResponse>
     {

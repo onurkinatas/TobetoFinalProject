@@ -11,11 +11,18 @@ using static Application.Features.StudentQuizOptions.Constants.StudentQuizOption
 using Application.Services.ContextOperations;
 using Application.Services.Questions;
 using Application.Services.StudentQuizResults;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.StudentQuizOptions.Commands.Create;
 
 public class CreateStudentQuizOptionCommand : IRequest<CreatedStudentQuizOptionResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+, ICacheRemoverRequest
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
     public int QuizId { get; set; }
     public int QuestionId { get; set; }
     public int? OptionId { get; set; }

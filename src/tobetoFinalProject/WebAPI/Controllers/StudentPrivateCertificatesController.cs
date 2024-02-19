@@ -6,6 +6,7 @@ using Application.Features.StudentPrivateCertificates.Queries.GetList;
 using Application.Features.StudentPrivateCertificates.Queries.GetListForLoggedStudent;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Core.Security.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -17,6 +18,7 @@ public class StudentPrivateCertificatesController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromForm] CreateStudentPrivateCertificateCommand createStudentPrivateCertificateCommand)
     {
+        createStudentPrivateCertificateCommand.UserId = getUserIdFromRequest();
         CreatedStudentPrivateCertificateResponse response = await Mediator.Send(createStudentPrivateCertificateCommand);
 
         return Created(uri: "", response);
@@ -33,7 +35,7 @@ public class StudentPrivateCertificatesController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        DeletedStudentPrivateCertificateResponse response = await Mediator.Send(new DeleteStudentPrivateCertificateCommand { Id = id });
+        DeletedStudentPrivateCertificateResponse response = await Mediator.Send(new DeleteStudentPrivateCertificateCommand { Id = id,UserId= getUserIdFromRequest() });
 
         return Ok(response);
     }

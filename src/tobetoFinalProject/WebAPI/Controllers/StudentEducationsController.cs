@@ -18,7 +18,7 @@ public class StudentEducationsController : BaseController
 {
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentEducationCommand createStudentEducationCommand)
-    {
+    {createStudentEducationCommand.UserId = getUserIdFromRequest();
         CreatedStudentEducationResponse response = await Mediator.Send(createStudentEducationCommand);
 
         return Created(uri: "", response);
@@ -35,7 +35,7 @@ public class StudentEducationsController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        DeletedStudentEducationResponse response = await Mediator.Send(new DeleteStudentEducationCommand { Id = id });
+        DeletedStudentEducationResponse response = await Mediator.Send(new DeleteStudentEducationCommand { Id = id,UserId = getUserIdFromRequest() });
 
         return Ok(response);
     }

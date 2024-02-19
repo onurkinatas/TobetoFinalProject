@@ -15,6 +15,11 @@ namespace Application.Features.StudentEducations.Commands.Update;
 
 public class UpdateStudentEducationCommand : IRequest<UpdatedStudentEducationResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
     public Guid Id { get; set; }
     public Guid? StudentId { get; set; }
     public string EducationStatus { get; set; }
@@ -25,10 +30,6 @@ public class UpdateStudentEducationCommand : IRequest<UpdatedStudentEducationRes
     public DateTime? GraduationDate { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Update, "Student" };
-
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentEducations";
 
     public class UpdateStudentEducationCommandHandler : IRequestHandler<UpdateStudentEducationCommand, UpdatedStudentEducationResponse>
     {

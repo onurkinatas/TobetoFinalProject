@@ -21,9 +21,11 @@ public class CreateStudentSocialMediaCommand : IRequest<CreatedStudentSocialMedi
 
     public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Create, "Student" };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentSocialMedias";
 
     public class CreateStudentSocialMediaCommandHandler : IRequestHandler<CreateStudentSocialMediaCommand, CreatedStudentSocialMediaResponse>
     {

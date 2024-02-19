@@ -19,9 +19,11 @@ public class DeleteStudentSkillCommand : IRequest<DeletedStudentSkillResponse>, 
 
     public string[] Roles => new[] { Admin, Write, StudentSkillsOperationClaims.Delete, "Student" };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentSkills";
 
     public class DeleteStudentSkillCommandHandler : IRequestHandler<DeleteStudentSkillCommand, DeletedStudentSkillResponse>
     {

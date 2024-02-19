@@ -12,16 +12,16 @@ using static Application.Features.StudentClassStudents.Constants.StudentClassStu
 
 namespace Application.Features.StudentClassStudents.Commands.Create;
 
-public class CreateStudentClassStudentCommand : IRequest<CreatedStudentClassStudentResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+public class CreateStudentClassStudentCommand : IRequest<CreatedStudentClassStudentResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest, ICacheRemoverRequest
 {
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => "GetStudentClassStudents";
     public Guid StudentId { get; set; }
     public Guid StudentClassId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentClassStudentsOperationClaims.Create };
 
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentClassStudents";
 
     public class CreateStudentClassStudentCommandHandler : IRequestHandler<CreateStudentClassStudentCommand, CreatedStudentClassStudentResponse>
     {

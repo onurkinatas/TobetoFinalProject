@@ -14,7 +14,13 @@ using Application.Services.ContextOperations;
 namespace Application.Features.StudentEducations.Commands.Create;
 
 public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+, ICacheRemoverRequest
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
     public Guid? StudentId { get; set; }
     public string EducationStatus { get; set; }
     public string SchoolName { get; set; }

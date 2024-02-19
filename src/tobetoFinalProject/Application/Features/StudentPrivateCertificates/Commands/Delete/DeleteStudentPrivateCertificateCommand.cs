@@ -19,9 +19,11 @@ public class DeleteStudentPrivateCertificateCommand : IRequest<DeletedStudentPri
 
     public string[] Roles => new[] { Admin, Write, StudentPrivateCertificatesOperationClaims.Delete, "Student" };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentPrivateCertificates";
 
     public class DeleteStudentPrivateCertificateCommandHandler : IRequestHandler<DeleteStudentPrivateCertificateCommand, DeletedStudentPrivateCertificateResponse>
     {

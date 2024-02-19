@@ -14,14 +14,17 @@ using static Application.Features.StudentExperiences.Constants.StudentExperience
 namespace Application.Features.StudentExperiences.Commands.Delete;
 
 public class DeleteStudentExperienceCommand : IRequest<DeletedStudentExperienceResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+
 {
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
     public Guid Id { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentExperiencesOperationClaims.Delete, "Student" };
 
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentExperiences";
 
     public class DeleteStudentExperienceCommandHandler : IRequestHandler<DeleteStudentExperienceCommand, DeletedStudentExperienceResponse>
     {

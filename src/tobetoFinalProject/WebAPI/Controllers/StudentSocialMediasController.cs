@@ -19,6 +19,7 @@ public class StudentSocialMediasController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentSocialMediaCommand createStudentSocialMediaCommand)
     {
+        createStudentSocialMediaCommand.UserId = getUserIdFromRequest();
         CreatedStudentSocialMediaResponse response = await Mediator.Send(createStudentSocialMediaCommand);
 
         return Created(uri: "", response);
@@ -27,6 +28,7 @@ public class StudentSocialMediasController : BaseController
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateStudentSocialMediaCommand updateStudentSocialMediaCommand)
     {
+        updateStudentSocialMediaCommand.UserId = getUserIdFromRequest();
         UpdatedStudentSocialMediaResponse response = await Mediator.Send(updateStudentSocialMediaCommand);
 
         return Ok(response);
@@ -35,7 +37,7 @@ public class StudentSocialMediasController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        DeletedStudentSocialMediaResponse response = await Mediator.Send(new DeleteStudentSocialMediaCommand { Id = id });
+        DeletedStudentSocialMediaResponse response = await Mediator.Send(new DeleteStudentSocialMediaCommand { Id = id,UserId=getUserIdFromRequest });
 
         return Ok(response);
     }

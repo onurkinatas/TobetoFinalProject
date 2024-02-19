@@ -19,9 +19,11 @@ public class DeleteStudentSocialMediaCommand : IRequest<DeletedStudentSocialMedi
 
     public string[] Roles => new[] { Admin, Write, StudentSocialMediasOperationClaims.Delete, "Student" };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentSocialMedias";
 
     public class DeleteStudentSocialMediaCommandHandler : IRequestHandler<DeleteStudentSocialMediaCommand, DeletedStudentSocialMediaResponse>
     {

@@ -20,9 +20,11 @@ public class UpdateStudentPrivateCertificateCommand : IRequest<UpdatedStudentPri
 
     public string[] Roles => new[] { Admin, Write, StudentPrivateCertificatesOperationClaims.Update };
 
+    public int? UserId { get; set; }
+
+    public string CacheGroupKey => $"GetStudent{UserId}";
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentPrivateCertificates";
 
     public class UpdateStudentPrivateCertificateCommandHandler : IRequestHandler<UpdateStudentPrivateCertificateCommand, UpdatedStudentPrivateCertificateResponse>
     {

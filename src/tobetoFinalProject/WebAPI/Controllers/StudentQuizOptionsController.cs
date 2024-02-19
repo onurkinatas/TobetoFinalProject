@@ -5,6 +5,7 @@ using Application.Features.StudentQuizOptions.Queries.GetById;
 using Application.Features.StudentQuizOptions.Queries.GetList;
 using Core.Application.Requests;
 using Core.Application.Responses;
+using Core.Security.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -15,7 +16,7 @@ public class StudentQuizOptionsController : BaseController
 {
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentQuizOptionCommand createStudentQuizOptionCommand)
-    {
+    {createStudentQuizOptionCommand.UserId = getUserIdFromRequest();    
         CreatedStudentQuizOptionResponse response = await Mediator.Send(createStudentQuizOptionCommand);
 
         return Created(uri: "", response);

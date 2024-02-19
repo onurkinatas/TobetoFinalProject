@@ -21,6 +21,7 @@ public class StudentLanguageLevelsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentLanguageLevelCommand createStudentLanguageLevelCommand)
     {
+        createStudentLanguageLevelCommand.UserId = getUserIdFromRequest();
         CreatedStudentLanguageLevelResponse response = await Mediator.Send(createStudentLanguageLevelCommand);
 
         return Created(uri: "", response);
@@ -37,7 +38,7 @@ public class StudentLanguageLevelsController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        DeletedStudentLanguageLevelResponse response = await Mediator.Send(new DeleteStudentLanguageLevelCommand { Id = id });
+        DeletedStudentLanguageLevelResponse response = await Mediator.Send(new DeleteStudentLanguageLevelCommand { Id = id,UserId = getUserIdFromRequest() });
 
         return Ok(response);
     }

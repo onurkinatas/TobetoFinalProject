@@ -19,6 +19,7 @@ public class StudentSkillsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentSkillCommand createStudentSkillCommand)
     {
+        createStudentSkillCommand.UserId = getUserIdFromRequest();
         CreatedStudentSkillResponse response = await Mediator.Send(createStudentSkillCommand);
 
         return Created(uri: "", response);
@@ -26,7 +27,7 @@ public class StudentSkillsController : BaseController
 
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateStudentSkillCommand updateStudentSkillCommand)
-    {
+    {updateStudentSkillCommand.UserId = getUserIdFromRequest();
         UpdatedStudentSkillResponse response = await Mediator.Send(updateStudentSkillCommand);
 
         return Ok(response);
@@ -35,7 +36,7 @@ public class StudentSkillsController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        DeletedStudentSkillResponse response = await Mediator.Send(new DeleteStudentSkillCommand { Id = id });
+        DeletedStudentSkillResponse response = await Mediator.Send(new DeleteStudentSkillCommand { Id = id ,UserId=getUserIdFromRequest()});
 
         return Ok(response);
     }
