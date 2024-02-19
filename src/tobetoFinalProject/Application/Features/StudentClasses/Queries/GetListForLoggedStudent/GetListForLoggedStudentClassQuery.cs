@@ -56,8 +56,6 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
                     .ThenInclude(ca => ca.Lecture)
                .Include(sc => sc.ClassQuizs)
                     .ThenInclude(ca => ca.Quiz)
-                .Include(sc => sc.ClassQuizs)
-                    .ThenInclude(ca => ca.StudentClass)
                .Include(sc => sc.ClassSurveys)
                       .ThenInclude(ca => ca.Survey),
                 index: 0,
@@ -69,6 +67,7 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
 
             StudentClass studentClassGetData = new()
             {
+                
                 ClassAnnouncements = studentClasses.Items.SelectMany(sc => sc.ClassAnnouncements).Take(request.ClassAnnouncementsCount).OrderByDescending(ca=>ca.CreatedDate).ToList(),
                 ClassLectures = studentClasses.Items.SelectMany(sc => sc.ClassLectures).Take(request.ClassLecturesCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
                 ClassQuizs = studentClasses.Items.SelectMany(sc => sc.ClassQuizs).Take(request.ClassQuizsCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
@@ -76,6 +75,7 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
             };
 
             GetListForLoggedStudentClassListItemDto response = _mapper.Map<GetListForLoggedStudentClassListItemDto>(studentClassGetData);
+            response.ClassNames = studentClasses.Items.SelectMany(sc => sc.Name).ToList();
             return response;
         }
     }

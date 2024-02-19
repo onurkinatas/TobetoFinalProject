@@ -9,8 +9,5 @@ public class GetListClassQuizListItemDto : IDto
     public int Id { get; set; }
     public int QuizId { get; set; }
     public GetByIdQuizResponse Quiz { get; set; }
-    public string StudentClassName { get; set; }
-    public string StudentStudentClassName { get; set; }
-    public string ClassName { get; set; }
 
 }
