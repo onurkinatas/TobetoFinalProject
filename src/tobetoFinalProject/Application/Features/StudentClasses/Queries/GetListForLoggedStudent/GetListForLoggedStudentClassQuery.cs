@@ -24,7 +24,7 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
     public int ClassQuizsCount { get; set; } = 10;
     public int ClassLecturesCount { get; set; } =4;
     public int? UserId { get; set; }
-    public string CacheKey => $"GetAllClassDetails({userId})";
+    public string CacheKey => $"GetAllClassDetails({UserId})";
     public string CacheGroupKey => "GetAllClassDetails";
     public TimeSpan? SlidingExpiration { get; }
     public string[] Roles => new[] { "Student" };
@@ -56,6 +56,8 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
                     .ThenInclude(ca => ca.Lecture)
                .Include(sc => sc.ClassQuizs)
                     .ThenInclude(ca => ca.Quiz)
+                .Include(sc => sc.ClassQuizs)
+                    .ThenInclude(ca => ca.StudentClass)
                .Include(sc => sc.ClassSurveys)
                       .ThenInclude(ca => ca.Survey),
                 index: 0,

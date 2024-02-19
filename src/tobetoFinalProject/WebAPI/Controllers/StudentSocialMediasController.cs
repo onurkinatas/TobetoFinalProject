@@ -37,7 +37,7 @@ public class StudentSocialMediasController : BaseController
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        DeletedStudentSocialMediaResponse response = await Mediator.Send(new DeleteStudentSocialMediaCommand { Id = id,UserId=getUserIdFromRequest });
+        DeletedStudentSocialMediaResponse response = await Mediator.Send(new DeleteStudentSocialMediaCommand { Id = id,UserId=getUserIdFromRequest() });
 
         return Ok(response);
     }

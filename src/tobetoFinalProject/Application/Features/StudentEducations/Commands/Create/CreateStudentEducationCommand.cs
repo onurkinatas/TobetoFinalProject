@@ -14,8 +14,7 @@ using Application.Services.ContextOperations;
 namespace Application.Features.StudentEducations.Commands.Create;
 
 public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
-, ICacheRemoverRequest
-{
+{ 
     public int? UserId { get; set; }
 
     public string CacheGroupKey => $"GetStudent{UserId}";
@@ -30,10 +29,6 @@ public class CreateStudentEducationCommand : IRequest<CreatedStudentEducationRes
     public DateTime? GraduationDate { get; set; }
 
     public string[] Roles => new[] { Admin, Write, StudentEducationsOperationClaims.Create, "Student" };
-
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentEducations";
 
     public class CreateStudentEducationCommandHandler : IRequestHandler<CreateStudentEducationCommand, CreatedStudentEducationResponse>
     {
