@@ -23,8 +23,8 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
     public int ClassSurveysCount { get; set; } = 4;
     public int ClassQuizsCount { get; set; } = 10;
     public int ClassLecturesCount { get; set; } =4;
-    public string? cacheValue { get; set; }
-    public string CacheKey => $"GetAllClassDetails({cacheValue})";
+    public int? UserId { get; set; }
+    public string CacheKey => $"GetAllClassDetails({userId})";
     public string CacheGroupKey => "GetAllClassDetails";
     public TimeSpan? SlidingExpiration { get; }
     public string[] Roles => new[] { "Student" };

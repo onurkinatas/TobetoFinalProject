@@ -20,12 +20,12 @@ namespace Application.Features.StudentSurveys.Queries.GetListForLoggedStudent;
 public class GetListStudentSurveyForLoggedStudentQuery : IRequest<GetListResponse<GetListStudentSurveyForLoggedStudentListItemDto>>, ISecuredRequest, ICachableRequest
 {
     public PageRequest PageRequest { get; set; }
-
+    public int? UserId { get; set; }
     public string[] Roles => new[] {"Student" };
 
     public bool BypassCache { get; }
-    public string CacheKey => $"GetListStudentSurveys({PageRequest.PageIndex},{PageRequest.PageSize})";
-    public string CacheGroupKey => "GetStudentSurveys";
+    public string CacheKey => $"GetListStudentSurveys({PageRequest.PageIndex},{PageRequest.PageSize},{UserId})";
+    public string CacheGroupKey => $"GetStudentSurveys{UserId}";
     public TimeSpan? SlidingExpiration { get; }
 
     public class GetListStudentSurveyForLoggedStudentQueryHandler : IRequestHandler<GetListStudentSurveyForLoggedStudentQuery, GetListResponse<GetListStudentSurveyForLoggedStudentListItemDto>>

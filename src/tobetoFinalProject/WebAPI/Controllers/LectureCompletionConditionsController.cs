@@ -73,14 +73,14 @@ public class LectureCompletionConditionsController : BaseController
     [HttpGet("getListForCompleted")]
     public async Task<IActionResult> GetListForCompleted([FromQuery] PageRequest pageRequest)
     {
-        GetListLectureCompletionConditionForCompletedQuery getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest};
+        GetListLectureCompletionConditionForCompletedQuery getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest, UserId = getUserIdFromRequest() };
         GetListResponse<GetListLectureCompletionConditionListItemDto> response = await Mediator.Send(getListByLectureIdLectureCompletionConditionQuery);
         return Ok(response);
     }
     [HttpGet("getListForContinued")]
     public async Task<IActionResult> GetListForContinued([FromQuery] PageRequest pageRequest)
     {
-        GetListLectureCompletionConditionForContiuned getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest };
+        GetListLectureCompletionConditionForContiuned getListByLectureIdLectureCompletionConditionQuery = new() { PageRequest = pageRequest,UserId=getUserIdFromRequest() };
         GetListResponse<GetListLectureCompletionConditionListItemDto> response = await Mediator.Send(getListByLectureIdLectureCompletionConditionQuery);
         return Ok(response);
     }

@@ -56,7 +56,7 @@ public class StudentClassesController : BaseController
     [HttpGet("GetListForLoggedStudent")]
     public async Task<IActionResult> GetListForLoggedStudent()
     {
-        GetListForLoggedStudentClassQuery getListStudentClassQuery = new() { cacheValue=getUserIdFromRequest().ToString() };
+        GetListForLoggedStudentClassQuery getListStudentClassQuery = new() { UserId=getUserIdFromRequest() };
         GetListForLoggedStudentClassListItemDto response = await Mediator.Send(getListStudentClassQuery);
         return Ok(response);
     }

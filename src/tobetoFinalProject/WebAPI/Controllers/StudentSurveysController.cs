@@ -17,6 +17,7 @@ public class StudentSurveysController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentSurveyCommand createStudentSurveyCommand)
     {
+        createStudentSurveyCommand.UserId = getUserIdFromRequest();
         CreatedStudentSurveyResponse response = await Mediator.Send(createStudentSurveyCommand);
 
         return Created(uri: "", response);
@@ -55,7 +56,7 @@ public class StudentSurveysController : BaseController
     [HttpGet("ForLoggedStudent")]
     public async Task<IActionResult> GetForLoggedStudentList([FromQuery] PageRequest pageRequest)
     {
-        GetListStudentSurveyForLoggedStudentQuery getListStudentSurveyQuery = new() { PageRequest = pageRequest };
+        GetListStudentSurveyForLoggedStudentQuery getListStudentSurveyQuery = new() { PageRequest = pageRequest, UserId = getUserIdFromRequest() };
         GetListResponse<GetListStudentSurveyForLoggedStudentListItemDto> response = await Mediator.Send(getListStudentSurveyQuery);
         return Ok(response);
     }

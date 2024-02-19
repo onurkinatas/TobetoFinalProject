@@ -10,6 +10,7 @@ using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentSurveys.Constants.StudentSurveysOperationClaims;
 using Application.Services.ContextOperations;
+using Core.Security.Entities;
 
 namespace Application.Features.StudentSurveys.Commands.Create;
 
@@ -17,12 +18,12 @@ public class CreateStudentSurveyCommand : IRequest<CreatedStudentSurveyResponse>
 {
     public Guid SurveyId { get; set; }
     public Guid? StudentId { get; set; }
-
+    public int? UserId { get; set; }
     public string[] Roles => new[] { Admin, Write, StudentSurveysOperationClaims.Create, "Student" };
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentSurveys";
+    public string CacheGroupKey => $"GetStudentSurveys{UserId}";
 
     public class CreateStudentSurveyCommandHandler : IRequestHandler<CreateStudentSurveyCommand, CreatedStudentSurveyResponse>
     {

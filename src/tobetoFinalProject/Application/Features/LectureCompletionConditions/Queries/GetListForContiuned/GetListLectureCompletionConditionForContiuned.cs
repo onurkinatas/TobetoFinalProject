@@ -3,6 +3,7 @@ using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
+using Core.Application.Pipelines.Caching;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
@@ -16,15 +17,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Features.LectureCompletionConditions.Queries.GetListForContiuned;
-public class GetListLectureCompletionConditionForContiuned : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest
+public class GetListLectureCompletionConditionForContiuned : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest,ICachableRequest
 {
     public PageRequest PageRequest { get; set; }
-
+    public int? UserId { get; set; }
     public string[] Roles => new[] { "Student" };
-
     public bool BypassCache { get; }
-    public string CacheKey => $"GetListLectureCompletionConditions({PageRequest.PageIndex},{PageRequest.PageSize})";
-    public string CacheGroupKey => "GetLectureCompletionConditions";
+    public string CacheKey => $"GetListLectureCompletionConditions({PageRequest.PageIndex},{PageRequest.PageSize},{UserId})";
+    public string CacheGroupKey => $"GetLectureCompletionConditionsForCompletedAndContinued({UserId})";
     public TimeSpan? SlidingExpiration { get; }
 
     public class GetListLectureCompletionConditionForContiunedQueryHandler : IRequestHandler<GetListLectureCompletionConditionForContiuned, GetListResponse<GetListLectureCompletionConditionListItemDto>>

@@ -21,7 +21,7 @@ public class CreateClassAnnouncementCommand : IRequest<CreatedClassAnnouncementR
     public string[] Roles => new[] { Admin, Write, ClassAnnouncementsOperationClaims.Create };
 
     public bool BypassCache { get; }
-    public string? CacheKey { get; }
+    public string? CacheKey =>"GetListForLoggedStudent"
     public string CacheGroupKey => "GetAllClassDetails";
 
     public class CreateClassAnnouncementCommandHandler : IRequestHandler<CreateClassAnnouncementCommand, CreatedClassAnnouncementResponse>

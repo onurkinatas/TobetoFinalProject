@@ -22,12 +22,12 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
     public Guid? StudentId { get; set; }
     public Guid LectureId { get; set; }
     public Guid ContentId { get; set; }
-
+    public int? UserId { get; set; }
     public string[] Roles => new[] { Admin, Write, LectureViewsOperationClaims.Create ,"Student"};
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetLectureViews";
+    public string CacheGroupKey => $"GetLectureCompletionConditionsForCompletedAndContinued({UserId})";
 
     public class CreateLectureViewCommandHandler : IRequestHandler<CreateLectureViewCommand, CreatedLectureViewResponse>
     {

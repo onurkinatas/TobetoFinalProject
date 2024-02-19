@@ -24,6 +24,7 @@ public class LectureViewsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateLectureViewCommand createLectureViewCommand)
     {
+        createLectureViewCommand.UserId = getUserIdFromRequest();
         CreatedLectureViewResponse response = await Mediator.Send(createLectureViewCommand);
 
         return Created(uri: "", response);
