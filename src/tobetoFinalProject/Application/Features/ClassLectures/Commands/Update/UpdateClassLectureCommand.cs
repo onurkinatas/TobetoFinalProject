@@ -22,7 +22,7 @@ public class UpdateClassLectureCommand : IRequest<UpdatedClassLectureResponse>, 
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassLectures";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class UpdateClassLectureCommandHandler : IRequestHandler<UpdateClassLectureCommand, UpdatedClassLectureResponse>
     {

@@ -9,11 +9,15 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.ClassQuizs.Constants.ClassQuizsOperationClaims;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.ClassQuizs.Commands.Delete;
 
-public class DeleteClassQuizCommand : IRequest<DeletedClassQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+public class DeleteClassQuizCommand : IRequest<DeletedClassQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest, ICacheRemoverRequest
 {
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => "GetAllClassDetails";
     public int Id { get; set; }
 
     public string[] Roles => new[] { Admin, Write, ClassQuizsOperationClaims.Delete };

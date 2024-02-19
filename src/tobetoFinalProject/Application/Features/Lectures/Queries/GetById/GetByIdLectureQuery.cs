@@ -9,6 +9,9 @@ using static Application.Features.Lectures.Constants.LecturesOperationClaims;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.LectureLikes;
 using Application.Services.ContextOperations;
+using Application.Services.Lectures;
+using Application.Services.LectureViews;
+using Application.Services.LectureCompletionConditions;
 
 namespace Application.Features.Lectures.Queries.GetById;
 
@@ -24,15 +27,21 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
         private readonly ILectureRepository _lectureRepository;
         private readonly LectureBusinessRules _lectureBusinessRules;
         private readonly ILectureLikesService _lectureLikesService;
+        private readonly ILecturesService _lectureService;
+        private readonly ILectureViewsService _lectureViewsService;
+        private readonly ILectureCompletionConditionsService _lectureCompletionConditionsService;
         private readonly IContextOperationService _contextOperationService;
 
-        public GetByIdLectureQueryHandler(IMapper mapper, ILectureRepository lectureRepository, LectureBusinessRules lectureBusinessRules, ILectureLikesService lectureLikesService, IContextOperationService contextOperationService)
+        public GetByIdLectureQueryHandler(IMapper mapper, ILectureRepository lectureRepository, LectureBusinessRules lectureBusinessRules, ILectureLikesService lectureLikesService, IContextOperationService contextOperationService, ILectureViewsService lectureViewsService, ILecturesService lectureService, ILectureCompletionConditionsService lectureCompletionConditionsService)
         {
             _mapper = mapper;
             _lectureRepository = lectureRepository;
             _lectureBusinessRules = lectureBusinessRules;
             _lectureLikesService = lectureLikesService;
             _contextOperationService = contextOperationService;
+            _lectureViewsService = lectureViewsService;
+            _lectureService = lectureService;
+            _lectureCompletionConditionsService = lectureCompletionConditionsService;
         }
 
         public async Task<GetByIdLectureResponse> Handle(GetByIdLectureQuery request, CancellationToken cancellationToken)
@@ -73,13 +82,21 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
 
             await _lectureBusinessRules.LectureShouldExistWhenSelected(lecture);
 
+            int contentCount = await _lectureService.GetAllContentCountByLectureId(lecture.Id, cancellationToken);
+            int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(lecture.Id, student.Id);
+            int completionPercentage = await _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
+
             int lectureLikeCount = await _lectureLikesService.GetCount(lecture.Id);
+            
             bool isLiked = await _lectureLikesService.IsLiked(lecture.Id, student.Id);
 
 
             GetByIdLectureResponse response = _mapper.Map<GetByIdLectureResponse>(lecture);
             response.IsLiked = isLiked;
             response.LikeCount = lectureLikeCount;
+            response.CompletionPercentage = completionPercentage;
+            response.TotalWatchedCount = lectureViewCount;
+            response.TotalContentCount = contentCount;
             return response;
         }
     }

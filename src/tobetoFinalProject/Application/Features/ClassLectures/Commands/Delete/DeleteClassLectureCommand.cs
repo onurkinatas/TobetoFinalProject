@@ -21,7 +21,7 @@ public class DeleteClassLectureCommand : IRequest<DeletedClassLectureResponse>, 
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassLectures";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class DeleteClassLectureCommandHandler : IRequestHandler<DeleteClassLectureCommand, DeletedClassLectureResponse>
     {

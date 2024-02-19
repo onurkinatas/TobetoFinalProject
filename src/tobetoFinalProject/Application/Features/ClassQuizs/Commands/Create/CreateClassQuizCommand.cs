@@ -8,11 +8,17 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.ClassQuizs.Constants.ClassQuizsOperationClaims;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.ClassQuizs.Commands.Create;
 
-public class CreateClassQuizCommand : IRequest<CreatedClassQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+public class CreateClassQuizCommand : IRequest<CreatedClassQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest, ICacheRemoverRequest
 {
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => "GetAllClassDetails";
+    public Guid ExamId { get; set; }
+
     public Guid StudentClassId { get; set; }
     public int QuizId { get; set; }
 

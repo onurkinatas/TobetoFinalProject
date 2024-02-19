@@ -3,6 +3,8 @@ using Application.Features.StudentClasses.Commands.Delete;
 using Application.Features.StudentClasses.Commands.Update;
 using Application.Features.StudentClasses.Queries.GetById;
 using Application.Features.StudentClasses.Queries.GetList;
+using Application.Features.StudentClasses.Queries.GetListForLoggedStudent;
+using Application.Services.ContextOperations;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -51,4 +53,12 @@ public class StudentClassesController : BaseController
         GetListResponse<GetListStudentClasses> response = await Mediator.Send(getListStudentClassQuery);
         return Ok(response);
     }
+    [HttpGet("GetListForLoggedStudent")]
+    public async Task<IActionResult> GetListForLoggedStudent()
+    {
+        GetListForLoggedStudentClassQuery getListStudentClassQuery = new() { cacheValue=getUserIdFromRequest().ToString() };
+        GetListForLoggedStudentClassListItemDto response = await Mediator.Send(getListStudentClassQuery);
+        return Ok(response);
+    }
+
 }

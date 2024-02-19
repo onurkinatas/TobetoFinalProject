@@ -28,5 +28,5 @@ public interface ILectureLikesService
     Task<LectureLike> UpdateAsync(LectureLike lectureLike);
     Task<LectureLike> DeleteAsync(LectureLike lectureLike, bool permanent = false);
     Task<int> GetCount(Guid lectureId);
-    Task<bool> IsLiked(Guid lectureId, Guid studentId)
+    Task<bool> IsLiked(Guid lectureId, Guid studentId);
 }

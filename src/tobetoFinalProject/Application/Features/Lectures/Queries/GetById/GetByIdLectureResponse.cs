@@ -12,6 +12,9 @@ public class GetByIdLectureResponse : IResponse
     public double EstimatedVideoDuration { get; set; }
     public string ManufacturerName { get; set; }
     public int LikeCount { get; set; }
+    public int TotalContentCount { get; set; }
+    public int CompletionPercentage { get; set; }
+    public int TotalWatchedCount { get; set; }
     public bool IsLiked { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

@@ -21,7 +21,7 @@ public class DeleteClassSurveyCommand : IRequest<DeletedClassSurveyResponse>, IS
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassSurveys";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class DeleteClassSurveyCommandHandler : IRequestHandler<DeleteClassSurveyCommand, DeletedClassSurveyResponse>
     {

@@ -22,7 +22,7 @@ public class UpdateClassSurveyCommand : IRequest<UpdatedClassSurveyResponse>, IS
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassSurveys";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class UpdateClassSurveyCommandHandler : IRequestHandler<UpdateClassSurveyCommand, UpdatedClassSurveyResponse>
     {

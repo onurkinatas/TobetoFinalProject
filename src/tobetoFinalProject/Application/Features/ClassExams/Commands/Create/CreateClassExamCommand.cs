@@ -12,16 +12,17 @@ using static Application.Features.ClassExams.Constants.ClassExamsOperationClaims
 
 namespace Application.Features.ClassExams.Commands.Create;
 
-public class CreateClassExamCommand : IRequest<CreatedClassExamResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
+public class CreateClassExamCommand : IRequest<CreatedClassExamResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest,ICacheRemoverRequest
 {
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => "GetAllClassDetails";
     public Guid ExamId { get; set; }
     public Guid StudentClassId { get; set; }
 
     public string[] Roles => new[] { Admin, Write, ClassExamsOperationClaims.Create };
 
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassExams";
+   
 
     public class CreateClassExamCommandHandler : IRequestHandler<CreateClassExamCommand, CreatedClassExamResponse>
     {

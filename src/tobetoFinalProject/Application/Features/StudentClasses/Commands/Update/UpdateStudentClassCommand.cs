@@ -44,7 +44,7 @@ public class UpdateStudentClassCommand : IRequest<UpdatedStudentClassResponse>, 
                 predicate: sc => sc.Id == request.Id,
                 include: sc => sc.Include(sc => sc.ClassAnnouncements)
                     .Include(sc => sc.ClassLectures)
-                    .Include(sc => sc.ClassExams)
+                    .Include(sc => sc.ClassQuizs)
                     .Include(sc => sc.ClassSurveys)
                     .Include(sc => sc.StudentClassStudentes),
                 cancellationToken: cancellationToken);

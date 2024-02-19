@@ -25,6 +25,11 @@ public class ContextOperationManager : IContextOperationService
         _studentBusinessRules = studentBusinessRules;
         _studentClassStudentRepository = studentClassStudentRepository;
     }
+
+    public ContextOperationManager()
+    {
+    }
+
     public async Task<Student> GetStudentFromContext()
     {
         int userId = _httpContextAccessor.HttpContext.User.GetUserId();

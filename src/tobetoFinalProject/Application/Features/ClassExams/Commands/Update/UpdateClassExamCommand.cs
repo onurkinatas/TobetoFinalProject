@@ -22,7 +22,7 @@ public class UpdateClassExamCommand : IRequest<UpdatedClassExamResponse>, ISecur
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassExams";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class UpdateClassExamCommandHandler : IRequestHandler<UpdateClassExamCommand, UpdatedClassExamResponse>
     {

@@ -21,7 +21,7 @@ public class DeleteClassAnnouncementCommand : IRequest<DeletedClassAnnouncementR
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassAnnouncements";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class DeleteClassAnnouncementCommandHandler : IRequestHandler<DeleteClassAnnouncementCommand, DeletedClassAnnouncementResponse>
     {

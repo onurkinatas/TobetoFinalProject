@@ -21,7 +21,7 @@ public class CreateClassLectureCommand : IRequest<CreatedClassLectureResponse>, 
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassLectures";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class CreateClassLectureCommandHandler : IRequestHandler<CreateClassLectureCommand, CreatedClassLectureResponse>
     {

@@ -21,7 +21,7 @@ public class CreateClassSurveyCommand : IRequest<CreatedClassSurveyResponse>, IS
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassSurveys";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class CreateClassSurveyCommandHandler : IRequestHandler<CreateClassSurveyCommand, CreatedClassSurveyResponse>
     {

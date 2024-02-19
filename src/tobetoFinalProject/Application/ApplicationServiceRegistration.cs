@@ -161,7 +161,6 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IOperationClaimService, OperationClaimManager>();
         services.AddScoped<IStudentSurveysService, StudentSurveysManager>();
         services.AddScoped<ICacheMemoryService, CacheService>();
-        services.AddMemoryCache();
         services.AddScoped<ILectureViewsService, LectureViewsManager>();
         services.AddScoped<IStudentPrivateCertificatesService, StudentPrivateCertificatesManager>();
         services.AddScoped<IOptionsService, OptionsManager>();
@@ -175,6 +174,7 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IGeneralQuizsService, GeneralQuizsManager>();
         services.AddScoped<IClassQuizsService, ClassQuizsManager>();
         services.AddScoped<IStudentQuizResultsService, StudentQuizResultsManager>();
+        services.AddMemoryCache();
         return services;
     }
 

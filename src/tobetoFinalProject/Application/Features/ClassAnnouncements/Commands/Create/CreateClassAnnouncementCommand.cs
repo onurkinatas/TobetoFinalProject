@@ -14,6 +14,7 @@ namespace Application.Features.ClassAnnouncements.Commands.Create;
 
 public class CreateClassAnnouncementCommand : IRequest<CreatedClassAnnouncementResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
+    
     public Guid AnnouncementId { get; set; }
     public Guid StudentClassId { get; set; }
 
@@ -21,7 +22,7 @@ public class CreateClassAnnouncementCommand : IRequest<CreatedClassAnnouncementR
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetClassAnnouncements";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class CreateClassAnnouncementCommandHandler : IRequestHandler<CreateClassAnnouncementCommand, CreatedClassAnnouncementResponse>
     {

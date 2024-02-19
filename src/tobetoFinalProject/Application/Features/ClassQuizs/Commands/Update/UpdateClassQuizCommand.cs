@@ -8,11 +8,15 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.ClassQuizs.Constants.ClassQuizsOperationClaims;
+using Core.Application.Pipelines.Caching;
 
 namespace Application.Features.ClassQuizs.Commands.Update;
 
-public class UpdateClassQuizCommand : IRequest<UpdatedClassQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest
+public class UpdateClassQuizCommand : IRequest<UpdatedClassQuizResponse>, ISecuredRequest, ILoggableRequest, ITransactionalRequest, ICacheRemoverRequest
 {
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => "GetAllClassDetails";
     public int Id { get; set; }
     public Guid StudentClassId { get; set; }
     public int QuizId { get; set; }
