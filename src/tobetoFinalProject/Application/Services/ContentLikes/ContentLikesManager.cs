@@ -74,4 +74,10 @@ public class ContentLikesManager : IContentLikesService
 
         return deletedContentLike;
     }
+    public async Task<int> GetContentLikeCount(Guid contentId)
+    {
+        int contentLikeCount = _contentLikeRepository.GetContentLikeCount(cl=>cl.ContentId==contentId);
+
+        return contentLikeCount;
+    }
 }

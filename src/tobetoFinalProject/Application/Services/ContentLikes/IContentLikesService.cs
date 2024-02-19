@@ -27,4 +27,5 @@ public interface IContentLikesService
     Task<ContentLike> AddAsync(ContentLike contentLike);
     Task<ContentLike> UpdateAsync(ContentLike contentLike);
     Task<ContentLike> DeleteAsync(ContentLike contentLike, bool permanent = false);
+    Task<int> GetContentLikeCount(Guid contentId);
 }

@@ -32,6 +32,7 @@ public class GetByLectureIdLectureLikeQuery :  IRequest<GetByLectureIdLectureLik
         public async Task<GetByLectureIdLectureLikeResponse> Handle(GetByLectureIdLectureLikeQuery request, CancellationToken cancellationToken)
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
+
             LectureLike? lectureLike = await _lectureLikeRepository.GetAsync(
                 predicate: ll => ll.LectureId == request.LectureId && ll.StudentId== getStudent.Id, 
                 cancellationToken: cancellationToken);

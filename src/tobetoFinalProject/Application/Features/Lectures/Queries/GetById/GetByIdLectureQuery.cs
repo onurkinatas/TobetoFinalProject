@@ -7,6 +7,8 @@ using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.Lectures.Constants.LecturesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.LectureLikes;
+using Application.Services.ContextOperations;
 
 namespace Application.Features.Lectures.Queries.GetById;
 
@@ -21,16 +23,22 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
         private readonly IMapper _mapper;
         private readonly ILectureRepository _lectureRepository;
         private readonly LectureBusinessRules _lectureBusinessRules;
+        private readonly ILectureLikesService _lectureLikesService;
+        private readonly IContextOperationService _contextOperationService;
 
-        public GetByIdLectureQueryHandler(IMapper mapper, ILectureRepository lectureRepository, LectureBusinessRules lectureBusinessRules)
+        public GetByIdLectureQueryHandler(IMapper mapper, ILectureRepository lectureRepository, LectureBusinessRules lectureBusinessRules, ILectureLikesService lectureLikesService, IContextOperationService contextOperationService)
         {
             _mapper = mapper;
             _lectureRepository = lectureRepository;
             _lectureBusinessRules = lectureBusinessRules;
+            _lectureLikesService = lectureLikesService;
+            _contextOperationService = contextOperationService;
         }
 
         public async Task<GetByIdLectureResponse> Handle(GetByIdLectureQuery request, CancellationToken cancellationToken)
         {
+            Student student = await _contextOperationService.GetStudentFromContext();
+
             Lecture? lecture = await _lectureRepository.GetAsync(
                 predicate: l => l.Id == request.Id,
                 include: m => m.Include(m => m.LectureCourses)
@@ -61,14 +69,17 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
                    .ThenInclude(cc => cc.Content)
                    .ThenInclude(cc => cc.ContentInstructors)
                    .ThenInclude(cc => cc.Instructor),
-
-
-
-                //10 dk mola ahmet yalan etti 17:30
                 cancellationToken: cancellationToken);
+
             await _lectureBusinessRules.LectureShouldExistWhenSelected(lecture);
 
+            int lectureLikeCount = await _lectureLikesService.GetCount(lecture.Id);
+            bool isLiked = await _lectureLikesService.IsLiked(lecture.Id, student.Id);
+
+
             GetByIdLectureResponse response = _mapper.Map<GetByIdLectureResponse>(lecture);
+            response.IsLiked = isLiked;
+            response.LikeCount = lectureLikeCount;
             return response;
         }
     }

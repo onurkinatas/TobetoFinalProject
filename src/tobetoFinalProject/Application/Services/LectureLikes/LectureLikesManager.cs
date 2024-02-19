@@ -4,6 +4,7 @@ using Core.Persistence.Paging;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace Application.Services.LectureLikes;
 
@@ -74,4 +75,18 @@ public class LectureLikesManager : ILectureLikesService
 
         return deletedLectureLike;
     }
+    public async Task<int> GetCount(Guid lectureId)
+    {
+        int lectureLikeCount =  _lectureLikeRepository.GetLectureLikeCount(ll=>ll.LectureId ==lectureId);
+
+        return lectureLikeCount;
+    }
+    public async Task<bool> IsLiked(Guid lectureId,Guid studentId)
+    {
+        LectureLike? lectureLike = await _lectureLikeRepository.GetAsync(
+                predicate: ll => ll.LectureId == lectureId && ll.StudentId == studentId
+                );
+        return lectureLike.IsLiked;
+    }
+    
 }
