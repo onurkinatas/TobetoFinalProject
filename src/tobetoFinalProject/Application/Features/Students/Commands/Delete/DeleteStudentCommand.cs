@@ -48,7 +48,7 @@ public class DeleteStudentCommand : IRequest<DeletedStudentResponse>, ISecuredRe
                     .Include(s => s.StudentSkills)
                     .Include(s => s.StudentSocialMedias)
                     .Include(s => s.StudentClassStudentes)
-                    .Include(s => s.StudentCertificates)
+                    .Include(s => s.StudentPrivateCertificates)
                     .Include(s => s.StudentAppeal)
                     .Include(s => s.StudentStages),
                 cancellationToken: cancellationToken);

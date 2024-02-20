@@ -1,9 +1,14 @@
-﻿using Application.Features.Users.Commands.UpdateFromAuth;
+﻿using Application.Features.Students.Constants;
+using Application.Features.Users.Commands.UpdateFromAuth;
 using Application.Features.Users.Rules;
 using Application.Services.AuthService;
 using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Authorization;
+using Core.Application.Pipelines.Caching;
+using Core.Application.Pipelines.Logging;
+using Core.Application.Pipelines.Transaction;
 using Core.Security.Entities;
 using Core.Security.Hashing;
 using Domain.Entities;
@@ -15,11 +20,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Features.Students.Commands.UpdateForPassword;
-public class UpdateStudentForPasswordCommand : IRequest<UpdatedUserFromAuthResponse>
+public class UpdateStudentForPasswordCommand : IRequest<UpdatedUserFromAuthResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
+    public int? UserId { get; set; }
     public string LastPassword { get; set; }
     public string NewPassword { get; set; }
     public string CheckNewPassword { get; set; }
+
+    public string[] Roles => new[] { "Student" };
+
+    public bool BypassCache { get; }
+    public string? CacheKey { get; }
+    public string CacheGroupKey => $"GetStudent{UserId}";
+
 
     public class UpdateStudentForPasswordCommandHandler : IRequestHandler<UpdateStudentForPasswordCommand, UpdatedUserFromAuthResponse>
     {

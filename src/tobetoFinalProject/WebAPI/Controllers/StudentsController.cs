@@ -26,6 +26,7 @@ public class StudentsController : BaseController
     [HttpPut]
     public async Task<IActionResult> Update([FromForm] UpdateStudentCommand updateStudentCommand)
     {
+        updateStudentCommand.UserId = getUserIdFromRequest();
         UpdatedStudentResponse response = await Mediator.Send(updateStudentCommand);
 
         return Ok(response);
@@ -33,6 +34,7 @@ public class StudentsController : BaseController
     [HttpPut("forPassword")]
     public async Task<IActionResult> UpdateForPassword([FromBody] UpdateStudentForPasswordCommand updateStudentCommand)
     {
+        updateStudentCommand.UserId = getUserIdFromRequest();
         UpdatedUserFromAuthResponse response = await Mediator.Send(updateStudentCommand);
 
         return Ok(response);

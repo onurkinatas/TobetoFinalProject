@@ -22,6 +22,7 @@ namespace Application.Features.Students.Commands.Update;
 
 public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRequest, ICacheRemoverRequest, ILoggableRequest, ITransactionalRequest
 {
+    public int? UserId { get; set; }
     public Guid? CityId { get; set; }
     public Guid? DistrictId { get; set; }
     public string? NationalIdentity { get; set; }
@@ -40,7 +41,7 @@ public class UpdateStudentCommand : IRequest<UpdatedStudentResponse>, ISecuredRe
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudents";
+    public string CacheGroupKey => $"GetStudent{UserId}";
 
     public class UpdateStudentCommandHandler : IRequestHandler<UpdateStudentCommand, UpdatedStudentResponse>
     {
