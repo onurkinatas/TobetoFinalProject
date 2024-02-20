@@ -80,7 +80,7 @@ builder.Services.AddCors(options =>
     // this defines a CORS policy called "default"
     options.AddPolicy("default", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://tobetofrontend.z33.web.core.windows.net", "https://www.tobeto.online")
+        policy.WithOrigins("http://localhost:3000", "https://tobetofrontend.z33.web.core.windows.net", "https://www.tobeto.online" , "https://tobeto.online")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
