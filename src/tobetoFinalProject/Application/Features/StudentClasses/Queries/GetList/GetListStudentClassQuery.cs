@@ -41,7 +41,7 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
 
         public async Task<GetListResponse<GetListStudentClasses>> Handle(GetListStudentClassQuery request, CancellationToken cancellationToken)
         {
-            ICollection<Guid> getStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
+          
             IPaginate<StudentClass> studentClasses = await _studentClassRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
                 include: sc => sc.Include(sc => sc.ClassAnnouncements)
