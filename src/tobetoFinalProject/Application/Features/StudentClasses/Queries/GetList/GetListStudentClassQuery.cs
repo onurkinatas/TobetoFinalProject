@@ -43,7 +43,6 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
         {
             ICollection<Guid> getStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
             IPaginate<StudentClass> studentClasses = await _studentClassRepository.GetListAsync(
-                predicate:sc=>getStudentClasses.Contains(sc.Id),
                 index: request.PageRequest.PageIndex,
                 include: sc => sc.Include(sc => sc.ClassAnnouncements)
                .ThenInclude(ca => ca.Announcement)
