@@ -21,6 +21,8 @@ public class CreateStudentAnnouncementCommand : IRequest<CreatedStudentAnnouncem
     public string[] Roles => new[] { Admin, Write, StudentAnnouncementsOperationClaims.Create,"Student" };
 
     public int? UserId { get; set; }
+
+    public bool BypassCache { get; }
     public string CacheKey => $"GetAllClassDetails({UserId})";
     public string CacheGroupKey => "xx";
     public TimeSpan? SlidingExpiration { get; }
