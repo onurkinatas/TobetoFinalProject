@@ -20,9 +20,10 @@ public class CreateStudentAnnouncementCommand : IRequest<CreatedStudentAnnouncem
 
     public string[] Roles => new[] { Admin, Write, StudentAnnouncementsOperationClaims.Create,"Student" };
 
-    public bool BypassCache { get; }
-    public string? CacheKey { get; }
+    public int? UserId { get; set; }
+    public string CacheKey => $"GetAllClassDetails({UserId})";
     public string CacheGroupKey => "xx";
+    public TimeSpan? SlidingExpiration { get; }
 
     public class CreateStudentAnnouncementCommandHandler : IRequestHandler<CreateStudentAnnouncementCommand, CreatedStudentAnnouncementResponse>
     {

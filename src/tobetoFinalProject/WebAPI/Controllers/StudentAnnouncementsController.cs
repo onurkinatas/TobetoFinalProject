@@ -19,6 +19,7 @@ public class StudentAnnouncementsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateStudentAnnouncementCommand createStudentAnnouncementCommand)
     {
+        createStudentAnnouncementCommand.UserId = getUserIdFromRequest();
         CreatedStudentAnnouncementResponse response = await Mediator.Send(createStudentAnnouncementCommand);
 
         return Created(uri: "", response);
