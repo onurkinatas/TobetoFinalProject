@@ -18,13 +18,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Features.LectureCompletionConditions.Queries.GetListLecturesForCompleted;
-public class GetListLectureCompletionConditionForCompletedQuery : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest,ICachableRequest
+public class GetListLectureCompletionConditionForCompletedQuery : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
     public int UserId { get; set; }
     public string[] Roles => new[] { "Student" };
-
-    public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureCompletionConditions({PageRequest.PageIndex},{PageRequest.PageSize},{UserId})";
     public string CacheGroupKey => $"GetLectureCompletionConditionsForCompletedAndContinued({UserId})";
     public TimeSpan? SlidingExpiration { get; }
@@ -45,7 +43,7 @@ public class GetListLectureCompletionConditionForCompletedQuery : IRequest<GetLi
         {
             Student getStudent =await _contextOperationService.GetStudentFromContext();
             IPaginate<LectureCompletionCondition> lectureCompletionConditions = await _lectureCompletionConditionRepository.GetListAsync(
-                predicate:lcc=>lcc.StudentId==getStudent.Id&&lcc.CompletionPercentage==100,
+                predicate:lcc=>lcc.StudentId==getStudent.Id&&lcc.CompletionPercentage == 100,
                 include: lcc => lcc.Include(lcc => lcc.Student)
                 .ThenInclude(s => s.User)
                 .Include(lcc => lcc.Lecture),
@@ -54,7 +52,7 @@ public class GetListLectureCompletionConditionForCompletedQuery : IRequest<GetLi
                 size: request.PageRequest.PageSize,
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
-            );
+            ); 
 
             GetListResponse<GetListLectureCompletionConditionListItemDto> response = _mapper.Map<GetListResponse<GetListLectureCompletionConditionListItemDto>>(lectureCompletionConditions);
             return response;

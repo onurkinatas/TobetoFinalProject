@@ -17,12 +17,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Features.LectureCompletionConditions.Queries.GetListForContiuned;
-public class GetListLectureCompletionConditionForContiuned : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest,ICachableRequest
+public class GetListLectureCompletionConditionForContiuned : IRequest<GetListResponse<GetListLectureCompletionConditionListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
     public int? UserId { get; set; }
     public string[] Roles => new[] { "Student" };
-    public bool BypassCache { get; }
     public string CacheKey => $"GetListLectureCompletionConditions({PageRequest.PageIndex},{PageRequest.PageSize},{UserId})";
     public string CacheGroupKey => $"GetLectureCompletionConditionsForCompletedAndContinued({UserId})";
     public TimeSpan? SlidingExpiration { get; }
