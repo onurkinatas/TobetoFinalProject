@@ -69,7 +69,6 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
             );
 
             var studentAnnouncements = await _studentAnnouncementService.GetAllAsync(ss=>ss.StudentId==getStudent.Id);
-            
             int readingAnnouncement = studentClasses.Items.SelectMany(sc => sc.ClassAnnouncements).ToList().Count - studentAnnouncements.Count;
            
             StudentClass studentClassGetData = new()
