@@ -17,5 +17,6 @@ public class GetListForLoggedStudentClassListItemDto:IDto
     public List<GetListClassQuizListItemDto>? ClassQuizs { get; set; }
     public List<GetListClassLectureListItemDto>? ClassLectures { get; set; }
     public List<GetListClassSurveyListItemDto>? ClassSurveys { get; set; }
+    public int? ReadingAnnouncement { get; set; }
 }
 

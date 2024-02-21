@@ -1,6 +1,7 @@
 ﻿using Application.Features.StudentClasses.Queries.GetList;
 using Application.Services.ContextOperations;
 using Application.Services.Repositories;
+using Application.Services.StudentAnnouncements;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
@@ -36,17 +37,21 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
         private readonly IStudentClassRepository _studentClassRepository;
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
+        private readonly IStudentAnnouncementsService _studentAnnouncementService;
 
-        public GetListForLoggedStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper, IContextOperationService contextOperationService)
+        public GetListForLoggedStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper, IContextOperationService contextOperationService, IStudentAnnouncementsService studentAnnouncementService)
         {
             _studentClassRepository = studentClassRepository;
             _mapper = mapper;
             _contextOperationService = contextOperationService;
+            _studentAnnouncementService = studentAnnouncementService;
         }
 
         public async Task<GetListForLoggedStudentClassListItemDto> Handle(GetListForLoggedStudentClassQuery request, CancellationToken cancellationToken)
         {
             ICollection<Guid> getStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
+            Student getStudent = await _contextOperationService.GetStudentFromContext();
+
             IPaginate<StudentClass> studentClasses = await _studentClassRepository.GetListAsync(
                 predicate: sc => getStudentClasses.Contains(sc.Id),
                 include: sc => sc
@@ -63,7 +68,10 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
                 cancellationToken: cancellationToken
             );
 
-
+            var studentAnnouncements = await _studentAnnouncementService.GetAllAsync(ss=>ss.StudentId==getStudent.Id);
+            
+            int readingAnnouncement = studentClasses.Items.SelectMany(sc => sc.ClassAnnouncements).ToList().Count - studentAnnouncements.Count;
+           
             StudentClass studentClassGetData = new()
             {
                 
@@ -74,6 +82,7 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
             };
 
             GetListForLoggedStudentClassListItemDto response = _mapper.Map<GetListForLoggedStudentClassListItemDto>(studentClassGetData);
+            response.ReadingAnnouncement = readingAnnouncement;
             return response;
         }
     }
