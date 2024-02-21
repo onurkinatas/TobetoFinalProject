@@ -22,7 +22,7 @@ public class UpdateStudentClassStudentCommand : IRequest<UpdatedStudentClassStud
 
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentClassStudents";
+    public string CacheGroupKey => "GetAllClassDetails";
 
     public class UpdateStudentClassStudentCommandHandler : IRequestHandler<UpdateStudentClassStudentCommand, UpdatedStudentClassStudentResponse>
     {
