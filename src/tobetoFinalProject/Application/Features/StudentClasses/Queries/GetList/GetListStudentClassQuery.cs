@@ -19,7 +19,7 @@ public class GetListStudentClassQuery : IRequest<GetListResponse<GetListStudentC
     public PageRequest PageRequest { get; set; }
    
 
-    public string[] Roles => new[] { Admin, Read,"Student" };
+    public string[] Roles => new[] { Admin, Read,"Student" ,"Admin"};
 
     public bool BypassCache { get; }
     public string CacheKey => $"GetListStudentClasses({PageRequest.PageIndex},{PageRequest.PageSize})";

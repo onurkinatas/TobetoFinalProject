@@ -86,7 +86,7 @@ public class LectureLikesManager : ILectureLikesService
         LectureLike? lectureLike = await _lectureLikeRepository.GetAsync(
                 predicate: ll => ll.LectureId == lectureId && ll.StudentId == studentId
                 );
-        return lectureLike.IsLiked;
+        return lectureLike!=null?lectureLike.IsLiked:false;
     }
     
 }
