@@ -16,7 +16,7 @@ public class CreateStudentClassStudentCommand : IRequest<CreatedStudentClassStud
 {
     public bool BypassCache { get; }
     public string? CacheKey { get; }
-    public string CacheGroupKey => "GetStudentClassStudents";
+    public string CacheGroupKey => "GetAllClassDetails";
     public Guid StudentId { get; set; }
     public Guid StudentClassId { get; set; }
 
