@@ -10,6 +10,7 @@ using Core.Persistence.Paging;
 using MediatR;
 using static Application.Features.Lectures.Constants.LecturesOperationClaims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Application.Features.Lectures.Queries.GetList;
 
@@ -39,41 +40,59 @@ public class GetListLectureQuery : IRequest<GetListResponse<GetListLectureListIt
         {
             IPaginate<Lecture> lectures = await _lectureRepository.GetListAsync(
                 index: request.PageRequest.PageIndex,
-                 include: m => m.Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.ContentCategory)
-                   .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.Manufacturer)
-                   .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.SubType)
-                   .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.Language)
-                   .Include(m => m.Manufacturer)
-                   .Include(m => m.Category)
-                   .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(cc => cc.ContentInstructors)
-                   .ThenInclude(cc => cc.Instructor),
+                 include: IncludeLectureDetails(),
                 size: request.PageRequest.PageSize,
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 cancellationToken: cancellationToken
             );
 
             GetListResponse<GetListLectureListItemDto> response = _mapper.Map<GetListResponse<GetListLectureListItemDto>>(lectures);
+
             return response;
+        }
+        private Func<IQueryable<Lecture>, IIncludableQueryable<Lecture, object>> IncludeLectureDetails()
+        {
+            return query => query
+                    .Include(m => m.LectureCourses)
+                       .ThenInclude(mc => mc.Course)
+                          .ThenInclude(c => c.CourseContents)
+                             .ThenInclude(cc => cc.Content)
+                               .ThenInclude(c => c.ContentCategory)
+
+                    .Include(m => m.LectureCourses)
+                       .ThenInclude(mc => mc.Course)
+                           .ThenInclude(c => c.CourseContents)
+                                 .ThenInclude(cc => cc.Content)
+                                      .ThenInclude(c => c.Manufacturer)
+
+                   .Include(m => m.LectureCourses)
+                     .ThenInclude(mc => mc.Course)
+                        .ThenInclude(c => c.CourseContents)
+                             .ThenInclude(cc => cc.Content)
+                                 .ThenInclude(c => c.SubType)
+
+                   .Include(m => m.LectureCourses)
+                    .ThenInclude(mc => mc.Course)
+                         .ThenInclude(c => c.CourseContents)
+                              .ThenInclude(cc => cc.Content)
+                                 .ThenInclude(c => c.Language)
+
+                   .Include(m => m.Manufacturer)
+                   .Include(m => m.Category)
+
+                   .Include(m => m.LectureCourses)
+                     .ThenInclude(mc => mc.Course)
+                         .ThenInclude(c => c.CourseContents)
+                           .ThenInclude(cc => cc.Content)
+                              .ThenInclude(c => c.ContentTags)
+                                 .ThenInclude(c => c.Tag)
+
+                   .Include(m => m.LectureCourses)
+                     .ThenInclude(mc => mc.Course)
+                        .ThenInclude(c => c.CourseContents)
+                         .ThenInclude(cc => cc.Content)
+                             .ThenInclude(cc => cc.ContentInstructors)
+                                .ThenInclude(cc => cc.Instructor);
         }
     }
 }

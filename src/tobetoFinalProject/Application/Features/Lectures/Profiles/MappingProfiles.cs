@@ -28,6 +28,7 @@ public class MappingProfiles : Profile
 
         CreateMap<Lecture, GetListLectureListItemDto>()
             .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.LectureCourses.Select(si => si.Course).ToList()));
+           
         CreateMap<Lecture, GetByIdLectureResponse>()
             .ForMember(dest => dest.Courses, opt => opt.MapFrom(src => src.LectureCourses.Select(si => si.Course).ToList()));
     }

@@ -25,14 +25,6 @@ public class MappingProfiles : Profile
         CreateMap<LectureCompletionCondition, GetListLectureCompletionConditionListItemDto>().ReverseMap();
         CreateMap<IPaginate<LectureCompletionCondition>, GetListResponse<GetListLectureCompletionConditionListItemDto>>().ReverseMap();
 
-        CreateMap<LectureCompletionCondition, GetListLectureCompletionConditionListItemDto>()
-            .ForMember(dest => dest.StudentFirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
-            .ForMember(dest => dest.StudentLastName, opt => opt.MapFrom(src => src.Student.User.LastName))
-            .ForMember(dest => dest.StudentEmail, opt => opt.MapFrom(src => src.Student.User.Email))
-            .ForMember(dest => dest.LectureName, opt => opt.MapFrom(src => src.Lecture.Name))
-            .ForMember(dest => dest.LectureImageUrl, opt => opt.MapFrom(src => src.Lecture.ImageUrl))
-            .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Lecture.StartDate))
-            .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.Lecture.EndDate))
-            ;
+ 
     }
 }

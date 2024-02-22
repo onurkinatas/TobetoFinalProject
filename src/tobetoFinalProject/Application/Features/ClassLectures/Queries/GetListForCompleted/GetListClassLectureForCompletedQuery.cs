@@ -46,9 +46,6 @@ public class GetListClassLectureForCompletedQuery : IRequest<GetListResponse<Get
         {
             ICollection<Guid> getClassIds = await _contextOperationService.GetStudentClassesFromContext();
 
-
-
-
             IPaginate<ClassLecture> classLectures = await _classLectureRepository.GetListAsync(
                 predicate: ce => getClassIds.Contains(ce.StudentClassId),
                 include: ca => ca.Include(ca => ca.Lecture)
