@@ -77,7 +77,16 @@ public class LecturesManager : ILecturesService
         return deletedLecture;
     }
 
-    public async Task<int> GetAllContentCountByLectureId(Guid lectureId,CancellationToken cancellationToken)
+    public int GetAllContentCountByLecture(Lecture lecture,CancellationToken cancellationToken)
+    {
+        
+        int contentCount = 
+                lecture.LectureCourses.Count!=0 ? (lecture.LectureCourses.Select(lc => lc.Course.CourseContents).Count() != 0 ? lecture.LectureCourses
+                    .SelectMany(lc => lc.Course.CourseContents)
+                    .Count() : 0):0;
+        return contentCount;
+    }
+    public async Task<int> GetAllContentCountByLectureId(Guid lectureId, CancellationToken cancellationToken)
     {
         Lecture lecture = await _lectureRepository.GetAsync(
                 predicate: l => l.Id == lectureId,
@@ -87,9 +96,11 @@ public class LecturesManager : ILecturesService
                    .ThenInclude(cc => cc.Content),
                 cancellationToken: cancellationToken);
 
-        var contentCount = lecture.LectureCourses
-            .SelectMany(lc => lc.Course.CourseContents)
-            .Count();
+        int contentCount =
+                lecture.LectureCourses.Count != 0 ? (lecture.LectureCourses.Select(lc => lc.Course.CourseContents).Count() != 0 ? lecture.LectureCourses
+                    .SelectMany(lc => lc.Course.CourseContents)
+                    .Count() : 0) : 0;
+
         return contentCount;
     }
 }

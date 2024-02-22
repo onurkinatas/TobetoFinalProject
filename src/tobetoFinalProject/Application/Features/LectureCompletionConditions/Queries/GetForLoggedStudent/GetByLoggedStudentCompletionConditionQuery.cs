@@ -51,8 +51,8 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
         {
             Student getStudent = await _contextOperationService.GetStudentFromContext();
             
-            int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
-            int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
+            //int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
+            //int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
 
             LectureCompletionCondition? lectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(
                 predicate: lcc => lcc.LectureId == request.LectureId
@@ -62,8 +62,8 @@ public class GetByLoggedStudentCompletionConditionQuery : IRequest<GetByLoggedSt
 
             GetByLoggedStudentCompletionConditionResponse response = new GetByLoggedStudentCompletionConditionResponse();
             response.CompletionPercentage = lectureCompletionCondition == null ? 0 : lectureCompletionCondition.CompletionPercentage;
-            response.TotalWatchedCount = lectureViewCount;
-            response.TotalContentCount = contentCount;
+            //response.TotalWatchedCount = lectureViewCount;
+            //response.TotalContentCount = contentCount;
             return response;
         }
     }

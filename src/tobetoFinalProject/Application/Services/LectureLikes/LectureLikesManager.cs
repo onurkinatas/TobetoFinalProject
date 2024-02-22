@@ -75,7 +75,7 @@ public class LectureLikesManager : ILectureLikesService
 
         return deletedLectureLike;
     }
-    public async Task<int> GetCount(Guid lectureId)
+    public int GetCount(Guid lectureId)
     {
         int lectureLikeCount = _lectureLikeRepository.GetLectureLikeCount(ll=>ll.LectureId ==lectureId&&ll.IsLiked==true);
 

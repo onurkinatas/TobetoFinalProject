@@ -11,5 +11,6 @@ public class LectureLikeRepository : EfRepositoryBase<LectureLike, Guid, BaseDbC
     public LectureLikeRepository(BaseDbContext context) : base(context)
     {
     }
-    public int GetLectureLikeCount(Expression<Func<LectureLike, bool>> filter) => Context.Set<LectureLike>().Where(e => e.DeletedDate == null).Where(filter).ToList().Count;
+    public int GetLectureLikeCount(Expression<Func<LectureLike, bool>> filter)
+    =>filter!=null?Context.Set<LectureLike>().Where(filter).Count(e => e.DeletedDate == null): Context.Set<LectureLike>().Count(e => e.DeletedDate == null);
 }

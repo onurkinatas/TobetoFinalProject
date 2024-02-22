@@ -64,34 +64,34 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
 
             LectureView? existLectureView = await _lectureViewRepository.GetAsync(predicate: lw => lw.StudentId == getStudent.Id && lw.ContentId == lectureView.ContentId &&
                                                                                          lw.LectureId==lectureView.LectureId ,cancellationToken: cancellationToken);
-            
+
             if (existLectureView is null)
             {
                 await _lectureViewRepository.AddAsync(lectureView);
 
-                LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureView.LectureId 
+                LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureView.LectureId
                                                                                                                                                              && lcc.StudentId == getStudent.Id);
 
-                int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId,cancellationToken);
+                int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId, cancellationToken);
                 int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
-                int completionPercentage = await _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
+                int completionPercentage =  _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
 
                 if (doesExistLectureCompletionCondition is null)
                 {
-                    await _lectureCompletionConditionsService.AddAsync(new LectureCompletionCondition {StudentId=getStudent.Id,LectureId=lectureView.LectureId,CompletionPercentage=completionPercentage });
+                    await _lectureCompletionConditionsService.AddAsync(new LectureCompletionCondition { StudentId = getStudent.Id, LectureId = lectureView.LectureId, CompletionPercentage = completionPercentage });
                 }
-                    
-                else if(doesExistLectureCompletionCondition is not null)
+
+                else if (doesExistLectureCompletionCondition is not null)
                 {
                     doesExistLectureCompletionCondition.CompletionPercentage = completionPercentage;
                     await _lectureCompletionConditionsService.UpdateAsync(doesExistLectureCompletionCondition);
                 }
-                    
+
 
             }
-                
-            
-          
+
+
+
 
             CreatedLectureViewResponse response = _mapper.Map<CreatedLectureViewResponse>(lectureView);
             return response;

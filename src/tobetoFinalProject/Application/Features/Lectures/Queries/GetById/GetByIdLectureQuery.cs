@@ -55,11 +55,11 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
                 cancellationToken: cancellationToken);
             await _lectureBusinessRules.LectureShouldExistWhenSelected(lecture);
 
-            int contentCount = await _lectureService.GetAllContentCountByLectureId(lecture.Id, cancellationToken);
-            int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(lecture.Id, student.Id);
-            int completionPercentage = await _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
+            int contentCount = _lectureService.GetAllContentCountByLecture(lecture, cancellationToken);
+            int lectureViewCount = _lectureViewsService.ContentViewedCountByLectureId(lecture.Id, student.Id);
+            int completionPercentage =  _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
 
-            int lectureLikeCount = await _lectureLikesService.GetCount(lecture.Id);
+            int lectureLikeCount = _lectureLikesService.GetCount(lecture.Id);
             
             bool isLiked = await _lectureLikesService.IsLiked(lecture.Id, student.Id);
 
@@ -74,46 +74,47 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
         }
         private Func<IQueryable<Lecture>, IIncludableQueryable<Lecture, object>> IncludeLectureDetails()
         {
-            return query => query.Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.ContentCategory)
+            return query => query
+                    .Include(m => m.LectureCourses)
+                       .ThenInclude(mc => mc.Course)
+                          .ThenInclude(c => c.CourseContents)
+                             .ThenInclude(cc => cc.Content)
+                               .ThenInclude(c => c.ContentCategory)
+
+                    .Include(m => m.LectureCourses)
+                       .ThenInclude(mc => mc.Course)
+                           .ThenInclude(c => c.CourseContents)
+                                 .ThenInclude(cc => cc.Content)
+                                      .ThenInclude(c => c.Manufacturer)
 
                    .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.Manufacturer)
+                     .ThenInclude(mc => mc.Course)
+                        .ThenInclude(c => c.CourseContents)
+                             .ThenInclude(cc => cc.Content)
+                                 .ThenInclude(c => c.SubType)
 
                    .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.SubType)
-
-                   .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.Language)
+                    .ThenInclude(mc => mc.Course)
+                         .ThenInclude(c => c.CourseContents)
+                              .ThenInclude(cc => cc.Content)
+                                 .ThenInclude(c => c.Language)
 
                    .Include(m => m.Manufacturer)
                    .Include(m => m.Category)
 
                    .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(c => c.ContentTags)
-                   .ThenInclude(c => c.Tag)
+                     .ThenInclude(mc => mc.Course)
+                         .ThenInclude(c => c.CourseContents)
+                           .ThenInclude(cc => cc.Content)
+                              .ThenInclude(c => c.ContentTags)
+                                 .ThenInclude(c => c.Tag)
 
                    .Include(m => m.LectureCourses)
-                   .ThenInclude(mc => mc.Course)
-                   .ThenInclude(c => c.CourseContents)
-                   .ThenInclude(cc => cc.Content)
-                   .ThenInclude(cc => cc.ContentInstructors)
-                   .ThenInclude(cc => cc.Instructor);
+                     .ThenInclude(mc => mc.Course)
+                        .ThenInclude(c => c.CourseContents)
+                         .ThenInclude(cc => cc.Content)
+                             .ThenInclude(cc => cc.ContentInstructors)
+                                .ThenInclude(cc => cc.Instructor);
         }
     }
 }

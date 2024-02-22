@@ -7,4 +7,5 @@ namespace Application.Services.Repositories;
 public interface ILectureViewRepository : IAsyncRepository<LectureView, Guid>, IRepository<LectureView, Guid>
 {
     public Task<ICollection<LectureView>> GetAll(Expression<Func<LectureView, bool>> filter = null);
+    public int GetCount(Expression<Func<LectureView, bool>> filter = null);
 }

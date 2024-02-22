@@ -81,4 +81,9 @@ public class LectureViewsManager : ILectureViewsService
         int lectureViewCount = lectureViews.Count;
         return lectureViewCount;
     }
+    public int ContentViewedCountByLectureId(Guid lectureId, Guid studentId)
+    {
+        int lectureViewCount =  _lectureViewRepository.GetCount(lv => lv.LectureId == lectureId && lv.StudentId == studentId);
+        return lectureViewCount;
+    }
 }
