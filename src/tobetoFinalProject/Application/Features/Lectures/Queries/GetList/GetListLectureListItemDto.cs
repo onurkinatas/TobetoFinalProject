@@ -13,5 +13,5 @@ public class GetListLectureListItemDto : IDto
     public string ManufacturerName { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public ICollection<GetListCourseListItemDto> Courses { get; set; }
+    public ICollection<GetListCourseListItemDto>? Courses { get; set; }
 }
