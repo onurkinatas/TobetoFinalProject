@@ -77,4 +77,10 @@ public class StudentQuizOptionsManager : IStudentQuizOptionsService
 
         return deletedStudentQuizOption;
     }
+
+    public async Task<List<StudentQuizOption>> GetAllAsync(Expression<Func<StudentQuizOption, bool>> filter = null) {
+        
+        return await _studentQuizOptionRepository.GetAll(filter);
+
+    }
 }

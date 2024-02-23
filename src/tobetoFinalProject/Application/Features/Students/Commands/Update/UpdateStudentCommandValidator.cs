@@ -9,7 +9,7 @@ public class UpdateStudentCommandValidator : AbstractValidator<UpdateStudentComm
 
 
         RuleFor(c => c.Phone)
-            .Matches(@"^\d{11}$").WithMessage("Telefon numarasý tam olarak11 rakamdan oluþmalýdýr.");
+            .Matches(@"^\d{11}$").WithMessage("Telefon numarasý tam olarak 11 rakamdan oluþmalýdýr.");
 
         RuleFor(c => c.NationalIdentity)
             .Matches(@"^\d{11}$").WithMessage("TC Kimlik Numarasý 11 rakamdan oluþmalýdýr.");

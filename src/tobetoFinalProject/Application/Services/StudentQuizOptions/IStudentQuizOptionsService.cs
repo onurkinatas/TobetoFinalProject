@@ -27,4 +27,5 @@ public interface IStudentQuizOptionsService
     Task<StudentQuizOption> AddAsync(StudentQuizOption studentQuizOption);
     Task<StudentQuizOption> UpdateAsync(StudentQuizOption studentQuizOption);
     Task<StudentQuizOption> DeleteAsync(StudentQuizOption studentQuizOption, bool permanent = false);
+    Task<List<StudentQuizOption>> GetAllAsync(Expression<Func<StudentQuizOption, bool>> filter = null);
 }

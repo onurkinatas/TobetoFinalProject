@@ -4,6 +4,7 @@ using Application.Features.Quizs.Commands.Update;
 using Application.Features.Quizs.Queries.GetById;
 using Application.Features.Quizs.Queries.GetForAllStudent;
 using Application.Features.Quizs.Queries.GetList;
+using Application.Features.Quizs.Queries.GetQuizDeatailByQuizIdForLoggedStudent;
 using Application.Features.Quizs.Queries.GetQuizSession;
 using Core.Application.Requests;
 using Core.Application.Responses;
@@ -66,4 +67,12 @@ public class QuizsController : BaseController
         GetListResponse<GetListQuizListItemDto> response = await Mediator.Send(getListQuizQuery);
         return Ok(response);
     }
+    [HttpGet("GetQuizDetailForStudent{quizId}")]
+    public async Task<IActionResult> GetQuizDetailForStudent([FromRoute] int quizId)
+    {
+        GetQuizDetailByQuizIdForLoggedStudentQuery getListQuizQuery = new() { QuizId=quizId};
+        GetQuizDetailByQuizIdForLoggedStudentResponse response = await Mediator.Send(getListQuizQuery);
+        return Ok(response);
+    }
+    
 }
