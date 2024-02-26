@@ -39,7 +39,7 @@ public class DeleteCommentSubCommentCommand : IRequest<DeletedCommentSubCommentR
             Student getStudent = await _contextOperationService.GetStudentFromContext();
             CommentSubComment? commentSubComment = await _commentSubCommentRepository.GetAsync(predicate: csc => csc.Id == request.Id, cancellationToken: cancellationToken);
             await _commentSubCommentBusinessRules.CommentSubCommentShouldExistWhenSelected(commentSubComment);
-            await _commentSubCommentBusinessRules.HaveToActiveStudent(commentSubComment.StudentId,getStudent.Id)
+            await _commentSubCommentBusinessRules.HaveToActiveStudent(commentSubComment.StudentId, getStudent.Id);
             await _commentSubCommentRepository.DeleteAsync(commentSubComment!);
 
             DeletedCommentSubCommentResponse response = _mapper.Map<DeletedCommentSubCommentResponse>(commentSubComment);

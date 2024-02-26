@@ -42,7 +42,9 @@ public class GetListByLectureIdStudentLectureCommentQuery : IRequest<GetListResp
             IPaginate<StudentLectureComment> studentLectureComments = await _studentLectureCommentRepository.GetListAsync(
                 include:slc=>slc.Include(slc=>slc.Student)
                                   .ThenInclude(slc=>slc.User)
-                                  .Include(slc=>slc.CommentSubComments),
+                                  .Include(slc=>slc.CommentSubComments)
+                                  .ThenInclude(csc=>csc.Student)
+                                  .ThenInclude(s=>s.User),
                 predicate:slc=>slc.LectureId==request.LectureId,
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,

@@ -6,10 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Features.StudentLectureComments.Queries.Dtos;
-public class StudentUserCommentDto:IDto
+public class StudentSubCommentDto:IDto
 {
+    public int Id { get; set; }
     public string ProfilePhotoPath { get; set; }
-    public string UserFirstName { get; set; }
-    public string UserLastName { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string SubComment { get; set; }
+    public int StudentLectureCommentId { get; set; }
+    public bool? IsDeletable { get; set; }
 }
 
