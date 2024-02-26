@@ -18,7 +18,7 @@ public class CreateCommentSubCommentCommand : IRequest<CreatedCommentSubCommentR
     public Guid? StudentId { get; set; }
     public string SubComment { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, CommentSubCommentsOperationClaims.Create };
+    public string[] Roles => new[] { "Student"};
 
     public class CreateCommentSubCommentCommandHandler : IRequestHandler<CreateCommentSubCommentCommand, CreatedCommentSubCommentResponse>
     {

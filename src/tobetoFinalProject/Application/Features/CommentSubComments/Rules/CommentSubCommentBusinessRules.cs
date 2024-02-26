@@ -14,7 +14,13 @@ public class CommentSubCommentBusinessRules : BaseBusinessRules
     {
         _commentSubCommentRepository = commentSubCommentRepository;
     }
-
+    
+    public Task HaveToActiveStudent(Guid subCommentStudentId,Guid studentId)
+    {
+        if (subCommentStudentId != studentId)
+            throw new BusinessException(CommentSubCommentsBusinessMessages.HaveToActiveStudent);
+        return Task.CompletedTask;
+    }
     public Task CommentSubCommentShouldExistWhenSelected(CommentSubComment? commentSubComment)
     {
         if (commentSubComment == null)
