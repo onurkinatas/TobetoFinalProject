@@ -53,6 +53,7 @@ public class GetListByLectureIdStudentLectureCommentQuery : IRequest<GetListResp
             
             GetListResponse<GetListByLectureIdStudentLectureCommentListItemDto> response = _mapper.Map<GetListResponse<GetListByLectureIdStudentLectureCommentListItemDto>>(studentLectureComments);
             response.Items.ToList().ForEach(item =>item.IsDeletable= getStudent.Id==item.StudentId?true:false);
+            response.Items.ToList().ForEach(item => item.CommentSubComments.ToList().ForEach(item => item.IsDeletable = getStudent.Id == item.StudentId));
             return response;
         }
     }

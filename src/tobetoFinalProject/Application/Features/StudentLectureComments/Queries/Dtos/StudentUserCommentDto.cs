@@ -14,6 +14,8 @@ public class StudentSubCommentDto:IDto
     public string LastName { get; set; }
     public string SubComment { get; set; }
     public int StudentLectureCommentId { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public Guid StudentId { get; set; }
     public bool? IsDeletable { get; set; }
 }
 
