@@ -80,6 +80,8 @@ using Application.Services.StudentQuizOptions;
 using Application.Services.GeneralQuizs;
 using Application.Services.ClassQuizs;
 using Application.Services.StudentQuizResults;
+using Application.Services.CommentSubComments;
+using Application.Services.StudentLectureComments;
 
 namespace Application;
 
@@ -175,6 +177,8 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IClassQuizsService, ClassQuizsManager>();
         services.AddScoped<IStudentQuizResultsService, StudentQuizResultsManager>();
         services.AddMemoryCache();
+        services.AddScoped<ICommentSubCommentsService, CommentSubCommentsManager>();
+        services.AddScoped<IStudentLectureCommentsService, StudentLectureCommentsManager>();
         return services;
     }
 

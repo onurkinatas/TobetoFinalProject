@@ -573,6 +573,20 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizResults.Add" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizResults.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizResults.Delete" });
+        #region CommentSubComments
+        seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Delete" });
+        #region StudentLectureComments
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Admin" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Read" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Write" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Add" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Update" });
+        seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Delete" });
         return seeds;
         #endregion
     }

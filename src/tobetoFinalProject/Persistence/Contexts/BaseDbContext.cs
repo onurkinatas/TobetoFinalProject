@@ -76,6 +76,8 @@ public class BaseDbContext : DbContext
     public DbSet<GeneralQuiz> GeneralQuizs { get; set; }
     public DbSet<ClassQuiz> ClassQuizs { get; set; }
     public DbSet<StudentQuizResult> StudentQuizResults { get; set; }
+    public DbSet<CommentSubComment> CommentSubComments { get; set; }
+    public DbSet<StudentLectureComment> StudentLectureComments { get; set; }
 
     public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
         : base(dbContextOptions)
