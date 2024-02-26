@@ -573,6 +573,8 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizResults.Add" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizResults.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentQuizResults.Delete" });
+        #endregion
+
         #region CommentSubComments
         seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Admin" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Read" });
@@ -580,6 +582,7 @@ public class OperationClaimConfiguration : IEntityTypeConfiguration<OperationCla
         seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Add" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Update" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "CommentSubComments.Delete" });
+        #endregion
         #region StudentLectureComments
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Admin" });
         seeds.Add(new OperationClaim { Id = ++id, Name = "StudentLectureComments.Read" });
