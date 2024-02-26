@@ -21,6 +21,13 @@ public class StudentLectureCommentBusinessRules : BaseBusinessRules
             throw new BusinessException(StudentLectureCommentsBusinessMessages.StudentLectureCommentNotExists);
         return Task.CompletedTask;
     }
+    public Task HaveToActiveStudent(StudentLectureComment? studentLectureComment,Guid studentId)
+    {
+        if (studentLectureComment.StudentId != studentId)
+            throw new BusinessException(StudentLectureCommentsBusinessMessages.HaveToActiveStudent);
+        return Task.CompletedTask;
+    }
+    
 
     public async Task StudentLectureCommentIdShouldExistWhenSelected(int id, CancellationToken cancellationToken)
     {

@@ -6,8 +6,7 @@ public class CreateCommentSubCommentCommandValidator : AbstractValidator<CreateC
 {
     public CreateCommentSubCommentCommandValidator()
     {
-        RuleFor(c => c.UserLectureCommentId).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
+        RuleFor(c => c.StudentLectureCommentId).NotEmpty();
         RuleFor(c => c.SubComment).NotEmpty();
     }
 }
