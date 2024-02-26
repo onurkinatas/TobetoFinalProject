@@ -11,7 +11,7 @@ public class CommentSubCommentConfiguration : IEntityTypeConfiguration<CommentSu
         builder.ToTable("CommentSubComments").HasKey(csc => csc.Id);
 
         builder.Property(csc => csc.Id).HasColumnName("Id").IsRequired();
-        builder.Property(csc => csc.UserLectureCommentId).HasColumnName("UserLectureCommentId");
+        builder.Property(csc => csc.StudentLectureCommentId).HasColumnName("StudentLectureCommentId");
         builder.Property(csc => csc.StudentId).HasColumnName("StudentId");
         builder.Property(csc => csc.SubComment).HasColumnName("SubComment");
         builder.Property(csc => csc.CreatedDate).HasColumnName("CreatedDate").IsRequired();

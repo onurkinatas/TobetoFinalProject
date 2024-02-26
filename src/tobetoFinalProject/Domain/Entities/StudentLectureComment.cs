@@ -14,6 +14,7 @@ public class StudentLectureComment:Entity<int>
     public string Comment { get; set; }
     public virtual Student? Student { get; set; }
     public virtual Lecture? Lecture { get; set; }
-   
+    public virtual ICollection<CommentSubComment>? CommentSubComments { get; set; }
+
 }
 

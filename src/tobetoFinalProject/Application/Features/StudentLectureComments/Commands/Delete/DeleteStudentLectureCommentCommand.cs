@@ -9,6 +9,7 @@ using Core.Application.Pipelines.Logging;
 using Core.Application.Pipelines.Transaction;
 using MediatR;
 using static Application.Features.StudentLectureComments.Constants.StudentLectureCommentsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentLectureComments.Commands.Delete;
 
@@ -16,7 +17,7 @@ public class DeleteStudentLectureCommentCommand : IRequest<DeletedStudentLecture
 {
     public int Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Write, StudentLectureCommentsOperationClaims.Delete };
+    public string[] Roles => new[] { "Student" };
 
     public class DeleteStudentLectureCommentCommandHandler : IRequestHandler<DeleteStudentLectureCommentCommand, DeletedStudentLectureCommentResponse>
     {
@@ -34,7 +35,10 @@ public class DeleteStudentLectureCommentCommand : IRequest<DeletedStudentLecture
 
         public async Task<DeletedStudentLectureCommentResponse> Handle(DeleteStudentLectureCommentCommand request, CancellationToken cancellationToken)
         {
-            StudentLectureComment? studentLectureComment = await _studentLectureCommentRepository.GetAsync(predicate: slc => slc.Id == request.Id, cancellationToken: cancellationToken);
+            StudentLectureComment? studentLectureComment = await _studentLectureCommentRepository.GetAsync(
+                include:slc=>slc.Include(slc=>slc.CommentSubComments),
+                predicate: slc => slc.Id == request.Id, cancellationToken: cancellationToken
+                );
             await _studentLectureCommentBusinessRules.StudentLectureCommentShouldExistWhenSelected(studentLectureComment);
 
             await _studentLectureCommentRepository.DeleteAsync(studentLectureComment!);

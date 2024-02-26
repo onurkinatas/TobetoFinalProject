@@ -7,6 +7,8 @@ using AutoMapper;
 using Core.Application.Responses;
 using Domain.Entities;
 using Core.Persistence.Paging;
+using Application.Features.StudentLectureComments.Queries.GetListByLectureId;
+using Application.Features.Students.Queries.GetList;
 
 namespace Application.Features.StudentLectureComments.Profiles;
 
@@ -23,5 +25,13 @@ public class MappingProfiles : Profile
         CreateMap<StudentLectureComment, GetByIdStudentLectureCommentResponse>().ReverseMap();
         CreateMap<StudentLectureComment, GetListStudentLectureCommentListItemDto>().ReverseMap();
         CreateMap<IPaginate<StudentLectureComment>, GetListResponse<GetListStudentLectureCommentListItemDto>>().ReverseMap();
+        CreateMap<StudentLectureComment, GetListByLectureIdStudentLectureCommentListItemDto>().ReverseMap();
+        CreateMap<IPaginate<StudentLectureComment>, GetListResponse<GetListByLectureIdStudentLectureCommentListItemDto>>().ReverseMap();
+
+        CreateMap<StudentLectureComment, GetListByLectureIdStudentLectureCommentListItemDto>()
+            .ForMember(dest => dest.ProfilePhotoPath, opt => opt.MapFrom(src => src.Student.ProfilePhotoPath))
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+            ;
     }
 }

@@ -15,4 +15,5 @@ public class Lecture : Entity<Guid>
     public virtual Category? Category { get; set; }
     public virtual ICollection<LectureCourse>? LectureCourses { get; set; }
     public virtual ICollection<ClassLecture>? ClassLectures { get; set; }
+    public virtual ICollection<StudentLectureComment>? StudentLectureComments { get; set; }
 }

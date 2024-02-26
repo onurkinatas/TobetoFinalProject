@@ -7,7 +7,6 @@ public class CreateStudentLectureCommentCommandValidator : AbstractValidator<Cre
     public CreateStudentLectureCommentCommandValidator()
     {
         RuleFor(c => c.LectureId).NotEmpty();
-        RuleFor(c => c.StudentId).NotEmpty();
         RuleFor(c => c.Comment).NotEmpty();
     }
 }

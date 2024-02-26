@@ -11,6 +11,7 @@ public class GetByIdLectureResponse : IResponse
     public string ImageUrl { get; set; }
     public double EstimatedVideoDuration { get; set; }
     public string ManufacturerName { get; set; }
+    public int CommentCount { get; set; }
     public int LikeCount { get; set; }
     public int TotalContentCount { get; set; }
     public int CompletionPercentage { get; set; }
@@ -18,5 +19,5 @@ public class GetByIdLectureResponse : IResponse
     public bool IsLiked { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public ICollection<GetListCourseListItemDto> Courses { get; set; }
+    public ICollection<GetListCourseListItemDto>? Courses { get; set; }
 }

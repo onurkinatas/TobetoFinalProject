@@ -3,6 +3,7 @@ using Application.Features.StudentLectureComments.Commands.Delete;
 using Application.Features.StudentLectureComments.Commands.Update;
 using Application.Features.StudentLectureComments.Queries.GetById;
 using Application.Features.StudentLectureComments.Queries.GetList;
+using Application.Features.StudentLectureComments.Queries.GetListByLectureId;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -51,4 +52,12 @@ public class StudentLectureCommentsController : BaseController
         GetListResponse<GetListStudentLectureCommentListItemDto> response = await Mediator.Send(getListStudentLectureCommentQuery);
         return Ok(response);
     }
+    [HttpGet("GetListByLectureId/{lectureId}")]
+    public async Task<IActionResult> GetListByLectureId([FromQuery] PageRequest pageRequest,Guid lectureId)
+    {
+        GetListByLectureIdStudentLectureCommentQuery getListStudentLectureCommentQuery = new() { PageRequest = pageRequest,LectureId=lectureId };
+        GetListResponse<GetListByLectureIdStudentLectureCommentListItemDto> response = await Mediator.Send(getListStudentLectureCommentQuery);
+        return Ok(response);
+    }
+    
 }

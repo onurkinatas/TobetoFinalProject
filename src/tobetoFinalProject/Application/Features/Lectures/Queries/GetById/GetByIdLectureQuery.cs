@@ -63,6 +63,7 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
             
             bool isLiked = await _lectureLikesService.IsLiked(lecture.Id, student.Id);
 
+            int commentCount = lecture.StudentLectureComments.Count;
 
             GetByIdLectureResponse response = _mapper.Map<GetByIdLectureResponse>(lecture);
             response.IsLiked = isLiked;
@@ -70,6 +71,7 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
             response.CompletionPercentage = completionPercentage;
             response.TotalWatchedCount = lectureViewCount;
             response.TotalContentCount = contentCount;
+            response.CommentCount = commentCount;
             return response;
         }
         private Func<IQueryable<Lecture>, IIncludableQueryable<Lecture, object>> IncludeLectureDetails()
@@ -114,7 +116,9 @@ public class GetByIdLectureQuery : IRequest<GetByIdLectureResponse>, ISecuredReq
                         .ThenInclude(c => c.CourseContents)
                          .ThenInclude(cc => cc.Content)
                              .ThenInclude(cc => cc.ContentInstructors)
-                                .ThenInclude(cc => cc.Instructor);
+                                .ThenInclude(cc => cc.Instructor)
+
+                    .Include(m => m.StudentLectureComments);
         }
     }
 }
