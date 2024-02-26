@@ -47,6 +47,7 @@ public class GetListByLectureIdStudentLectureCommentQuery : IRequest<GetListResp
                                   .ThenInclude(s=>s.User),
                 predicate:slc=>slc.LectureId==request.LectureId,
                 index: request.PageRequest.PageIndex,
+                orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),
                 size: request.PageRequest.PageSize,
                 cancellationToken: cancellationToken
             );
