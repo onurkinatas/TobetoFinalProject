@@ -8,4 +8,5 @@ public class GetByIdStudentLectureCommentResponse : IResponse
     public Guid LectureId { get; set; }
     public Guid StudentId { get; set; }
     public string Comment { get; set; }
+    public ICollection<StudentSubCommentDto>? CommentSubComments { get; set; }
 }

@@ -6,6 +6,7 @@ using Domain.Entities;
 using Core.Application.Pipelines.Authorization;
 using MediatR;
 using static Application.Features.StudentLectureComments.Constants.StudentLectureCommentsOperationClaims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.StudentLectureComments.Queries.GetById;
 
@@ -30,7 +31,11 @@ public class GetByIdStudentLectureCommentQuery : IRequest<GetByIdStudentLectureC
 
         public async Task<GetByIdStudentLectureCommentResponse> Handle(GetByIdStudentLectureCommentQuery request, CancellationToken cancellationToken)
         {
-            StudentLectureComment? studentLectureComment = await _studentLectureCommentRepository.GetAsync(predicate: slc => slc.Id == request.Id, cancellationToken: cancellationToken);
+            StudentLectureComment? studentLectureComment = await _studentLectureCommentRepository.GetAsync(
+                include: slc => slc
+                                  .Include(slc => slc.CommentSubComments),
+                predicate: slc => slc.Id == request.Id, 
+               cancellationToken: cancellationToken);
             await _studentLectureCommentBusinessRules.StudentLectureCommentShouldExistWhenSelected(studentLectureComment);
 
             GetByIdStudentLectureCommentResponse response = _mapper.Map<GetByIdStudentLectureCommentResponse>(studentLectureComment);

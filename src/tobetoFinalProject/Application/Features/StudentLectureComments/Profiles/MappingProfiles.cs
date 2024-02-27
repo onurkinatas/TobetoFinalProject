@@ -29,6 +29,7 @@ public class MappingProfiles : Profile
         CreateMap<StudentLectureComment, GetListByLectureIdStudentLectureCommentListItemDto>().ReverseMap();
         CreateMap<IPaginate<StudentLectureComment>, GetListResponse<GetListByLectureIdStudentLectureCommentListItemDto>>().ReverseMap();
 
+        
         CreateMap<StudentLectureComment, GetListByLectureIdStudentLectureCommentListItemDto>()
             .ForMember(dest => dest.ProfilePhotoPath, opt => opt.MapFrom(src => src.Student.ProfilePhotoPath))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
