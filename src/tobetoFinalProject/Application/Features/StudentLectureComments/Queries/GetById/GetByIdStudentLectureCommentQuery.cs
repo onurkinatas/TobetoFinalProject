@@ -15,7 +15,7 @@ public class GetByIdStudentLectureCommentQuery : IRequest<GetByIdStudentLectureC
 {
     public int Id { get; set; }
 
-    public string[] Roles => new[] { Admin, Read };
+    public string[] Roles => new[] { Admin, Read ,"Student"};
 
     public class GetByIdStudentLectureCommentQueryHandler : IRequestHandler<GetByIdStudentLectureCommentQuery, GetByIdStudentLectureCommentResponse>
     {
