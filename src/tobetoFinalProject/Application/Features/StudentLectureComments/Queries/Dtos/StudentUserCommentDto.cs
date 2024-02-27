@@ -12,7 +12,7 @@ public class StudentSubCommentDto:IDto
     public string ProfilePhotoPath { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string SubComment { get; set; }
+    public string Comment { get; set; }
     public int StudentLectureCommentId { get; set; }
     public DateTime CreatedDate { get; set; }
     public Guid StudentId { get; set; }

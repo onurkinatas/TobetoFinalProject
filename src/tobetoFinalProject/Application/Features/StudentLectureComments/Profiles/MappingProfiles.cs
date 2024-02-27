@@ -40,6 +40,8 @@ public class MappingProfiles : Profile
             .ForMember(dest => dest.ProfilePhotoPath, opt => opt.MapFrom(src => src.Student.ProfilePhotoPath))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Student.User.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Student.User.LastName))
+
+             .ForMember(dest => dest.Comment, opt => opt.MapFrom(src => src.SubComment))
             ;
     }
 }
