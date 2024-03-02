@@ -3,6 +3,7 @@ using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Query;
+using Nest;
 using System.Linq.Expressions;
 
 namespace Application.Services.StudentClassStudents;
@@ -73,5 +74,10 @@ public class StudentClassStudentsManager : IStudentClassStudentsService
         StudentClassStudent deletedStudentClassStudent = await _studentClassStudentRepository.DeleteAsync(studentClassStudent);
 
         return deletedStudentClassStudent;
+    }
+    public ICollection<StudentClassStudent> GetAllWithoutPaginate(Expression<Func<StudentClassStudent, bool>> filter = null)
+    {
+        var studentClassStudents=  _studentClassStudentRepository.GetAllWithoutPaginate(filter);
+        return studentClassStudents;
     }
 }

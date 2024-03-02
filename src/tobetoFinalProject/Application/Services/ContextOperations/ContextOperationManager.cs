@@ -1,6 +1,8 @@
 ﻿using Amazon.Runtime.Internal.Util;
 using Application.Features.Students.Rules;
 using Application.Services.Repositories;
+using Application.Services.StudentClassStudents;
+using Application.Services.Students;
 using Core.Security.Extensions;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -15,32 +17,29 @@ public class ContextOperationManager : IContextOperationService
 {
 
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IStudentRepository _studentRepository;
+    private readonly IStudentsService _studentsService;
     private readonly StudentBusinessRules _studentBusinessRules;
-    private readonly IStudentClassStudentRepository _studentClassStudentRepository;
-    public ContextOperationManager(IHttpContextAccessor contextAccessor, IStudentRepository studentRepository, StudentBusinessRules studentBusinessRules, IStudentClassStudentRepository studentClassStudentRepository)
+    private readonly IStudentClassStudentsService _studentClassStudentsService;
+    public ContextOperationManager(IHttpContextAccessor contextAccessor, StudentBusinessRules studentBusinessRules, IStudentsService studentsService, IStudentClassStudentsService studentClassStudentsServicey)
     {
         _httpContextAccessor = contextAccessor;
-        _studentRepository = studentRepository;
         _studentBusinessRules = studentBusinessRules;
-        _studentClassStudentRepository = studentClassStudentRepository;
+        _studentsService = studentsService;
+        _studentClassStudentsService = studentClassStudentsServicey;
     }
 
-    public ContextOperationManager()
-    {
-    }
 
     public async Task<Student> GetStudentFromContext()
     {
         int userId = _httpContextAccessor.HttpContext.User.GetUserId();
         await _studentBusinessRules.StudentShouldBeExist(userId);
-        Student student = await _studentRepository.GetAsync(predicate: s => s.UserId == userId);
+        Student student = await _studentsService.GetAsync(predicate: s => s.UserId == userId);
         return student;
     }
     public async Task<ICollection<Guid>> GetStudentClassesFromContext()
     {
         Student student = await GetStudentFromContext();
-        ICollection<Guid> classIds = _studentClassStudentRepository
+        ICollection<Guid> classIds = _studentClassStudentsService
             .GetAllWithoutPaginate(sc => sc.StudentId == student.Id)
             .Select(sc => sc.StudentClassId)
             .ToList();

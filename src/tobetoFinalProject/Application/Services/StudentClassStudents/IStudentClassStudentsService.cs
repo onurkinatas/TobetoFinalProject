@@ -27,4 +27,5 @@ public interface IStudentClassStudentsService
     Task<StudentClassStudent> AddAsync(StudentClassStudent studentClassStudent);
     Task<StudentClassStudent> UpdateAsync(StudentClassStudent studentClassStudent);
     Task<StudentClassStudent> DeleteAsync(StudentClassStudent studentClassStudent, bool permanent = false);
+    ICollection<StudentClassStudent> GetAllWithoutPaginate(Expression<Func<StudentClassStudent, bool>> filter = null);
 }
