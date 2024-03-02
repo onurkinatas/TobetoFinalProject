@@ -53,7 +53,7 @@ public class GetListForLoggedStudentClassAnnouncementQuery : IRequest<GetListRes
                 cancellationToken: cancellationToken
             );
 
-            List<StudentAnnouncement> studentAnnouncements = await _studentAnnouncementsService.GetAllAsync(sa=>sa.StudentId==getStudents.Id); 
+            var studentAnnouncements = await _studentAnnouncementsService.GetAllAsync(sa=>sa.StudentId==getStudents.Id); 
 
 
             GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto> response = _mapper.Map<GetListResponse<GetListForLoggedStudentClassAnnouncementListItemDto>>(classAnnouncements);

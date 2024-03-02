@@ -42,10 +42,6 @@ public class GetListForLoggedStudentLanguageLevelQuery : IRequest<GetListRespons
 
             IPaginate<StudentLanguageLevel> studentLanguageLevels = await _studentLanguageLevelRepository.GetListAsync(
                 predicate: cc => cc.StudentId == student.Id,
-                include: sll => sll.Include(sll => sll.Student)
-                    .ThenInclude(s => s.User)
-                    .Include(sll => sll.LanguageLevel)
-                    .ThenInclude(ll => ll.Language),
                 index: request.PageRequest.PageIndex,
                 size: request.PageRequest.PageSize,
                 orderBy: ce => ce.OrderByDescending(x => x.CreatedDate),

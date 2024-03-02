@@ -28,4 +28,6 @@ public interface ILectureCompletionConditionsService
     Task<LectureCompletionCondition> UpdateAsync(LectureCompletionCondition lectureCompletionCondition);
     Task<LectureCompletionCondition> DeleteAsync(LectureCompletionCondition lectureCompletionCondition, bool permanent = false);
     int CompletionPercentageCalculator(int lectureViewCount,int contentCount);
+
+    Task ImpactOfLectureView(Guid lectureId, Guid studentId, CancellationToken cancellationToken);
 }

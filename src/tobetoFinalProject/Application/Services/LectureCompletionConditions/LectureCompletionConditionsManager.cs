@@ -1,9 +1,12 @@
 using Application.Features.LectureCompletionConditions.Rules;
+using Application.Services.Lectures;
+using Application.Services.LectureViews;
 using Application.Services.Repositories;
 using Core.Persistence.Paging;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace Application.Services.LectureCompletionConditions;
 
@@ -11,11 +14,14 @@ public class LectureCompletionConditionsManager : ILectureCompletionConditionsSe
 {
     private readonly ILectureCompletionConditionRepository _lectureCompletionConditionRepository;
     private readonly LectureCompletionConditionBusinessRules _lectureCompletionConditionBusinessRules;
-
-    public LectureCompletionConditionsManager(ILectureCompletionConditionRepository lectureCompletionConditionRepository, LectureCompletionConditionBusinessRules lectureCompletionConditionBusinessRules)
+    private readonly ILectureViewsService _lectureViewsService;
+    private readonly ILecturesService _lecturesService;
+    public LectureCompletionConditionsManager(ILectureCompletionConditionRepository lectureCompletionConditionRepository, LectureCompletionConditionBusinessRules lectureCompletionConditionBusinessRules, ILecturesService lecturesService, ILectureViewsService lectureViewsService)
     {
         _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
         _lectureCompletionConditionBusinessRules = lectureCompletionConditionBusinessRules;
+        _lecturesService = lecturesService;
+        _lectureViewsService = lectureViewsService;
     }
 
     public async Task<LectureCompletionCondition?> GetAsync(
@@ -76,4 +82,24 @@ public class LectureCompletionConditionsManager : ILectureCompletionConditionsSe
     }
 
     public int CompletionPercentageCalculator(int lectureViewCount, int contentCount) => (lectureViewCount * 100) / contentCount;
+    public async Task ImpactOfLectureView(Guid lectureId, Guid studentId,CancellationToken cancellationToken)
+    {
+        LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureId
+        && lcc.StudentId == studentId);
+
+        int contentCount = await _lecturesService.GetAllContentCountByLectureId(lectureId, cancellationToken);
+        int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(lectureId, studentId);
+        int completionPercentage = CompletionPercentageCalculator(lectureViewCount, contentCount);
+
+        if (doesExistLectureCompletionCondition is null)
+        {
+            await _lectureCompletionConditionRepository.AddAsync(new LectureCompletionCondition { StudentId = studentId, LectureId = lectureId, CompletionPercentage = completionPercentage });
+        }
+
+        else if (doesExistLectureCompletionCondition is not null)
+        {
+            doesExistLectureCompletionCondition.CompletionPercentage = completionPercentage;
+            await _lectureCompletionConditionRepository.UpdateAsync(doesExistLectureCompletionCondition);
+        }
+    }
 }

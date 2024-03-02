@@ -47,6 +47,7 @@ public class GetByIdStudentQuizResultQuery : IRequest<GetByIdStudentQuizResultRe
                 );
 
             await _studentQuizResultBusinessRules.StudentQuizResultShouldExistWhenSelected(studentQuizResult);
+
             int getQuestionCount = await _quizsService.GetQuizQuestionCount(studentQuizResult.QuizId);
             int point = _studentQuizResultsService.QuizPointCalculator(studentQuizResult.CorrectAnswerCount, getQuestionCount);
             int emptyAnswerCount = _studentQuizResultsService.QuizEmptyAnswerCalculator(studentQuizResult.CorrectAnswerCount, studentQuizResult.WrongAnswerCount, getQuestionCount);

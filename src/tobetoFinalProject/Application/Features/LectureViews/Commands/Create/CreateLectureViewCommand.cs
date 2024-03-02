@@ -33,7 +33,6 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
     {
         private readonly IMapper _mapper;
         private readonly ILectureViewRepository _lectureViewRepository;
-        private readonly ILectureCompletionConditionRepository _lectureCompletionConditionRepository;
         private readonly LectureViewBusinessRules _lectureViewBusinessRules;
         private readonly IContextOperationService _contextOperationService;
         private readonly ILectureRepository _lectureRepository;
@@ -42,7 +41,7 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
         private readonly ILectureCompletionConditionsService _lectureCompletionConditionsService;
         public CreateLectureViewCommandHandler(IMapper mapper, ILectureViewRepository lectureViewRepository,
                                          LectureViewBusinessRules lectureViewBusinessRules, IContextOperationService contextOperationService,
-                                         ILectureRepository lectureRepository, ILectureCompletionConditionRepository lectureCompletionConditionRepository
+                                         ILectureRepository lectureRepository
                                          , ILecturesService lecturesService, ILectureViewsService lectureViewsService, ILectureCompletionConditionsService lectureCompletionConditionsService)
         {
             _lecturesService = lecturesService;
@@ -51,7 +50,7 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
             _lectureViewBusinessRules = lectureViewBusinessRules;
             _contextOperationService = contextOperationService;
             _lectureRepository = lectureRepository;
-            _lectureCompletionConditionRepository = lectureCompletionConditionRepository;
+
             _lectureViewsService = lectureViewsService;
             _lectureCompletionConditionsService = lectureCompletionConditionsService;
         }
@@ -62,36 +61,15 @@ public class CreateLectureViewCommand : IRequest<CreatedLectureViewResponse>, IS
             LectureView lectureView = _mapper.Map<LectureView>(request);
             lectureView.StudentId = getStudent.Id;
 
-            LectureView? existLectureView = await _lectureViewRepository.GetAsync(predicate: lw => lw.StudentId == getStudent.Id && lw.ContentId == lectureView.ContentId &&
+            bool existLectureView = await _lectureViewRepository.AnyAsync(predicate: lw => lw.StudentId == getStudent.Id && lw.ContentId == lectureView.ContentId &&
                                                                                          lw.LectureId==lectureView.LectureId ,cancellationToken: cancellationToken);
 
-            if (existLectureView is null)
+            if (existLectureView is false)
             {
                 await _lectureViewRepository.AddAsync(lectureView);
-
-                LectureCompletionCondition? doesExistLectureCompletionCondition = await _lectureCompletionConditionRepository.GetAsync(predicate: lcc => lcc.LectureId == lectureView.LectureId
-                                                                                                                                                             && lcc.StudentId == getStudent.Id);
-
-                int contentCount = await _lecturesService.GetAllContentCountByLectureId(request.LectureId, cancellationToken);
-                int lectureViewCount = await _lectureViewsService.ContentViewedByLectureId(request.LectureId, getStudent.Id);
-                int completionPercentage =  _lectureCompletionConditionsService.CompletionPercentageCalculator(lectureViewCount, contentCount);
-
-                if (doesExistLectureCompletionCondition is null)
-                {
-                    await _lectureCompletionConditionsService.AddAsync(new LectureCompletionCondition { StudentId = getStudent.Id, LectureId = lectureView.LectureId, CompletionPercentage = completionPercentage });
-                }
-
-                else if (doesExistLectureCompletionCondition is not null)
-                {
-                    doesExistLectureCompletionCondition.CompletionPercentage = completionPercentage;
-                    await _lectureCompletionConditionsService.UpdateAsync(doesExistLectureCompletionCondition);
-                }
-
+                await _lectureCompletionConditionsService.ImpactOfLectureView(lectureView.LectureId, lectureView.StudentId, cancellationToken);
 
             }
-
-
-
 
             CreatedLectureViewResponse response = _mapper.Map<CreatedLectureViewResponse>(lectureView);
             return response;

@@ -99,4 +99,17 @@ public class StudentClassesManager : IStudentClassesService
 
         return contentCount;
     }
+
+    public StudentClass GetStudentClassSpesificData(IList<StudentClass> studentClasses, int classAnnouncementsCount, int classLecturesCount, int classQuizsCount, int classSurveysCount)
+    {
+        StudentClass studentClassGetData = new()
+        {
+
+            ClassAnnouncements = studentClasses.SelectMany(sc => sc.ClassAnnouncements).Take(classAnnouncementsCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
+            ClassLectures = studentClasses.SelectMany(sc => sc.ClassLectures).Take(classLecturesCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
+            ClassQuizs = studentClasses.SelectMany(sc => sc.ClassQuizs).Take(classQuizsCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
+            ClassSurveys = studentClasses.SelectMany(sc => sc.ClassSurveys).Take(classSurveysCount).OrderByDescending(ca => ca.CreatedDate).ToList()
+        };
+        return studentClassGetData;
+    }
 }

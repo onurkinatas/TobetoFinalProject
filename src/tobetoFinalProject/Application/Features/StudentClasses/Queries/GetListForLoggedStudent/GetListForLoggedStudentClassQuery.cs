@@ -2,6 +2,7 @@
 using Application.Services.ContextOperations;
 using Application.Services.Repositories;
 using Application.Services.StudentAnnouncements;
+using Application.Services.StudentClasses;
 using AutoMapper;
 using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Caching;
@@ -11,6 +12,7 @@ using Core.Persistence.Paging;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,51 +40,51 @@ public class GetListForLoggedStudentClassQuery : IRequest<GetListForLoggedStuden
         private readonly IMapper _mapper;
         private readonly IContextOperationService _contextOperationService;
         private readonly IStudentAnnouncementsService _studentAnnouncementService;
+        private readonly IStudentClassesService _studentClassesService;
 
-        public GetListForLoggedStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper, IContextOperationService contextOperationService, IStudentAnnouncementsService studentAnnouncementService)
+        public GetListForLoggedStudentClassQueryHandler(IStudentClassRepository studentClassRepository, IMapper mapper, IContextOperationService contextOperationService, IStudentAnnouncementsService studentAnnouncementService, IStudentClassesService studentClassesService)
         {
             _studentClassRepository = studentClassRepository;
             _mapper = mapper;
             _contextOperationService = contextOperationService;
             _studentAnnouncementService = studentAnnouncementService;
+            _studentClassesService = studentClassesService;
         }
 
         public async Task<GetListForLoggedStudentClassListItemDto> Handle(GetListForLoggedStudentClassQuery request, CancellationToken cancellationToken)
         {
             ICollection<Guid> getStudentClasses = await _contextOperationService.GetStudentClassesFromContext();
-            Student getStudent = await _contextOperationService.GetStudentFromContext();
 
             IPaginate<StudentClass> studentClasses = await _studentClassRepository.GetListAsync(
                 predicate: sc => getStudentClasses.Contains(sc.Id),
-                include: sc => sc
-                .Include(sc => sc.ClassAnnouncements)
-                     .ThenInclude(ca => ca.Announcement)
-               .Include(sc => sc.ClassLectures)
-                    .ThenInclude(ca => ca.Lecture)
-               .Include(sc => sc.ClassQuizs)
-                    .ThenInclude(ca => ca.Quiz)
-               .Include(sc => sc.ClassSurveys)
-                      .ThenInclude(ca => ca.Survey),
+                include: IncludeStudentClassesDetails(),
                 index: 0,
                 size: 100,
                 cancellationToken: cancellationToken
             );
 
-            var studentAnnouncements = await _studentAnnouncementService.GetAllAsync(ss=>ss.StudentId==getStudent.Id);
-            int readingAnnouncement = studentClasses.Items.SelectMany(sc => sc.ClassAnnouncements).ToList().Count - studentAnnouncements.Count;
-           
-            StudentClass studentClassGetData = new()
-            {
-                
-                ClassAnnouncements = studentClasses.Items.SelectMany(sc => sc.ClassAnnouncements).Take(request.ClassAnnouncementsCount).OrderByDescending(ca=>ca.CreatedDate).ToList(),
-                ClassLectures = studentClasses.Items.SelectMany(sc => sc.ClassLectures).Take(request.ClassLecturesCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
-                ClassQuizs = studentClasses.Items.SelectMany(sc => sc.ClassQuizs).Take(request.ClassQuizsCount).OrderByDescending(ca => ca.CreatedDate).ToList(),
-                ClassSurveys = studentClasses.Items.SelectMany(sc => sc.ClassSurveys).Take(request.ClassSurveysCount).OrderByDescending(ca => ca.CreatedDate).ToList()
-            };
+            int readingAnnouncement =  await _studentAnnouncementService.GetReadingAnnouncementCount(studentClasses.Items.SelectMany(sc => sc.ClassAnnouncements).ToList().Count);
+
+            StudentClass studentClassGetData = _studentClassesService.GetStudentClassSpesificData(studentClasses.Items,request.ClassAnnouncementsCount
+                ,request.ClassLecturesCount,request.ClassQuizsCount,request.ClassSurveysCount);
+
 
             GetListForLoggedStudentClassListItemDto response = _mapper.Map<GetListForLoggedStudentClassListItemDto>(studentClassGetData);
             response.ReadingAnnouncement = readingAnnouncement;
             return response;
+        }
+
+        private Func<IQueryable<StudentClass>, IIncludableQueryable<StudentClass, object>> IncludeStudentClassesDetails()
+        {
+            return query => query
+            .Include(sc => sc.ClassAnnouncements)
+                         .ThenInclude(ca => ca.Announcement)
+                   .Include(sc => sc.ClassLectures)
+                        .ThenInclude(ca => ca.Lecture)
+                   .Include(sc => sc.ClassQuizs)
+                        .ThenInclude(ca => ca.Quiz)
+                   .Include(sc => sc.ClassSurveys)
+                          .ThenInclude(ca => ca.Survey);
         }
     }
 }
